@@ -1,0 +1,144 @@
+\documentclass{scrartcl}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.8}
+\usepgfplotslibrary{statistics}
+\usepackage[ngerman]{babel}
+\usepackage[fleqn]{amsmath}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{algorithm} 
+\usepackage{algorithmic}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{longtable}
+\usetikzlibrary{trees}
+\newcommand{\bbN}{\mathbbm{N}}
+\newcommand{\bbR}{\mathbbm{R}}
+\newcommand{\bbZ}{\mathbbm{Z}}
+\newcommand{\bbI}{\mathbbm{I}}
+\usepackage{tikz}
+\usetikzlibrary{plotmarks}
+\usepackage[left=2cm,right=2cm,top=1.5cm,bottom=2cm]{geometry} % Seiteneinrichtung
+\pgfplotsset{compat=1.8}
+
+\begin{document}
+\title{Architekturbeschreibung: Mikrokontroller für FPGA-Board}
+\subtitle{Gruppe 2}
+\author{Jannik Graef 3392032 st161399@stud.uni-stuttgart.de \and
+ Tobias Weinschenk 3404690 st161650@stud.uni-stuttgart.de \and
+ Jochen Benzenhöfer 3456431 st166313@stud.uni-stuttgart.de \and
+ Alexander Bunz 3456583 st166212@stud.uni-stuttgart.de \and
+ Omar Al Kadri 3456978 st166418@stud.uni-stuttgart.de \and
+ Simon Naß 3460883 st166318@stud.uni-stuttgart.de \and
+ Jonas Unterweger 3464025 st167417@stud.uni-stuttgart.de}
+\maketitle
+
+
+\section{Blockdiagram}
+    \includegraphics[width=\textwidth, angle=0]{Blockdiagram.pdf}
+
+
+\section{Blockbeschreibung}
+\subsection{ALU}
+Führt Operationen auf zwei Eingabedaten aus. Diese sind entweder Konstante Werte vom Instruction Decoder oder aus den Registern geladene Werte.
+\subsection{Programm Counter}
+Zeigt auf die Position im Instruktionsspeicher, an der der Aktuelle Befehl in den Instruction Decoder geladen werden soll.
+\subsection{scratchpad RAM}
+Ein Zusätzlicher Speicher um Werte zu Speichern.
+\subsection{Instruction Decoder}
+Decodiert die aus dem Instruktionsspeicher geladenen Befehle und sendet entsprechende Steuersignale an die einzelnen Komponenten.
+\subsection{Register}
+Speichert 8bit Werte. Ergebnisse der ALU werden meist hierhin geschrieben.
+\subsection{Instruction Memory}
+Ein Speicher in dem die Instruktionen als 18 Bit Werte gespeichert werden.
+\subsection{CALL/RETURN Stack}
+Ein Stackspeicher, der die Position des Programm Counters vor einem Unterfunktionsaufruf speichert.
+
+
+\section{Instruktionen}
+
+
+%\begin{table}[h!]
+    %\centering
+    \begin{longtable}{||c|p{4cm}|c|c|c||}
+        \hline \hline
+         Instruktion & Beschreibung & Funktion & Zero & Carry   \endhead \hline
+         ADD sX, kk & Addiert zum Register sX das Literal kk hinzu. & sX $\leftarrow$ sX + kk & ? & ?  \\ \hline
+         ADD sX, sY & Addiert zum Register sX den Inhalt aus Register sY hinzu. & sX $\leftarrow$ sX + sY & ? & ?  \\ \hline
+         ADDCY sX, kk & Addiert zum Register sX das Literal kk mit Carry-Bit hinzu. &sX $\leftarrow$ sX+kk+CARRY & ? & ?  \\ \hline
+         ADDCY sX, sY & Addiert zum Register sX den Inhalt aus Register sY mit Carry-Bit hinzu. & sX $\leftarrow$ sX+sY+CARRY & ? & ?  \\ \hline
+         AND sX, kk & Bitweises UND von Register sX mit dem Literal kk. & sX $\leftarrow$ sX AND kk & ? & 0  \\ \hline
+         AND sX, sY & Bitweises UND von Register sX mit Register sY. & sX $\leftarrow$ sX AND sY & ? & 0  \\ \hline
+          CALL aaa & Bedingungsloser Aufruf der Unterfunktion an der Adresse aaa. &TOS $\leftarrow$ PC, PC $\leftarrow$ aaa & - & - \\ \hline
+         CALLC aaa & Falls CARRY-Bit gesetzt, Aufruf der Unterfunktion an der Adresse aaa. &if CARRY =1 {TOS $\leftarrow$ PC, PC $\leftarrow$ aaa} & - & - \\ \hline
+         CALLNC aaa & Falls CARRY-Bit nicht gesetzt, Aufruf der Unterfunktion an der Adresse aaa. &if CARRY =0 {TOS $\leftarrow$ PC, PC $\leftarrow$ aaa} & - & - \\ \hline
+         CALLNZ aaa & Falls ZERO-Bit nicht gesetzt, Aufruf der Unterfunktion an der Adresse aaa. &if ZERO=0 {TOS $\leftarrow$ PC, PC $\leftarrow$ aaa} & - & - \\ \hline
+         CALLZ aaa & Falls ZERO-Bit gesetzt, Aufruf der Unterfunktion an der Adresse aaa. &if ZERO=1{TOS $\leftarrow$ PC, PC $\leftarrow$ aaa} & - & - \\ \hline
+         COMPARE sX, kk & Vergleicht Register sX mit dem Literal kk. Setzt das CARRY und ZERO flag wie angegeben, Register bleiben dabei unverändert. & \makecell{if sX = kk ZERO $\leftarrow$ 1, \\ if sX \textless $ $ kk CARRY $\leftarrow$ 1 } & ? & ?  \\ \hline
+         COMPARE sX, sY & Vergleicht Register sX mit dem Register sY. Setzt das CARRY und ZERO flag wie angegeben, Register bleiben dabei unverändert. & \makecell{sX = sY ZERO $\leftarrow$ 1, \\ if sX \textless $ $ sY CARRY $\leftarrow$ 1  } & ? & ?  \\ \hline
+         FETCH sX, (sY) & Lese scratchpad RAM von der in Register sY gespeicherten Adresse in Register sX &sX $\leftarrow$ RAM[(sY)] & - & -  \\ \hline
+         FETCH sX, ss & Lese scretchpad RAM von Adresse ss in Register sX &sX $\leftarrow$ RAM[ss] & - & -  \\ \hline
+         INPUT sX, (sY) & Lese Wert des Input-Port, welcher vom Register sY spezifiziert wird, in das Register sX. &PORT\_ID $\leftarrow$ sY, sX $\leftarrow$ IN\_PORT & - & -  \\ \hline
+         INPUT sX, pp & Lese Wert des Input-Port, welcher von pp spezifiziert wird, in das Register sX. &PORT\_ID $\leftarrow$ pp, sX $\leftarrow$ IN\_PORT & - & -  \\ \hline
+         JUMP aaa & Bedingungsloser Sprung nach aaa. &pc $\leftarrow$ aaa & - & -  \\ \hline
+         JUMPC aaa & Falls das CARRY-Bit gesetzt ist, springe zu aaa. & if CARRY=1 pc $\leftarrow$ aaa & - & -  \\ \hline
+         JUMPNC aaa & Falls das CARRY-Bit nicht gesetzt ist, springe zu aaa. &if CARRY=0 pc $\leftarrow$ aaa & - & -  \\ \hline
+         JUMPNZ aaa & Falls das ZERO-Bit nicht gesetzt ist, springe zu aaa. &if ZERO=0 pc $\leftarrow$ aaa & - & -  \\ \hline
+         JUMPZ aaa & Falls das ZERO-Bit gesetzt ist, springe zu aaa. &if ZERO=1 pc $\leftarrow$ aaa & - & -  \\ \hline 
+         LOAD sX, kk & Lade das Literal kk in das Register sX. &sX $\leftarrow$ kk & - & -  \\ \hline
+         LOAD sX, sY & Lade den Inhalt des Registers sY in das Register sX. &sX $\leftarrow$ sX & - & -  \\ \hline 
+         OR sX, kk & Bitweise OR von Register sX mit literal kk. &sX $\leftarrow$ sX OR kk & ? & 0  \\ \hline
+         OR sX, sY & Bitweise OR von Register sX mit Register sY. & sX $\leftarrow$ sX OR sY & ? & 0  \\ \hline
+         OUTPUT sX, (sY) & Schreibe Register sX zum in sY gespeicherten output Port. &PORT\_ID $\leftarrow$ sY, OUT\_PORT $\leftarrow$ sX & - & -  \\ \hline
+         OUTPUT sX, pp & Schreibe Register sX zu output Port pp. &PORT\_ID $\leftarrow$ pp, OUT\_PORT $\leftarrow$ sX & - & -  \\ \hline
+         RETURN & Bedingungslose Rückkehr von der Unterfunktion. & PC $\leftarrow$ TOS+1 & - & -  \\ \hline
+         RETURNC & Falls Carry-Bit gesetzt, Rückkehr von der Unterfunktion. & If CARRY=1, PC $\leftarrow$ TOS+1 & - & - \\ \hline
+         RETURNNC & Falls Carry-Bit nicht gesetzt, Rückkehr von der Unterfunktion. & If CARRY=0, PC $\leftarrow$ TOS+1 & - & - \\ \hline
+         RETURNZ & Falls Zero-Bit gesetzt, Rückkehr von der Unterfunktion.& If ZERO=1, PC $\leftarrow$ TOS+1 & - & - \\ \hline
+         RETURNNZ & Falls Zero-Bit nicht gesetzt, Rückkehr von der Unterfunktion. & If ZERO=0, PC $\leftarrow$ TOS+1 & - & - \\ \hline
+         RL sX & Rotiert Register sX einen Schritt nach links. &sX $\leftarrow$ {sX[6:0],sX[7]}, CARRY $\leftarrow$ sX[7] & ? & ?  \\ \hline
+         RR sX & Rotiert Register sX einen Schritt nach rechts. &sX $\leftarrow$ {sX[0],sX[7:1]},CARRY $\leftarrow$ sX[0] & ? & ?  \\ \hline
+         SL0 sX & Schiebe Register sX links, mit 0 aufgefüllt. &sX $\leftarrow$ {sX[6:1],0}, CARRY $\leftarrow$ sX[7] & ? & ?  \\ \hline
+         SL1 sX & Schiebe Register sX links, mit 1 aufgefüllt. &sX $\leftarrow$ {sX[6:1],1}, CARRY $\leftarrow$ sX[7]  & 0 & ?  \\ \hline
+         SLA sX & Schiebe Register sX links durch alle Bits, inklusive Carry. &sX $\leftarrow$ {sX[6:1],CARRY}, CARRY $\Leftarrow$ sX[7]  & ? & ?  \\ \hline
+         SLX sX & Schiebe Register sX links. Bit sX[0] unbetroffen. &sX $\leftarrow$ {sX[6:1],sX[0]}, CARRY $\leftarrow$ sX[7]  & ? & ?  \\ \hline
+         SR0 sX & Schiebe Register sX rechts, mit 0 aufgefüllt. &sX $\leftarrow$ {0,sX[7:1]}, CARRY $\leftarrow$ sX[0]& ? & ?  \\ \hline
+         SR1 sX & Schiebe Register sX rechts, mit 1 aufgefüllt. &sX $\leftarrow$ {1,sX[7:1]}, CARRY $\leftarrow$ sX[0] & 0 & ?  \\ \hline
+         SRA sX & Schiebe Register sX durch alle bits, inklusive Carry. &sX $\leftarrow$ {CARRY,sX[7:1]}, CARRY $\leftarrow$ sX[0] & ? & ?  \\ \hline
+         SRX sX & Arithmetisches rechtsschieben von Register sX mit Vorzeichenerweiterung. &sX $\leftarrow$ {s[7],sX[7:1]}, CARRY $\leftarrow$ sX[0] & ? & ?  \\ \hline
+         STORE sX, (sY) & Schreibe Register sX in scratchpad RAM an der in Register sY gespeicherten Adresse. &RAM[(sY)] $\leftarrow$ sX & - & -  \\ \hline
+         STORE sX, ss & Schreibe Register sX an Adresse ss in scratchpad RAM. &RAM[ss] $\leftarrow$ sX  & - & -  \\ \hline
+         SUB sX, kk & Subtrahiere literal kk von Register sX. &sX $\leftarrow$ sX-kk & ? & ?  \\ \hline
+         SUB sX, sY & Subtrahiere Register sY von Register sX. &sX $\leftarrow$ sX-sY & ? & ?  \\ \hline
+         SUBCY sX, kk & Subtrahiere literal kk von Register sX mit Carry. &sX $\leftarrow$ sX-kk-CARRY  & ? & ?  \\ \hline
+         SUBCY sX, sY & Subtrahiere Register sY von Register sX mit Carry. &sX $\leftarrow$ sX-sY-CARRY & ? & ?  \\ \hline
+         TEST sX, kk & Teste Bits in Register sX gegen literal kk. Update Carry und Zero flags. Register bleiben unverändert. & \makecell{if(sX AND kk)=0 ZERO $\leftarrow$ 1, \\ CARRY $\leftarrow$ odd parity of (sX AND kk) } & ? & ?  \\ \hline
+         TEST sX, sY  & Teste Bits in Register sX gegen Bits in Register sY. Update Carry und Zero flags. Register bleiben unverändert. & \makecell{if(sX AND sY)=0 ZERO $\leftarrow$ 1, \\ CARRY $\leftarrow$ odd parity of (sX AND sY) } & ? & ?  \\ \hline
+         XOR sX, kk & Bitweise XOR von Register sX mit literal kk. &sX $\leftarrow$ sX XOR kk & ? & 0  \\ \hline
+         XOR sX, sY & Bitweise XOR von Register sX mit Register sY. &sX $\leftarrow$ sX XOR sY  & ? & 0  \\ \hline
+         
+    \end{longtable}
+    %\caption{Caption}
+    %\label{tab:my_label}
+%\end{table}
+
+\newpage
+\section{Aufgabenaufteilung}
+    \begin{longtable}{||c|c||}
+        \hline \hline
+         Namen & Aufgaben    \endhead \hline
+         Jannik Graef & Instruktionen, Register \& RAM  \\ \hline
+         Tobias Weinschenk & Instruktionen, Register \& RAM \\ \hline
+         Jochen Benzenhöfer & Blockdiagram, Instruktionen, PC \& I/O  \\ \hline
+         Alexander Bunz & Instruktionen, ALU \& Decoder  \\ \hline
+         Omar Al Kadri & Instruktionen, ALU \& Decoder \\ \hline
+         Simon Naß & Blockdiagram, ALU \& Decoder  \\ \hline
+         Jonas Unterweger & Instruktionen, PC \& I/O \\ \hline
+    \end{longtable}
+    
+   
+\end{document}
