@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 instructionDict = {
-    # Block 1: Instructions on registers or constants kk/pp/ss (6 bits). Starting with 0, ending with ?.
+    # Block 1: Instructions on registers or constants kk/pp/ss (8 bits). Starting with 0, ending with ?.
     # The ? is replaced by a 1, if the instruction contains a constant, else it is replaced with 00 or 01.
     "ADD": "00000?", "ADDCY": "00001?", "SUB": "00010?", "SUBCY": "00011?",
     "AND": "00100?", "OR": "00101?", "XOR": "00110?", "LOAD": "00111?", "STORE": "01000?",
@@ -16,9 +16,9 @@ instructionDict = {
     "SLA": "110100", "SLX": "110101", "SR0": "110110", "SR1": "110111", "SRA": "111000", "SRX": "111001"}
 
 registerDict = {
-    "x1": "000001", "x2": "000010", "x3": "000011", "x4": "000100", "x5": "000101",
-    "x6": "000110", "x7": "000111", "x8": "001000", "x9": "001001", "x10": "001010",
-    "x11": "001011", "x12": "001100", "x13": "001101", "x14": "001110", "x15": "001111", "x16": "010000"}
+    "x0": "0000", "x1": "0001", "x2": "0010", "x3": "0011", "x4": "0100",
+    "x5": "0101", "x6": "0110", "x7": "0111", "x8": "1000", "x9": "1001",
+    "xA": "1010", "xB": "1011", "xC": "1100", "xD": "1101", "xE": "1110", "xF": "1111"}
 
 checkOneList = ("RETURN", "RETURNC", "RETURNNC", "RETURNZ", "RETURNNZ")
 
@@ -36,15 +36,39 @@ root.configure(bg="black")
 scrollbar = tk.Scrollbar(root)
 
 
+def changeToBinary(n, bits):
+    system = n[0]
+    if system == "b":
+        number = n[1:]
+        while len(number) < bits:
+            number = "0" + number
+        return number
+    elif system == "h":
+        number = int(n[1:], 16)
+        if (128 > number > -129 and bits == 8) or (4096 > number > -1 and bits == 12):
+            b = bin(int(number) & int("1" * bits, 2))[2:]
+            return ("{0:0>%s}" % bits).format(b)
+        else:
+            return "1111111111111"
+    else:
+        number = int(n[0:])
+        print(number)
+        if (128 > number > -129 and bits == 8) or (4096 > number > -1 and bits == 12):
+            b = bin(int(number) & int("1" * bits, 2))[2:]
+            return ("{0:0>%s}" % bits).format(b)
+        else:
+            return "1111111111111"
+
+
 def generateMachinecode():
     """
     This function takes assembler code and converts it into machinecode.
-    Each line in the assembler textfield should have one of the following structures:
-    1. Instruction register1, register2; //comment
-    2. Instruction register, constant; //comment
-    3. Instruction register; //comment
-    4. Instruction; //comment
-    The comments startet wit a "//", the "," aswell as the ";" are optional.
+    Each line in the assembler textfield should have one Instruction of the following structures:
+    1. Operation register1, register2; //comment
+    2. Operation register, constant; //comment
+    3. Operation register; //comment
+    4. Operation; //comment
+    The comments starting wit a "//", the "," aswell as the ";" are optional.
     """
     text_field_machinecode.delete("1.0", "end")
     lines = text_field_assembler.get("1.0", "end").splitlines()
@@ -67,12 +91,14 @@ def generateMachinecode():
             try:
                 opcode = instructionDict[line[0]]
                 if registerDict.__contains__(line[1]):
-                    value = registerDict[line[1]] + "000000"
+                    value = registerDict[line[1]] + "00000000"
                 else:
-                    value = f"{int(line[1]):012b}"
+                    value = changeToBinary(line[1], 12)
                     if len(value) > 12:
-                        text_field_machinecode.insert("end", "Error in line {} {}, "
-                                                             "number to big!".format(current_line, line) + "\n")
+                        text_field_machinecode.insert(
+                            "end", "Error in line {} {}, invalid number!"
+                            "Number range for 12 bit constant aaa-->(0, 4095)"
+                            .format(current_line, line) + "\n")
                         text_field_machinecode.tag_add("error", "end-2c linestart", "end")
                         text_field_assembler.mark_set("insert", str(current_line) + ".0 lineend")
                         text_field_assembler.see(str(current_line) + ".0")
@@ -90,14 +116,16 @@ def generateMachinecode():
                 if registerDict.__contains__(line[2]):
                     opcode = instructionDict[line[0]].replace("?", "0")
                     value1 = registerDict[line[1]]
-                    value2 = registerDict[line[2]]
+                    value2 = registerDict[line[2]] + "0000"
                 else:
                     opcode = instructionDict[line[0]].replace("?", "1")
                     value1 = registerDict[line[1]]
-                    value2 = f"{int(line[2]):06b}"
-                    if len(value2) > 6:
-                        text_field_machinecode.insert("end", "Error in line {} {}, "
-                                                             "number to big!".format(current_line, line) + "\n")
+                    value2 = changeToBinary(line[2], 8)
+                    if len(value2) > 8:
+                        text_field_machinecode.insert(
+                            "end", "Error in line {} {}, invalid number!"
+                                   "Number range for 8 bit constants kk/pp/ss-->(-128, 127)"
+                                   .format(current_line, line) + "\n")
                         text_field_machinecode.tag_add("error", "end-2c linestart", "end")
                         text_field_assembler.mark_set("insert", str(current_line) + ".0 lineend")
                         text_field_assembler.see(str(current_line) + ".0")
