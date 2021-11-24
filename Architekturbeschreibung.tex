@@ -42,15 +42,19 @@
     \includegraphics[width=\textwidth, angle=0]{Blockdiagram.pdf}
 
 
-\section{Blockbeschreibung}
+\section{Blockbeschreibungen}
 \subsection{ALU}
-Führt Operationen auf zwei Eingabedaten aus. Diese sind entweder Konstante Werte vom Instruction Decoder oder aus den Registern geladene Werte.
+\includegraphics[height=0.7\textwidth, angle=0]{ALU_beschreibung.pdf}\\
+Die ALU führt Operationen auf zwei Eingabedaten aus. Die Operationen umfassen Arithmetische, Logische Verknüpfungen und Shift Operationen. Die Eingabedaten sind entweder Konstante Werte vom Instruction Decoder (kk) oder aus den Registern (sX,sY) geladene Werte. Sie werden an den Eingängen A\_i und B\_i angelegt. Der Opcode\_select\_i Eingang (vom Instruction Decoder), entscheidet darüber, welche Operation auf den Eingabedaten ausgeführt wird. Das Ergebnis der ausgeführten Operation wird an ALU\_out angelegt.
+Die ZERO und CARRY ausgänge werden je nach Operation, entsprechend der unten aufgeführten Tabelle, gesetzt.
+\subsection{Instruction Decoder}
+\includegraphics[height=0.7\textwidth, angle=0]{ID_beschreibung.pdf}\\
+Der Instruction Decoder (ID) dekodiert die aus dem Instruktionsspeicher geladenen Befehle und sendet entsprechende Steuersignale an die einzelnen Komponenten. Die Instruktionen, die vom ID verarbeitet werden, liegen am Eingang instruction\_i in form von 18 bit an. Je nach Instruktion, werden die Werte an den Ausgänge des ID entsprechend gesetzt. An register\_X\_ID\_o und registe\_Y\_ID\_o werden die in den Instruktionen vorhandenen Register Adressen ausgegeben und ans Register weitergeleitet.
+Enthält die Instruktion konstanten, so werden diese entsprechen an die Ausgänge Constant\_kk\_o (8 bit) und Const\_aaa\_o (12 bit) angelegt. Die MUX Ausgänge, sowie der Or\_PC\_o Ausgang, leiten entsprechend der eingegangenen Instruktion Steuerbits an verschiedene Multiplexer weiter. Der ALU\_select\_o Ausgang gibt den Opcode der Instruction an die ALU weiter. Der Store\_fetch\_o Ausgang signalisiert dem Speicher, ob ein Wert gelesen oder geschrieben werden soll. Die Stack\_enable\_o und RAM\_enable\_o Ausgänge, steuern den zugriff auf Stack und RAM.
 \subsection{Programm Counter}
 Zeigt auf die Position im Instruktionsspeicher, an der der Aktuelle Befehl in den Instruction Decoder geladen werden soll.
 \subsection{scratchpad RAM}
 Ein Zusätzlicher Speicher um Werte zu Speichern.
-\subsection{Instruction Decoder}
-Decodiert die aus dem Instruktionsspeicher geladenen Befehle und sendet entsprechende Steuersignale an die einzelnen Komponenten.
 \subsection{Register}
 Speichert 8bit Werte. Ergebnisse der ALU werden meist hierhin geschrieben.
 \subsection{Instruction Memory}
@@ -213,24 +217,24 @@ Ein Stackspeicher, der die Position des Programm Counters vor einem Unterfunktio
     \begin{longtable}{||c|c|c|c|c|c|c|c|c||}
         \hline \hline
          Nr. & Arbeitspaket & JG & TW & JB & AB & OAK & SN & JU \endhead \hline
-         1 & Instruktionen & * &  &  & * &  &  &\\ \hline
-         2 & Blockdiagram &  &  & * &  &  & * & \\ \hline
-         3 & Register &  & * &  &  &  &  &\\ \hline
-         4 & RAM & * &  &  &  &  &  &\\ \hline
-         5 & PC &  &  &  &  &  & & * \\ \hline
-         6 & I/O &  &  & *  &  &  & &  \\ \hline
-         7 & ALU Aritmetik &  &  &  & * & * & * & \\ \hline
-         7 & ALU Logik &  &  &  & * & * & * & \\ \hline
-         7 & ALU Shift &  &  &  & * & * & * & \\ \hline
-         7 & \makecell{ALU Verifikation \\ 10 einfache Testfälle }&  &  &  & * & * & * & \\ \hline
-         8 & Decoder &  &  &  & * & * &  & \\ \hline
-         9 & Assembler &  &  &  & * &  &  & \\ \hline
-         10 & Test Register &  &  & * &  &  &  &\\ \hline
-         11 & Test RAM &  &  &  &  &  &  & *\\ \hline
-         12 & Test PC &  &  &  &  &  & * &  \\ \hline
-         13 & Test I/O &  &  &  & * &  & &  \\ \hline
-         14 & Test ALU & * &  &  &  &  &  & \\ \hline
-         15 & Test Decoder &  & * &  &  &  &  & \\ \hline
+         10 & Instruktionen & * &  &  & * &  &  &\\ \hline
+         20 & Blockdiagram &  &  & * &  &  & * & \\ \hline
+         30 & Register &  & * &  &  &  &  &\\ \hline
+         40 & RAM & * &  &  &  &  &  &\\ \hline
+         50 & PC &  &  &  &  &  & & * \\ \hline
+         60 & I/O &  &  & *  &  &  & &  \\ \hline
+         71 & ALU Aritmetik &  &  &  &  & * &  & \\ \hline
+         72 & ALU Logik &  &  &  &  &  & * & \\ \hline
+         73 & ALU Shift &  &  &  & * &  &  & \\ \hline
+         74 & \makecell{ALU Verifikation \\ 10 einfache Testfälle }&  &  &  &  &  & * & \\ \hline
+         80 & Decoder &  &  &  &  & * &  & \\ \hline
+         90 & Assembler &  &  &  & * &  &  & \\ \hline
+         100 & Test Register &  &  & * &  &  &  &\\ \hline
+         110 & Test RAM &  &  &  &  &  &  & *\\ \hline
+         120 & Test PC &  &  &  &  &  & * &  \\ \hline
+         130 & Test I/O &  &  &  & * &  & &  \\ \hline
+         140 & Test ALU & * &  &  &  &  &  & \\ \hline
+         150 & Test Decoder &  & * &  &  &  &  & \\ \hline
     \end{longtable}
 
 
