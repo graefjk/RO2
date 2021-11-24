@@ -126,19 +126,112 @@ Ein Stackspeicher, der die Position des Programm Counters vor einem Unterfunktio
     %\label{tab:my_label}
 %\end{table}
 
+
+\begin{longtable}{||c|p{6cm}|p{6cm}|c||}
+\hline \hline
+    Instruktion & ZERO & CARRY & opcode   \endhead \hline
+    ADD sX, kk & if (sX + kk = (0 or 256)): ZERO = 1,\newline else: ZERO = 0
+    & if ((sX + kk) $>$ 255): CARRY = 1,\newline else: CARRY = 0 & 000001 \\ \hline
+    ADD sX, sY & if (sX + sY = (0 or 256)): ZERO = 1,\newline else: ZERO = 0
+    & if ((sX + sY) $>$ 255): CARRY = 1,\newline else: CARRY = 0 & 000000 \\ \hline
+    ADDCY sX, kk & if (sX + kk + CARRY = (0 or 256)): ZERO = 1,\newline else: ZERO = 0
+    & if ((sX + kk + CARRY) $>$ 255): CARRY = 1,\newline else: CARRY = 0 & 000011 \\ \hline
+    ADDCY sX, sY & if (sX + sY + CARRY = (0 or 256)): ZERO = 1,\newline else: ZERO = 0
+    & if ((sX + sY + CARRY) $>$ 255): CARRY = 1,\newline else: CARRY = 0 & 000010 \\ \hline
+    AND sX, kk & if (sX = 0): ZERO = 1,\newline else: ZERO = 0 & 0 & 001001 \\ \hline
+    AND sX, sY & if (sX = 0): ZERO = 1,\newline else: ZERO = 0 & 0 & 001000 \\ \hline
+    CALL aaa & - & - & 100001 \\ \hline
+    CALLC aaa  & - & - & 100010 \\ \hline
+    CALLNC aaa & - & - & 100011 \\ \hline
+    CALLNZ aaa & - & - & 100100 \\ \hline
+    CALLZ aaa & - & - & 100101 \\ \hline
+    COMPARE sX, kk & if (sX = kk): ZERO = 1,\newline else: ZERO = 0
+    & if (kk $>$ sX): CARRY = 1,\newline else: CARRY = 0 & 011011 \\ \hline
+    COMPARE sX, sY & if (sX = sY): ZERO = 1,\newline else: ZERO = 0
+    & if (sY $>$ sX): CARRY = 1,\newline else: CARRY = 0 & 011010 \\ \hline
+    FETCH sX, (sY) & - & - & 010010 \\ \hline
+    FETCH sX, ss & - & - & 010011 \\ \hline
+    INPUT sX, (sY) & - & - & 010110 \\ \hline
+    INPUT sX, pp & - & - & 010111 \\ \hline
+    JUMP aaa & - & - & 100110 \\ \hline
+    JUMPC aaa & - & - & 100111 \\ \hline
+    JUMPNC aaa & - & - & 101000 \\ \hline
+    JUMPNZ aaa & - & - & 101001 \\ \hline
+    JUMPZ aaa & - & - & 101010 \\ \hline 
+    LOAD sX, kk & - & - & 001111 \\ \hline
+    LOAD sX, sY & - & - & 001110 \\ \hline 
+    OR sX, kk & if (sX = 0): ZERO = 1,\newline else: ZERO = 0 & 0 & 001011 \\ \hline
+    OR sX, sY & if (sX = 0): ZERO = 1,\newline else: ZERO = 0 & 0 & 001010 \\ \hline
+    OUTPUT sX, (sY) & - & - & 010100 \\ \hline
+    OUTPUT sX, pp & - & - & 010101 \\ \hline
+    RETURN & - & - & 111010 \\ \hline
+    RETURNC & - & - & 111011 \\ \hline
+    RETURNNC & - & - & 111100 \\ \hline
+    RETURNZ & - & - & 111101 \\ \hline
+    RETURNNZ & - & - & 111110 \\ \hline
+    RL sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[7] & 110000 \\ \hline
+    RR sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[0] & 110001 \\ \hline
+    SL0 sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[7] & 110010 \\ \hline
+    SL1 sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[7] & 110011 \\ \hline
+    SLA sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[7] & 110100 \\ \hline
+    SLX sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[7] & 110101 \\ \hline
+    SR0 sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[0] & 110111 \\ \hline
+    SR1 sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[0] & 110111 \\ \hline
+    SRA sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[0] & 111000 \\ \hline
+    SRX sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
+    & CARRY = sX[0] & 111001 \\ \hline
+    STORE sX, (sY) & - & - & 010000 \\ \hline
+    STORE sX, ss & - & - & 010001 \\ \hline
+    SUB sX, kk & if ((sX - kk) = 0): ZERO = 1,\newline else: ZERO = 0
+    & if ((sX - kk) $<$ 0): CARRY = 1,\newline else: CARRY = 0 & 000101 \\ \hline
+    SUB sX, sY & if ((sX - sY) = 0): ZERO = 1,\newline else: ZERO = 0
+    & if ((sX - sY) $<$ 0): CARRY = 1,\newline else: CARRY = 0 & 000100 \\ \hline
+    SUBCY sX, kk & if ((sX - kk- CARRY) = (0 or -256): ZERO = 1,\newline else: ZERO = 0
+    & if ((sX - kk) $<$ 0): CARRY = 1,\newline else: CARRY = 0 & 000111 \\ \hline
+    SUBCY sX, sY & if ((sX - sY - CARRY) = (0 or -256): ZERO = 1,\newline else: ZERO = 0
+    & if ((sX - sY) $<$ 0): CARRY = 1,\newline else: CARRY = 0 & 000110 \\ \hline
+    TEST sX, kk & if (AND\textunderscore TEST = 0): ZERO = 1,\newline else: ZERO = 0
+    & if (XOR\textunderscore TEST = 1): CARRY = 1,\newline else: CARRY = 0 & 011001 \\ \hline
+    TEST sX, sY  & if (AND\textunderscore TEST = 0): ZERO = 1,\newline else: ZERO = 0
+    & if (XOR\textunderscore TEST = 1): CARRY = 1,\newline else: CARRY = 0 & 011000 \\ \hline
+    XOR sX, kk & if (sX = 0): ZERO = 1,\newline else: ZERO = 0 & 0 & 001101 \\ \hline
+    XOR sX, sY & if (sX = 0): ZERO = 1,\newline else: ZERO = 0 & 0 & 001100 \\ \hline
+\end{longtable}
+
 \newpage
 \section{Aufgabenaufteilung}
-    \begin{longtable}{||c|c||}
+
+    \begin{longtable}{||c|c|c|c|c|c|c|c|c||}
         \hline \hline
-         Namen & Aufgaben    \endhead \hline
-         Jannik Graef & Instruktionen, Register \& RAM  \\ \hline
-         Tobias Weinschenk & Instruktionen, Register \& RAM \\ \hline
-         Jochen Benzenhöfer & Blockdiagram, Instruktionen, PC \& I/O  \\ \hline
-         Alexander Bunz & Instruktionen, ALU \& Decoder  \\ \hline
-         Omar Al Kadri & Instruktionen, ALU \& Decoder \\ \hline
-         Simon Naß & Blockdiagram, ALU \& Decoder  \\ \hline
-         Jonas Unterweger & Instruktionen, PC \& I/O \\ \hline
+         Nr. & Arbeitspaket & JG & TW & JB & AB & OAK & SN & JU \endhead \hline
+         1 & Instruktionen & * &  &  & * &  &  &\\ \hline
+         2 & Blockdiagram &  &  & * &  &  & * & \\ \hline
+         3 & Register &  & * &  &  &  &  &\\ \hline
+         4 & RAM & * &  &  &  &  &  &\\ \hline
+         5 & PC &  &  &  &  &  & & * \\ \hline
+         6 & I/O &  &  & *  &  &  & &  \\ \hline
+         7 & ALU Aritmetik &  &  &  & * & * & * & \\ \hline
+         7 & ALU Logik &  &  &  & * & * & * & \\ \hline
+         7 & ALU Shift &  &  &  & * & * & * & \\ \hline
+         7 & \makecell{ALU Verifikation \\ 10 einfache Testfälle }&  &  &  & * & * & * & \\ \hline
+         8 & Decoder &  &  &  & * & * &  & \\ \hline
+         9 & Assembler &  &  &  & * &  &  & \\ \hline
+         10 & Test Register &  &  & * &  &  &  &\\ \hline
+         11 & Test RAM &  &  &  &  &  &  & *\\ \hline
+         12 & Test PC &  &  &  &  &  & * &  \\ \hline
+         13 & Test I/O &  &  &  & * &  & &  \\ \hline
+         14 & Test ALU & * &  &  &  &  &  & \\ \hline
+         15 & Test Decoder &  & * &  &  &  &  & \\ \hline
     \end{longtable}
-    
-   
+
+
 \end{document}
