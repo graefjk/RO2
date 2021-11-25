@@ -32,16 +32,16 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity ALU is
- Port (A_i: in std_logic_vector(7 downto 0); --input signals
-       B_i: in std_logic_vector(7 downto 0);
-       Opcode_select_i: in std_logic_vector(5 downto 0);
+ Port (sA_i: in std_logic_vector(7 downto 0); --input signals
+       sB_i: in std_logic_vector(7 downto 0);
+       opcode_select_i: in std_logic_vector(5 downto 0);
        reset_i: in std_logic;
-       Clk_i: in std_logic;
+       clk_i: in std_logic;
        
        
-       ALU_o: out std_logic_vector(7 downto 0); -- output signals
-       CARRY_o: out std_logic;
-       ZERO_o: out std_logic);
+       sALU_o: out std_logic_vector(7 downto 0); -- output signals
+       sCARRY_o: out std_logic;
+       sZERO_o: out std_logic);
 end ALU;
 
 architecture Behavioral of ALU is
