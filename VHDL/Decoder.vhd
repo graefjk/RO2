@@ -81,14 +81,13 @@ constant operation_SL0: std_logic_vector(5 downto 0):="110010"; -- opcode shift
 constant operation_SL1: std_logic_vector(5 downto 0):="110011";
 constant operation_SLA: std_logic_vector(5 downto 0):="110100";
 constant operation_SLX: std_logic_vector(5 downto 0):="110101";
-constant operation_RL0: std_logic_vector(5 downto 0):="110111";
-constant operation_RL1: std_logic_vector(5 downto 0):="110111";
-constant operation_RLA: std_logic_vector(5 downto 0):="111000";
-constant operation_RLX: std_logic_vector(5 downto 0):="111001";
+constant operation_SR0: std_logic_vector(5 downto 0):="110110";
+constant operation_SR1: std_logic_vector(5 downto 0):="110111";
+constant operation_SRA: std_logic_vector(5 downto 0):="111000";
+constant operation_SRX: std_logic_vector(5 downto 0):="111001";
 
-
-constant operation_COMPARE: std_logic_vector(5 downto 0):= "000010"; -- opcode compare
-constant operation_COMPARE_kk: std_logic_vector(5 downto 0):= "000011";
+constant operation_COMPARE: std_logic_vector(5 downto 0):= "011010"; -- opcode compare
+constant operation_COMPARE_kk: std_logic_vector(5 downto 0):= "011011";
 
 constant operation_TEST : std_logic_vector(5 downto 0):="011000"; --opcode test
 constant operation_TEST_kk : std_logic_vector(5 downto 0):="011001";
