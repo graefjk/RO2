@@ -1,0 +1,39 @@
+//Assembler to calculate x^y
+
+LOAD x0, 3 //x value
+LOAD x1, 2 //y value
+
+COMPARE x0, 2
+JUMPZ 16 //Jump to shift block if x = 2.
+LOAD x4, x0
+
+//multiply:
+COMPARE x1, 1
+JUMPZ 21 //Jump to end.
+SUB x1, 1
+LOAD x2, x0
+LOAD x3, x4
+//add:
+COMPARE x3, 1
+JUMPZ 6 //Repeat multiply block.
+ADD x0, x2
+SUB x3, 1
+JUMP 11 //Repeat add block.
+
+//Shift:
+COMPARE x1, 1
+JUMPZ 21 //Jump to end.
+SL0 x0
+SUB x1, 1
+JUMP 16 //Repeat Shift block.
+
+//End:
+LOAD x5, x0 //Save result in x5.
+
+
+
+
+
+
+
+
