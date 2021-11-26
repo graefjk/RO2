@@ -42,9 +42,9 @@ entity Decoder is
          mux_i_o_select_o: out std_logic; -- i/o signals
          
          mux_register_select_o: out std_logic_vector(1 downto 0); --register signals
-		 sRegister_X_adresse_o: out std_logic_vector(3 downto 0); 
+	 sRegister_X_adresse_o: out std_logic_vector(3 downto 0); 
          sRegister_Y_adresse_o: out std_logic_vector(3 downto 0);
-		 sRegister_write_enable_o: out std_logic;
+	 sRegister_write_enable_o: out std_logic;
          
          mux_ALU_select_o: out std_logic; --ALU signals
          sALU_select_o: out std_logic_vector(5 downto 0);
