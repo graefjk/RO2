@@ -40,6 +40,8 @@ entity Decoder is
          constant_aaa_o: out std_logic_vector(11 downto 0);
          
          mux_i_o_select_o: out std_logic; -- i/o signals
+		 sIO_write_or_read_o: out std_logic;
+		 sIO_enable_o: out std_logic;
          
          mux_register_select_o: out std_logic_vector(1 downto 0); --register signals
 	 sRegister_X_adresse_o: out std_logic_vector(3 downto 0); 
@@ -51,12 +53,13 @@ entity Decoder is
          
          
          mux_stack_select_o: out std_logic; --stack signals
+		 sStack_write_or_read_o: out std_logic;
          sStack_enable_o: out std_logic;
          
          mux_PC_select_o: out std_logic_vector(1 downto 0);-- PC signals
          or_PC_o: out std_logic;
          
-         store_fetch_o: out std_logic; -- RAM signals
+         sRAM_write_or_read_o: out std_logic; -- RAM signals
          sRAM_enable_o: out std_logic);
 end Decoder;
 
