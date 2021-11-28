@@ -221,9 +221,9 @@ begin
         when operation_XOR_kk=>
         
         when others=>
-            result_s <= "00000000";
-            carry_s <= '0';
-            zero_s <= '0';
+            result_s <= result_s;
+            carry_s <= carry_s;
+            zero_s <= zero_s;
       end case;
     end if;
  end if;
