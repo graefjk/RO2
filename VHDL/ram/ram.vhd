@@ -48,17 +48,18 @@ end ram;
 
 architecture Behavioral of ram is  
 
-  signal data  : std_ulogic_vector(2047 downto 0);
-  
+signal data  : std_ulogic_vector((2**ram_select_size_g)*ram_width_g-1 downto 0);
+
 begin
 
 process1: process (clk_i, reset_i, enable_i) is
 variable address : integer;
+
 begin
     if (reset_i = '1') then               -- asynchronous reset
         data <= (others => '0');
 	end if;
-	if (clk_i'event and clk_i = '1' and  enable_i = '1') then  -- writing with falling clock edge 
+	if (clk_i'event and clk_i = '1' and  enable_i = '1') then
 		address := to_integer(unsigned(address_i));
 		if(write_or_read_i = '0') then
 			read_data_o <= data((address+1)*ram_width_g-1 downto address*ram_width_g);
