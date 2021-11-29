@@ -244,9 +244,21 @@ begin
                 zero_s <= '0';
             end if;
         when operation_XOR =>
-        
+			result_s <= sA_i xor sB_i;
+			carry_s <= '0';
+			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         when operation_XOR_kk=>
-             
+			result_s <= sA_i xor sB_i;
+			carry_s <= '0';
+			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         when operation_LOAD=>
              result_s <= sB_i;
              carry_s <= carry_s;
