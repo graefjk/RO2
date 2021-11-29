@@ -156,9 +156,78 @@ uut: ALU port map (sA, sB, opcode_select, reset, clk, sALU, sCARRY, sZERO);
         sA <= "11111111";
         wait for 20 ns;
 		
-		--sB next
+		opcode_select <= "001011"; --or_kk
+		--sB = 1
+        sB <= "00000001";
+        sA <= "00000001";
+        wait for 20 ns;
         
+        sA <= "10000000";
+        wait for 20 ns;
         
+        sA <= "00000000";
+        wait for 20 ns;
+        
+        sA <= "11111111";
+        wait for 20 ns;
+        
+		--sB = 10000000
+		sB <= "10000000";
+        sA <= "00000001";
+        wait for 20 ns;
+        
+        sA <= "10000000";
+        wait for 20 ns;
+        
+        sA <= "00000000";
+        wait for 20 ns;
+        
+        sA <= "11111111";
+        wait for 20 ns;
+        
+		--sB = 0
+        sB <= "00000000";
+        sA <= "00000001";
+        wait for 20 ns;
+        
+        sA <= "10000000";
+        wait for 20 ns;
+        
+        sA <= "00000000";
+        wait for 20 ns;
+        
+        sA <= "11111111";
+        wait for 20 ns;
+        
+		--sB = 11111111
+        sB <= "11111111";
+        sA <= "00000001";
+        wait for 20 ns;
+        
+        sA <= "10000000";
+        wait for 20 ns;
+        
+        sA <= "00000000";
+        wait for 20 ns;
+        
+        sA <= "11111111";
+        wait for 20 ns;
+        
+		--sB = 10101010
+        sB <= "10101010";
+        sA <= "01010101";
+        wait for 20 ns;
+        
+        sA <= "10101010";
+        wait for 20 ns;
+        
+        sA <= "00000000";
+        wait for 20 ns;
+        
+        sA <= "11111111";
+        wait for 20 ns;
+		
+		
         wait;
     end process;
 
