@@ -98,7 +98,7 @@ uut: registers
 	write_address <= "0000";
 	write_data <= "11010100";
 	write_enable <= '1';
-	wait for 20 ns;
+	wait for 35 ns;
 	
 	write_address <= "1100";
 	write_data <= "10010010";
