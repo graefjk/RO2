@@ -214,17 +214,35 @@ begin
         when operation_AND =>
 			result_s <= sA_i and sB_i;
 			carry_s <= '0';
-			if (sA_i(7 downto 0) = "00000000") then
+			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
                 zero_s <= '1';
             else
                 zero_s <= '0';
             end if;
         when operation_AND_kk =>
-        
+			result_s <= sA_i and sB_i;
+			carry_s <= '0';
+			if (sA_i(7 downto 0) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         when operation_OR =>
-        
+			result_s <= sA_i or sB_i;
+			carry_s <= '0';
+			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         when operation_OR_kk=>
-        
+			result_s <= sA_i or sB_i;
+			carry_s <= '0';
+			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         when operation_XOR =>
         
         when operation_XOR_kk=>
