@@ -212,7 +212,13 @@ begin
         when operation_TEST_kk =>
         
         when operation_AND =>
-        
+			result_s <= sA_i and sB_i;
+			carry_s <= '0';
+			if (sA_i(7 downto 0) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         when operation_AND_kk =>
         
         when operation_OR =>
