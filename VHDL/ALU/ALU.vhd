@@ -38,14 +38,12 @@ entity ALU is
        reset_i: in std_logic;
        clk_i: in std_logic;
        
-       
        sALU_o: out std_logic_vector(7 downto 0); -- output signals
        sCARRY_o: out std_logic;
        sZERO_o: out std_logic);
 end ALU;
 
 architecture Behavioral of ALU is
-signal opcode_select_s: std_logic_vector(5 downto 0):= opcode_select_i;
 
 signal result_s : std_logic_vector(7 downto 0) := "00000000"; -- results signals
 signal carry_s : std_logic:='0'; 
@@ -85,23 +83,20 @@ constant operation_OR_kk: std_logic_vector(5 downto 0):= "001011";
 constant operation_XOR : std_logic_vector(5 downto 0):="001100";
 constant operation_XOR_kk : std_logic_vector(5 downto 0):="001101";
 
-
-
-
+constant operation_LOAD : std_logic_vector(5 downto 0):="001110"; -- Load
+constant operation_LOAD_kk : std_logic_vector(5 downto 0):="001111";
 
 
 begin
-
 operations: process(clk_i, reset_i)
-
-  begin
+begin
  if reset_i='1' then
    result_s<= "00000000";
    carry_s<= '0';
    zero_s<= '0';
  else
     if rising_edge(clk_i) then
-      case opcode_select_s is
+      case opcode_select_i is
         when operation_ADD => 
         
         when operation_ADD_kk =>
@@ -119,24 +114,94 @@ operations: process(clk_i, reset_i)
         when operation_SUBCY_kk =>
         
         when operation_RL =>
+            carry_s <= sA_i(7);
+            result_s <= sA_i(6 downto 0) & sA_i(7);
+            if (sA_i(6 downto 0) & sA_i(7) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         
-        when operation_RR =>
+        when operation_RR => 
+            carry_s <= sA_i(0);
+            result_s <= sA_i(0) & sA_i(7 downto 1);
+            if (sA_i(0) & sA_i(7 downto 1) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         
         when operation_SL0 =>
+            carry_s <= sA_i(7);
+            result_s <= sA_i(6 downto 0) & "0";
+            if (sA_i(6 downto 0) & "0" = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         
         when operation_SL1 =>
+            carry_s <= sA_i(7);
+            result_s <= sA_i(6 downto 0) & "1";
+            if (sA_i(6 downto 0) & "1" = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         
         when operation_SLA =>
+            result_s <= sA_i(6 downto 0) & carry_s;
+            if (sA_i(6 downto 0) & carry_s = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
+            carry_s <= sA_i(7);
         
         when operation_SLX =>
+            carry_s <= sA_i(7);
+            result_s <= sA_i(6 downto 0) & sA_i(0);
+            if (sA_i(6 downto 0) & sA_i(0) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         
         when operation_SR0 =>
+            carry_s <= sA_i(0);
+            result_s <= "0" & sA_i(7 downto 1);
+            if ("0" & sA_i(7 downto 1) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         
         when operation_SR1 =>
+            carry_s <= sA_i(0);
+            result_s <= "1" & sA_i(7 downto 1);
+            if ("1" & sA_i(7 downto 1) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         
         when operation_SRA =>
+            result_s <= carry_s & sA_i(7 downto 1);
+            if (carry_s & sA_i(7 downto 1) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
+            carry_s <= sA_i(0);
         
         when operation_SRX =>
+            carry_s <= sA_i(0);
+            result_s <= sA_i(7) & sA_i(7 downto 1);
+            if (sA_i(7) & sA_i(7 downto 1) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         
         when operation_COMPARE =>
         
@@ -157,7 +222,19 @@ operations: process(clk_i, reset_i)
         when operation_XOR =>
         
         when operation_XOR_kk=>
-        
+             
+        when operation_LOAD=>
+             result_s <= sB_i;
+             carry_s <= carry_s;
+             zero_s <= zero_s;
+        when operation_Load_kk=>
+             result_s <= sB_i;
+             carry_s <= carry_s;
+             zero_s <= zero_s;
+        when others=>
+            result_s <= result_s;
+            carry_s <= carry_s;
+            zero_s <= zero_s;
       end case;
     end if;
  end if;
@@ -166,7 +243,7 @@ operations: process(clk_i, reset_i)
   sALU_o <= result_s;
   sCARRY_o <= carry_s;
   sZERO_o <= zero_s ;
-  
-  
+
 
 end Behavioral;
+
