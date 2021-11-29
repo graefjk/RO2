@@ -83,6 +83,9 @@ constant operation_OR_kk: std_logic_vector(5 downto 0):= "001011";
 constant operation_XOR : std_logic_vector(5 downto 0):="001100";
 constant operation_XOR_kk : std_logic_vector(5 downto 0):="001101";
 
+constant operation_LOAD : std_logic_vector(5 downto 0):="001110"; -- Load
+constant operation_LOAD_kk : std_logic_vector(5 downto 0):="001111";
+
 
 begin
 operations: process(clk_i, reset_i)
@@ -219,7 +222,15 @@ begin
         when operation_XOR =>
         
         when operation_XOR_kk=>
-        
+             
+        when operation_LOAD=>
+             result_s <= sB_i;
+             carry_s <= carry_s;
+             zero_s <= zero_s;
+        when operation_Load_kk=>
+             result_s <= sB_i;
+             carry_s <= carry_s;
+             zero_s <= zero_s;
         when others=>
             result_s <= result_s;
             carry_s <= carry_s;
