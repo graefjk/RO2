@@ -1,4 +1,4 @@
-create_project project_registers ./project_registers -part xc7z010clg400-1 
+create_project project_ram ./project_ram -part xc7z010clg400-1 
 add_files -norecurse [glob ./ram.vhd]
 add_files -fileset sim_1 -norecurse ./sim_ram1.vhd
 add_files -fileset constrs_1 -norecurse ./constraint.xdc  
