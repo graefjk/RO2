@@ -216,7 +216,13 @@ begin
                 zero_s <= '0';
             end if;
         when operation_TEST | operation_TEST_kk =>
-        
+			result_s <= "00000000";
+			carry_s <= (sA_i(7) and sB_i(7)) xor (sA_i(6) and sB_i(6)) xor (sA_i(5) and sB_i(5)) xor (sA_i(4) and sB_i(4)) xor (sA_i(3) and sB_i(3)) xor (sA_i(2) and sB_i(2)) xor (sA_i(1) and sB_i(1)) xor (sA_i(0) and sB_i(0));
+			if ((sA_i and sB_i) = "00000000") then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
         when operation_AND | operation_AND_kk =>
 			result_s <= sA_i and sB_i;
 			carry_s <= '0';
