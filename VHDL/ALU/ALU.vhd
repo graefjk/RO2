@@ -203,58 +203,40 @@ begin
                 zero_s <= '0';
             end if;
         
-        when operation_COMPARE =>
+        when operation_COMPARE | operation_COMPARE_kk =>
+			result_s <= "00000000";
+			if (sA_i < sB_i) then
+                carry_s <= '1';
+            else
+                carry_s <= '0';
+            end if;
+			if (sA_i = sB_i) then
+                zero_s <= '1';
+            else
+                zero_s <= '0';
+            end if;
+        when operation_TEST | operation_TEST_kk =>
         
-        when operation_COMPARE_kk =>
-        
-        when operation_TEST =>
-        
-        when operation_TEST_kk =>
-        
-        when operation_AND =>
+        when operation_AND | operation_AND_kk =>
 			result_s <= sA_i and sB_i;
 			carry_s <= '0';
-			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
+			if ((sA_i and sB_i) = "00000000") then
                 zero_s <= '1';
             else
                 zero_s <= '0';
             end if;
-        when operation_AND_kk =>
-			result_s <= sA_i and sB_i;
-			carry_s <= '0';
-			if (sA_i(7 downto 0) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-        when operation_OR =>
+        when operation_OR | operation_OR_kk =>
 			result_s <= sA_i or sB_i;
 			carry_s <= '0';
-			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
+			if ((sA_i or sB_i) = "00000000") then
                 zero_s <= '1';
             else
                 zero_s <= '0';
             end if;
-        when operation_OR_kk=>
-			result_s <= sA_i or sB_i;
-			carry_s <= '0';
-			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-        when operation_XOR =>
+        when operation_XOR | operation_XOR_kk =>
 			result_s <= sA_i xor sB_i;
 			carry_s <= '0';
-			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-        when operation_XOR_kk=>
-			result_s <= sA_i xor sB_i;
-			carry_s <= '0';
-			if (sA_i(7 downto 0) = "00000000") then -- sB_i(7 downto 0) = "00000000"
+			if ((sA_i xor sB_i) = "00000000") then
                 zero_s <= '1';
             else
                 zero_s <= '0';
