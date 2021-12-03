@@ -35,7 +35,7 @@ entity sim_ALU_logik1 is
 --  Port ( );
 end sim_ALU_logik1;
 
-architecture Behavioral of sim_ALU_logik1 is
+architecture Behavioral of sim_ALU_logik2 is
 component ALU
     Port (
        sA_i: in std_logic_vector(7 downto 0); --input signals
