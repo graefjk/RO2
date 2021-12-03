@@ -99,28 +99,9 @@ begin
    zero_s<= '0';
  else
     if rising_edge(clk_i) then
-    
       case opcode_select_i is
-      when operation_ADD => 
-      
+      when operation_ADD | operation_ADD_kk => 
           result_s<=  sA_i+ sB_i;
-         
-          if (('0'&sA_i) +('0'&sB_i)) >"011111111" then 
-           carry_s <= '1';
-           else
-           carry_s <='0';
-          end if;
-          
-          if (sA_i +sB_i) ="00000000" then 
-           zero_s <= '1';
-           else
-           zero_s <='0';
-          end if;
-          
-        
-        when operation_ADD_kk =>
-       
-          result_s<= sA_i+ sB_i;
           if (('0'&sA_i) +('0'&sB_i)) >"011111111" then 
            carry_s <= '1';
            else
@@ -131,9 +112,8 @@ begin
            else
            zero_s <='0';
           end if;
-        
-        when operation_ADDCY =>
-        
+
+        when operation_ADDCY | operation_ADDCY_kk =>
           result_s<= sA_i+ sB_i + carry_s ;
           if ((('0'&sA_i) +('0'&sB_i)) + carry_s) >"011111111" then 
            carry_s <= '1';
@@ -146,80 +126,26 @@ begin
            zero_s <='0';
           end if;
         
-        when operation_ADDCY_kk =>
-        
-          result_s<=sA_i+ sB_i + carry_s  ;
-          
-           if ((('0'&sA_i) +('0'&sB_i))+ carry_s) >"011111111" then 
-           carry_s <= '1';
-           else
-           carry_s <='0';
-          end if;
-          
-          if (sA_i +sB_i+ carry_s) ="00000000" then 
-           zero_s <= '1';
-           else
-           zero_s <='0';
-          end if;
-        
-        when operation_SUB =>
-      
+        when operation_SUB | operation_SUB_kk =>
           result_s<= sA_i -sB_i;
-          
           if (sA_i <sB_i)  then 
            carry_s <= '1';
            else
            carry_s <='0';
           end if;
-          
           if (sA_i -sB_i) ="00000000" then 
            zero_s <= '1';
            else
            zero_s <='0';
           end if;
-        
-        when operation_SUB_kk =>
-        
-          result_s<=sA_i - sB_i ;
-
-          if (sA_i <sB_i)  then 
-           carry_s <= '1';
-           else
-           carry_s <='0';
-          end if;
-          
-          if (sA_i -sB_i) ="00000000" then 
-           zero_s <= '1';
-           else
-           zero_s <='0';
-          end if;
-          
-        when operation_SUBCY =>
-       
+                    
+        when operation_SUBCY | operation_SUBCY_kk=>
           result_s<= sA_i -sB_i -carry_s;
-          
           if (sA_i <(sB_i+carry_s))  then 
            carry_s <= '1';
            else
            carry_s <='0';
           end if;
-          
-          if (sA_i -sB_i -carry_s)="00000000" then 
- 
-           zero_s <= '1';
-           else
-           zero_s <='0';
-          end if;
-        when operation_SUBCY_kk =>
-        
-          result_s<=sA_i -sB_i -carry_s ;
-          
-          if (sA_i <(sB_i+carry_s))  then 
-           carry_s <= '1';
-           else
-           carry_s <='0';
-          end if;
-          
           if (sA_i -sB_i -carry_s)="00000000" then 
            zero_s <= '1';
            else
@@ -379,4 +305,3 @@ begin
 
 
 end Behavioral;
-
