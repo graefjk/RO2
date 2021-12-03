@@ -36,6 +36,9 @@ entity Decoder is
          clk_i: in std_logic;
          reset_i: in std_logic;
          
+         carry_i: in std_logic;--carry/zero
+         zero_i: in std_logic;
+         
          constant_kk_o: out std_logic_vector(7 downto 0); -- output signals -- Constant
          constant_aaa_o: out std_logic_vector(11 downto 0);
          
@@ -44,9 +47,9 @@ entity Decoder is
 		 sIO_enable_o: out std_logic;
          
          mux_register_select_o: out std_logic_vector(1 downto 0); --register signals
-	 sRegister_X_adresse_o: out std_logic_vector(3 downto 0); 
+	     sRegister_X_adresse_o: out std_logic_vector(3 downto 0); 
          sRegister_Y_adresse_o: out std_logic_vector(3 downto 0);
-	 sRegister_write_enable_o: out std_logic;
+	     sRegister_write_enable_o: out std_logic;
          
          mux_ALU_select_o: out std_logic; --ALU signals
          sALU_select_o: out std_logic_vector(5 downto 0);
@@ -56,8 +59,7 @@ entity Decoder is
 		 sStack_write_or_read_o: out std_logic;
          sStack_enable_o: out std_logic;
          
-         mux_PC_select_o: out std_logic_vector(1 downto 0);-- PC signals
-         or_PC_o: out std_logic;
+         mux_PC_select_o: out std_logic;-- PC signal
          
          sRAM_write_or_read_o: out std_logic; -- RAM signals
          sRAM_enable_o: out std_logic);
@@ -129,6 +131,476 @@ constant operation_OUTPUT: std_logic_vector(5 downto 0):="010100";
 constant operation_OUTPUT_pp: std_logic_vector(5 downto 0):="010101";
 
 begin
-
-
+operations: process(clk_i, reset_i)
+begin
+ if reset_i='1' then
+    constant_kk_o <= "00000000";
+    constant_aaa_o <= "000000000000";   
+    mux_i_o_select_o <= '0';
+    sIO_write_or_read_o <= '0';
+	sIO_enable_o <= '0';
+    mux_register_select_o <= "00";
+    sRegister_X_adresse_o <= "0000";
+    sRegister_Y_adresse_o <= "0000";
+	sRegister_write_enable_o <= '0';
+    mux_ALU_select_o <= '0';
+    sALU_select_o <= "000000";
+    mux_stack_select_o <= '0';
+    sStack_write_or_read_o <= '0';
+    sStack_enable_o <= '0';
+    mux_PC_select_o <= '0';
+    sRAM_write_or_read_o <= '0';
+    sRAM_enable_o <= '0';
+ else
+    if rising_edge(clk_i) then
+        case instruction_i(17 downto 16) is
+            when "11"=>--Returns/Shifts
+                --IO
+                mux_i_o_select_o <= '0';
+                sIO_write_or_read_o <= '0';
+	            sIO_enable_o <= '0';
+	            --ALU
+                mux_ALU_select_o <= '0';
+                --RAM
+                sRAM_write_or_read_o <= '0';
+                sRAM_enable_o <= '0';
+                --stack
+                sStack_write_or_read_o <= '1';
+                case instruction_i(17 downto 12) is
+                    when operation_RETURN=>
+                        --stack
+                        mux_stack_select_o <= '1';
+                        sStack_enable_o <= '1';
+                        --PC
+                        mux_PC_select_o <= '0';
+                        --register
+                        mux_register_select_o <= "00";
+	                    sRegister_write_enable_o <= '0';
+                    when operation_RETURNC=>
+                        if carry_i = '1' then
+                            --stack
+                            mux_stack_select_o <= '1';
+                            sStack_enable_o <= '1';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --register
+                            mux_register_select_o <= "00";
+	                       sRegister_write_enable_o <= '0';
+	                    else
+	                       --stack
+                            mux_stack_select_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --register
+                            mux_register_select_o <= "00";
+	                       sRegister_write_enable_o <= '0';
+                        end if;
+                    when operation_RETURNNC=>
+                        if carry_i = '0' then
+                            --stack
+                            mux_stack_select_o <= '1';
+                            sStack_enable_o <= '1';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --register
+                            mux_register_select_o <= "00";
+	                       sRegister_write_enable_o <= '0';
+	                    else
+	                       --stack
+                            mux_stack_select_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --register
+                            mux_register_select_o <= "00";
+	                       sRegister_write_enable_o <= '0';
+                        end if;
+                    when operation_RETURNZ=>
+                        if zero_i = '1' then
+                            --stack
+                            mux_stack_select_o <= '1';
+                            sStack_enable_o <= '1';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --register
+                            mux_register_select_o <= "00";
+	                       sRegister_write_enable_o <= '0';
+	                    else
+	                       --stack
+                            mux_stack_select_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --register
+                            mux_register_select_o <= "00";
+	                       sRegister_write_enable_o <= '0';
+                        end if;
+                    when operation_RETURNNZ=>
+                        if zero_i = '0' then
+                            --stack
+                            mux_stack_select_o <= '1';
+                            sStack_enable_o <= '1';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --register
+                            mux_register_select_o <= "00";
+	                       sRegister_write_enable_o <= '0';
+	                    else
+	                       --stack
+                            mux_stack_select_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --register
+                            mux_register_select_o <= "00";
+	                       sRegister_write_enable_o <= '0';
+                        end if;
+                    when others=>
+                        --stack
+                        mux_stack_select_o <= '0';
+                        sStack_enable_o <= '0';
+                        --PC
+                        mux_PC_select_o <= '0';
+                        --register
+                        mux_register_select_o <= "11";
+	                    sRegister_write_enable_o <= '1';
+	                end case;
+            when "10"=>--Jumps/Calls
+                --IO
+                mux_i_o_select_o <= '0';
+                sIO_write_or_read_o <= '0';
+	            sIO_enable_o <= '0';
+	            --register
+                mux_register_select_o <= "00";
+	            sRegister_write_enable_o <= '0';
+	            --ALU
+                mux_ALU_select_o <= '0';
+                --RAM
+                sRAM_write_or_read_o <= '0';
+                sRAM_enable_o <= '0';
+                --stack
+                mux_stack_select_o <= '0';
+                sStack_write_or_read_o <= '0';
+                case instruction_i(17 downto 12) is
+                    when operation_JUMP=>
+                        --stack
+                        sStack_enable_o <= '0';
+                        --PC
+                        mux_PC_select_o <= '1';
+                    when operation_JUMPC=>
+                        if carry_i = '1' then
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '1';
+                        else
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                        end if;
+                    when operation_JUMPNC=>
+                        if carry_i = '0' then
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '1';
+                        else
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                        end if;
+                    when operation_JUMPZ=>
+                        if zero_i = '1' then
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '1';
+                        else
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                        end if;
+                    when operation_JUMPNZ=>
+                        if zero_i = '0' then
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '1';
+                        else
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                        end if;
+                    when operation_CALL=>
+                        --stack
+                        sStack_enable_o <= '1';
+                        --PC
+                        mux_PC_select_o <= '1';
+                    when operation_CALLC=>
+                        if carry_i = '1' then
+                            --stack
+                            sStack_enable_o <= '1';
+                            --PC
+                            mux_PC_select_o <= '1';
+                        else
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                        end if;
+                    when operation_CALLNC=>
+                        if carry_i = '0' then
+                            --stack
+                            sStack_enable_o <= '1';
+                            --PC
+                            mux_PC_select_o <= '1';
+                        else
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                        end if;
+                    when operation_CALLZ=>
+                        if zero_i = '1' then
+                            --stack
+                            sStack_enable_o <= '1';
+                            --PC
+                            mux_PC_select_o <= '1';
+                        else
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                        end if;
+                    when operation_CALLNZ=>
+                        if zero_i = '0' then
+                            --stack
+                            sStack_enable_o <= '1';
+                            --PC
+                            mux_PC_select_o <= '1';
+                        else
+                            --stack
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                        end if;
+                        
+                end case;
+            when others=>
+                case instruction_i(17 downto 12) is
+                    when operation_STORE=>
+                        if instruction_i(12) = '0' then
+                            --IO
+                            mux_i_o_select_o <= '0';
+                            sIO_write_or_read_o <= '0';
+	                        sIO_enable_o <= '0';
+	                        --register
+                            mux_register_select_o <= "00";
+	                        sRegister_write_enable_o <= '0';
+	                        --ALU
+                            mux_ALU_select_o <= '1';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '0';
+                            sRAM_enable_o <= '1';
+                        else
+                            --IO
+                            mux_i_o_select_o <= '0';
+                            sIO_write_or_read_o <= '0';
+	                        sIO_enable_o <= '0';
+	                        --register
+                            mux_register_select_o <= "00";
+	                        sRegister_write_enable_o <= '0';
+	                        --ALU
+                            mux_ALU_select_o <= '0';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '0';
+                            sRAM_enable_o <= '1';
+                        end if;
+                    when operation_FETCH=>
+                        if instruction_i(12) = '0' then
+                            --IO
+                            mux_i_o_select_o <= '0';
+                            sIO_write_or_read_o <= '0';
+	                        sIO_enable_o <= '0';
+	                        --register
+                            mux_register_select_o <= "11";
+	                        sRegister_write_enable_o <= '1';
+	                        --ALU
+                            mux_ALU_select_o <= '0';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '1';
+                            sRAM_enable_o <= '1';
+                        else
+                            --IO
+                            mux_i_o_select_o <= '0';
+                            sIO_write_or_read_o <= '0';
+	                        sIO_enable_o <= '0';
+	                        --register
+                            mux_register_select_o <= "11";
+	                        sRegister_write_enable_o <= '1';
+	                        --ALU
+                            mux_ALU_select_o <= '1';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '1';
+                            sRAM_enable_o <= '1';
+                        end if;
+                    when operation_INPUT=>
+                        if instruction_i(12) = '0' then
+                            --IO
+                            mux_i_o_select_o <= '1';
+                            sIO_write_or_read_o <= '0';
+	                        sIO_enable_o <= '1';
+	                        --register
+                            mux_register_select_o <= "00";
+	                        sRegister_write_enable_o <= '1';
+	                        --ALU
+                            mux_ALU_select_o <= '1';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '0';
+                            sRAM_enable_o <= '0';
+                        else
+                            --IO
+                            mux_i_o_select_o <= '0';
+                            sIO_write_or_read_o <= '0';
+	                        sIO_enable_o <= '1';
+	                        --register
+                            mux_register_select_o <= "00";
+	                        sRegister_write_enable_o <= '1';
+	                        --ALU
+                            mux_ALU_select_o <= '1';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '0';
+                            sRAM_enable_o <= '0';
+                        end if;
+                    when operation_OUTPUT=>
+                        if instruction_i(12) = '0' then
+                            --IO
+                            mux_i_o_select_o <= '1';
+                            sIO_write_or_read_o <= '1';
+	                        sIO_enable_o <= '1';
+	                        --register
+                            mux_register_select_o <= "00";
+	                        sRegister_write_enable_o <= '0';
+	                        --ALU
+                            mux_ALU_select_o <= '1';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '0';
+                            sRAM_enable_o <= '0';
+                        else
+                            --IO
+                            mux_i_o_select_o <= '0';
+                            sIO_write_or_read_o <= '1';
+	                        sIO_enable_o <= '1';
+	                        --register
+                            mux_register_select_o <= "00";
+	                        sRegister_write_enable_o <= '0';
+	                        --ALU
+                            mux_ALU_select_o <= '1';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '0';
+                            sRAM_enable_o <= '0';
+                        end if;
+                    when others=>
+                        if instruction_i(12) = '0' then
+                            --IO
+                            mux_i_o_select_o <= '0';
+                            sIO_write_or_read_o <= '0';
+	                        sIO_enable_o <= '0';
+	                        --register
+                            mux_register_select_o <= "11";
+	                        sRegister_write_enable_o <= '1';
+	                        --ALU
+                            mux_ALU_select_o <= '1';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '0';
+                            sRAM_enable_o <= '0';
+                        else
+                            --IO
+                            mux_i_o_select_o <= '0';
+                            sIO_write_or_read_o <= '0';
+	                        sIO_enable_o <= '0';
+	                        --register
+                            mux_register_select_o <= "11";
+	                        sRegister_write_enable_o <= '0';
+	                        --ALU
+                            mux_ALU_select_o <= '1';
+                            --stack
+                            mux_stack_select_o <= '0';
+                            sStack_write_or_read_o <= '0';
+                            sStack_enable_o <= '0';
+                            --PC
+                            mux_PC_select_o <= '0';
+                            --RAM
+                            sRAM_write_or_read_o <= '0';
+                            sRAM_enable_o <= '0';
+                        end if;
+                    end case;
+        end case;
+      end if;
+    end if;
+  end process operations;
+  constant_kk_o <= instruction_i(7 downto 0);
+  constant_aaa_o <= instruction_i(11 downto 0);
+  sRegister_X_adresse_o <= instruction_i(11 downto 8);
+  sRegister_Y_adresse_o <= instruction_i(7 downto 4);
+  sALU_select_o <= instruction_i(17 downto 12);
 end Behavioral;
