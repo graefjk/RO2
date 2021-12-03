@@ -440,10 +440,10 @@ begin
                             sIO_write_or_read_o <= '0';
 	                        sIO_enable_o <= '0';
 	                        --register
-                            mux_register_select_o <= "11";
+                            mux_register_select_o <= "01";
 	                        sRegister_write_enable_o <= '1';
 	                        --ALU
-                            mux_ALU_select_o <= '0';
+                            mux_ALU_select_o <= '1';
                             --stack
                             mux_stack_select_o <= '0';
                             sStack_write_or_read_o <= '0';
@@ -459,10 +459,10 @@ begin
                             sIO_write_or_read_o <= '0';
 	                        sIO_enable_o <= '0';
 	                        --register
-                            mux_register_select_o <= "11";
+                            mux_register_select_o <= "01";
 	                        sRegister_write_enable_o <= '1';
 	                        --ALU
-                            mux_ALU_select_o <= '1';
+                            mux_ALU_select_o <= '0';
                             --stack
                             mux_stack_select_o <= '0';
                             sStack_write_or_read_o <= '0';
@@ -580,9 +580,9 @@ begin
 	                        sIO_enable_o <= '0';
 	                        --register
                             mux_register_select_o <= "11";
-	                        sRegister_write_enable_o <= '0';
+	                        sRegister_write_enable_o <= '1';
 	                        --ALU
-                            mux_ALU_select_o <= '1';
+                            mux_ALU_select_o <= '0';
                             --stack
                             mux_stack_select_o <= '0';
                             sStack_write_or_read_o <= '0';
