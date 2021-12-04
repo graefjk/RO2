@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 28.11.2021 12:00:50
+-- Create Date: 04.12.2021 12:00:50
 -- Design Name: 
--- Module Name: sim_ALU_logik1 - Behavioral
+-- Module Name: sim_ALU_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -84,8 +84,24 @@ uut: ALU port map (sA, sB, opcode_select, reset, clk, sALU, sCARRY, sZERO);
     end process;
     
     stimuli: process
+	variable err_cnt: integer := 0; 
     begin
-		
+	
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "000000";
+		wait for 10 ns;
+		if (not(sALU = "00111100")) then
+			err_cnt := err_cnt+1;
+		end if;
+	
+		if err_cnt = 0 then
+            report "Test Passed";
+        else
+            report "Test Failed";
+        end if;       
+        wait;
     end process;
 
 end Behavioral;
