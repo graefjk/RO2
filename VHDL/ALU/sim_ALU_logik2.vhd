@@ -31,9 +31,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_ALU_logik1 is
+entity sim_ALU_logik2 is
 --  Port ( );
-end sim_ALU_logik1;
+end sim_ALU_logik2;
 
 architecture Behavioral of sim_ALU_logik2 is
 component ALU
