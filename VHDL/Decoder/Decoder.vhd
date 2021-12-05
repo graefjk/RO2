@@ -389,7 +389,11 @@ begin
                             --PC
                             mux_PC_select_o <= '0';
                         end if;
-                        
+                    when others=>
+                        --stack
+                        sStack_enable_o <= '0';
+                        --PC
+                        mux_PC_select_o <= '0';
                 end case;
             when others=>
                 case instruction_i(17 downto 12) is
@@ -595,12 +599,12 @@ begin
                         end if;
                     end case;
         end case;
+	constant_kk_o <= instruction_i(7 downto 0);
+  	constant_aaa_o <= instruction_i(11 downto 0);
+  	sRegister_X_adresse_o <= instruction_i(11 downto 8);
+  	sRegister_Y_adresse_o <= instruction_i(7 downto 4);
+  	sALU_select_o <= instruction_i(17 downto 12);
       end if;
     end if;
   end process operations;
-  constant_kk_o <= instruction_i(7 downto 0);
-  constant_aaa_o <= instruction_i(11 downto 0);
-  sRegister_X_adresse_o <= instruction_i(11 downto 8);
-  sRegister_Y_adresse_o <= instruction_i(7 downto 4);
-  sALU_select_o <= instruction_i(17 downto 12);
 end Behavioral;
