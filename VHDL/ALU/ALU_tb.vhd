@@ -77,7 +77,7 @@ uut: ALU port map (sA, sB, opcode_select, reset, clk, sALU, sCARRY, sZERO);
     begin
         reset <= '0';
         wait for 275 ns;
-        reset <= '1';
+        --reset <= '1';
         wait for 20 ns;
         reset <= '0';
         wait;
@@ -102,7 +102,7 @@ uut: ALU port map (sA, sB, opcode_select, reset, clk, sALU, sCARRY, sZERO);
 		sB <= "00110011";
 		opcode_select <= "000100"; --SUB--
 		wait for 10 ns;
-		if (not(sALU = "00101010")) then
+		if (not(sALU = "11001101")) then
 			err_cnt := err_cnt+1;
 			report "SUB Failed";
 		end if;
@@ -130,9 +130,9 @@ uut: ALU port map (sA, sB, opcode_select, reset, clk, sALU, sCARRY, sZERO);
 		wait for 10 ns;
 		sA <= "00001001";
 		sB <= "00110011";
-		opcode_select <= "110101"; --SLA--
+		opcode_select <= "110101"; --SLA
 		wait for 10 ns;
-		if (not(sALU = "000010011")) then
+		if (not(sALU = "00010011")) then
 			err_cnt := err_cnt+1;
 			report "SLA Failed";
 		end if;
