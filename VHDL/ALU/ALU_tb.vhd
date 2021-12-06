@@ -90,10 +90,131 @@ uut: ALU port map (sA, sB, opcode_select, reset, clk, sALU, sCARRY, sZERO);
 		wait for 10 ns;
 		sA <= "00001001";
 		sB <= "00110011";
-		opcode_select <= "000000";
+		opcode_select <= "000000"; --ADD
 		wait for 10 ns;
 		if (not(sALU = "00111100")) then
 			err_cnt := err_cnt+1;
+			report "ADD Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "000100"; --SUB--
+		wait for 10 ns;
+		if (not(sALU = "00101010")) then
+			err_cnt := err_cnt+1;
+			report "SUB Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "110000"; --RL
+		wait for 10 ns;
+		if (not(sALU = "00010010")) then
+			err_cnt := err_cnt+1;
+			report "RL Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "110010"; --SL0
+		wait for 10 ns;
+		if (not(sALU = "00010010")) then
+			err_cnt := err_cnt+1;
+			report "SL0 Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "110101"; --SLA--
+		wait for 10 ns;
+		if (not(sALU = "000010011")) then
+			err_cnt := err_cnt+1;
+			report "SLA Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "110111"; --SR1
+		wait for 10 ns;
+		if (not(sALU = "10000100")) then
+			err_cnt := err_cnt+1;
+			report "SR1 Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "10001001";
+		sB <= "00110011";
+		opcode_select <= "111001"; --SRX
+		wait for 10 ns;
+		if (not(sALU = "11000100")) then
+			err_cnt := err_cnt+1;
+			report "SRX Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "011011"; --CompareKK
+		wait for 10 ns;
+		if (not(sALU = "00001001")) then
+			err_cnt := err_cnt+1;
+			report "CompareKK Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "011000"; --Test--
+		wait for 10 ns;
+		if (not(sALU = "00001001")) then
+			err_cnt := err_cnt+1;
+			report "Test Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "001000"; --AND
+		wait for 10 ns;
+		if (not(sALU = "00000001")) then
+			err_cnt := err_cnt+1;
+			report "AND Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "001011"; --ORKK
+		wait for 10 ns;
+		if (not(sALU = "00111011")) then
+			err_cnt := err_cnt+1;
+			report "ORKK Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "001100"; --XOR
+		wait for 10 ns;
+		if (not(sALU = "00111010")) then
+			err_cnt := err_cnt+1;
+			report "XOR Failed";
+		end if;
+		
+		wait for 10 ns;
+		sA <= "00001001";
+		sB <= "00110011";
+		opcode_select <= "001111"; --LOAD
+		wait for 10 ns;
+		if (not(sALU = "00110011")) then
+			err_cnt := err_cnt+1;
+			report "LOAD Failed";
 		end if;
 	
 		if err_cnt = 0 then
