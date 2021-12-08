@@ -132,8 +132,8 @@ end component;
 --signal sA: std_logic_vector(7downto 0);
 --signal sB: std_logic_vector(7downto 0);
 -- signal opcode_select: std_logic_vector(5 downto 0);
-signal reset: std_logic;
-signal clk: std_logic;
+signal reset_s: std_logic;
+signal clk_s: std_logic;
 
 -- signal sALU: std_logic_vector(7 downto 0);
 -- signal sCARRY: std_logic;
@@ -143,7 +143,36 @@ signal clk: std_logic;
 
 begin
 
-uut: ALU port map (sA, sB, opcode_select, reset, clk, sALU, sCARRY, sZERO);
+uut: PC port map (pc_s);
+uut: IP port map (pc_s, clk_s, instruction_s);
+uut: Decoder port map (instruction_s, 
+						clk_s, 
+						reset_s, 
+						carry_s, 
+						zero_s, 
+						constant_kk_s, 
+						constant_aaa_s, 
+						mux_i_o_select_s, 
+						sIO_write_or_read_s, 
+						sIO_enable_s, 
+						mux_register_select_s,
+						sRegister_X_adresse_s,
+						sRegister_Y_adresse_s,
+						sRegister_write_enable_s,
+						mux_ALU_select_s
+						sALU_select_s
+						mux_stack_select_s
+						sStack_write_or_read_s
+						sStack_enable_s
+						mux_PC_select_s
+						sRAM_write_or_read_s
+						sRAM_enable_s);
+uut: IO port map ();
+uut: ADD port map ();
+uut: Stack port map ();
+uut: registers port map ();
+uut: ALU port map ();
+uut: rams_sp_wf port map ();
 
     clk_process: process
     begin
