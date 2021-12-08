@@ -5,10 +5,10 @@
 -- Create Date: 26.11.2021 11:51:37
 -- Design Name: register
 -- Module Name: registers - Behavioral
--- Project Name: Microcontroller
+-- Project Name: microcontroller
 -- Target Devices: 
 -- Tool Versions: 
--- Description: 
+-- Description: register file for the microcontroller
 -- 
 -- Dependencies: library IEEE;
 -- 
