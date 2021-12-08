@@ -23,11 +23,11 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use std.env.finish;
 
-entity sim_registers1 is
+entity registers_tb is
 --  no IO needed here
-end sim_registers1;
+end registers_tb;
 
-architecture Behavioral of sim_registers1 is
+architecture Behavioral of registers_tb is
 component registers
     generic(    register_width_g: integer := 8; 
                 register_select_size_g: integer := 4);
