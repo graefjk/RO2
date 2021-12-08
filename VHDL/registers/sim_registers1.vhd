@@ -1,20 +1,20 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Group 2
+-- Engineer: Tobias Weinschenk
 -- 
 -- Create Date: 04/03/2017 10:57:44 AM
--- Design Name: 
+-- Design Name: registers testbench
 -- Module Name: sim_registers1 - Behavioral
--- Project Name: 
+-- Project Name: microcontroller
 -- Target Devices: 
 -- Tool Versions: 
--- Description: 
+-- Description: testbench for the register file
 -- 
--- Dependencies: 
+-- Dependencies: library IEEE;
 -- 
 -- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
+-- Revision 0.5
+-- Additional Comments: basic test with asserts
 -- 
 ----------------------------------------------------------------------------------
 
