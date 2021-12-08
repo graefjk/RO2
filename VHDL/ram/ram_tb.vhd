@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 04/03/2017 10:57:44 AM
 -- Design Name: ram testbench
--- Module Name: sim_ram1 - Behavioral
+-- Module Name: ram_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -23,11 +23,11 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use std.env.finish;
 
-entity sim_ram1 is
+entity ram_tb is
 --  no IO needed here
-end sim_ram1;
+end ram_tb;
 
-architecture Behavioral of sim_ram1 is
+architecture Behavioral of ram_tb is
     component ram
         generic(    ram_width_g: integer := 8; 
                     ram_select_size_g: integer := 8;
