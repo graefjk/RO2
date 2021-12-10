@@ -39,38 +39,38 @@
 
 
 \section{Blockdiagram}
-    \includegraphics[width=\textwidth, angle=0]{Blockdiagram.pdf}
+    \includegraphics[width=\textwidth]{Blockdiagram.pdf}
 
 
 \section{Blockbeschreibungen}
 \subsection{ALU}
-\includegraphics[height=0.6\textheight, angle=0]{ALU_beschreibung.pdf}\\
-Die ALU führt Operationen auf zwei Eingabedaten aus. Die Operationen umfassen Arithmetische, Logische Verknüpfungen und Shift Operationen. Die Eingabedaten sind entweder Konstante Werte vom Instruction Decoder (kk) oder aus den Registern (sX,sY) geladene Werte. Sie werden an den Eingängen sA\_i und sB\_i angelegt. Der opcode\_select\_i Eingang (vom Instruction Decoder), entscheidet darüber, welche Operation auf den Eingabedaten ausgeführt wird. Das Ergebnis der ausgeführten Operation wird an sALU\_o angelegt.
+\includegraphics[height=0.5\textheight]{ALU_beschreibung.pdf}\\
+Die ALU führt Operationen auf zwei Eingabedaten aus wenn das enable\_i Signal auf 1 gesetzt ist. Die Operationen umfassen Arithmetische, Logische Verknüpfungen und Shift Operationen. Die Eingabedaten sind entweder Konstante Werte vom Instruction Decoder (kk) oder aus den Registern (sX,sY) geladene Werte. Sie werden an den Eingängen sA\_i und sB\_i angelegt. Der opcode\_select\_i Eingang (vom Instruction Decoder), entscheidet darüber, welche Operation auf den Eingabedaten ausgeführt wird. Das Ergebnis der ausgeführten Operation wird an sALU\_o angelegt.
 Die sZERO\_o und sCARRY\_o ausgänge werden je nach Operation, entsprechend der unten aufgeführten Tabelle, gesetzt.
 \subsection{Instruction Decoder}
-\includegraphics[height=0.7\textheight, angle=0]{ID_beschreibung.pdf}\\
+\includegraphics[height=0.6\textheight]{ID_beschreibung.pdf}\\
 Der Instruction Decoder (ID) dekodiert die aus dem Instruktionsspeicher geladenen Befehle und sendet entsprechende Steuersignale an die einzelnen Komponenten. Die Instruktionen, die vom ID verarbeitet werden, liegen am Eingang instruction\_i in form von 18 bit an. Je nach Instruktion, werden die Werte an den Ausgänge des ID entsprechend gesetzt. An sRegister\_X\_adresse\_o und sRegister\_Y\_adresse\_o werden die in den Instruktionen vorhandenen Register Adressen ausgegeben und ans Register weitergeleitet.
-Enthält die Instruktion konstanten, so werden diese entsprechen an die Ausgänge constant\_kk\_o (8 bit) und const\_aaa\_o (12 bit) angelegt. Die mux\_... Ausgänge, sowie der or\_PC\_o Ausgang, leiten entsprechend der eingegangenen Instruktion Steuerbits an verschiedene Multiplexer weiter. Der sALU\_select\_o Ausgang gibt den Opcode der Instruction an die ALU weiter. Der sRam\_write\_or\_read\_o Ausgang signalisiert dem Speicher, ob ein Wert gelesen oder geschrieben werden soll. Die sRegister\_write\_enable\_o , sStack\_enable\_o, sRAM\_write\_or\_read\_o und sRAM\_enable\_o Ausgänge, steuern den zugriff auf Register, Stack und RAM.
+Enthält die Instruktion konstanten, so werden diese entsprechen an die Ausgänge constant\_kk\_o (8 bit) und const\_aaa\_o (12 bit) angelegt. Die mux\_... Ausgänge, sowie der or\_PC\_o Ausgang, leiten entsprechend der eingegangenen Instruktion Steuerbits an verschiedene Multiplexer weiter. Der sALU\_select\_o Ausgang gibt den Opcode der Instruction an die ALU weiter. Der sRam\_write\_or\_read\_o Ausgang signalisiert dem Speicher, ob ein Wert gelesen oder geschrieben werden soll. Die sRegister\_write\_enable\_o, sALU\_enable\_o, sPC\_enable\_o, sStack\_enable\_o, sRAM\_write\_or\_read\_o und sRAM\_enable\_o Ausgänge, steuern den zugriff auf Register, ALU, Stack und RAM.
 \subsection{Program Counter}
-\includegraphics[]{ProgramCounter_beschreibung (2).pdf}\\
+\includegraphics[height=0.5\textheight]{ProgramCounter_beschreibung (2).pdf}\\
 Der Program Counter zeigt mit den Outputbits pc\_o auf die Position im Instruktionsspeicher, an welcher der aktuelle Befehl steht, der in den Instruktions Decoder geladen werden soll um ausgeführt zu werden. Bei jeder rising edge am clk\_i Input werden, falls das enable\_i Bit auf 1 gesetzt ist, die momentanen pc\_i Bits auf die pc\_o Bits übertragen, und damit der nächste Befehl geladen. \\
 Durch ein setzten des reset\_i Bits auf 1 kann der Program Counter asynchron auf den ersten Befehl zurückgesetzt werden.
 \subsection{scratchpad RAM}
-\includegraphics[]{RAM_beschreibung.pdf}\\
-Ein Zusätzlicher Speicher um Werte zu Speichern. Das write\_or\_read bit bestimmt ob gelesen oder geschreiben wird. Es wird entweder von address\_i auf read\_data gelesen  oder es wird write\_data auf address\_i geschrieben. address\_i kommt entweder aus dem Register oder vom Instruction decoder. write\_data und read\_data sind beide mit dem Register verbunden. Es wird nur in den RAM geschrieben wenn enable auf 1 gesetzt ist.
+\includegraphics[height=0.5\textheight]{RAM_beschreibung.pdf}\\
+Ein zusätzlicher Speicher um Werte zu Speichern. Das write\_or\_read\_i bit bestimmt ob gelesen oder geschrieben wird. Es wird entweder aus dem RAM die Daten an der Adresse address\_i auf read\_data\_o gelesen  oder es wird write\_data\_i auf die Adresse address\_i im RAM geschrieben. address\_i kommt entweder aus dem Register oder vom Instruction Decoder. write\_data\_i und read\_data\_o sind beide mit dem Register verbunden. Es wird nur aus dem RAM gelesen oder in den RAM geschrieben wenn enable\_i auf 1 gesetzt ist.
 \subsection{Register}
-\includegraphics[]{Register_beschreibung.pdf}\\
+\includegraphics[height=0.5\textheight]{Register_beschreibung.pdf}\\
 Speichert 8bit Werte. Ergebnisse der ALU werden meist hierhin geschrieben. Das Register hat einen 8-bit breiten Eingang write\_data\_i um Daten anzunehmen, welche gespeichert werden sollen. Hierzu gibt es noch einen 4-bit breiten Eingang write\_address\_i um das Register auszuwählen und das write\_enable\_i bit um das schreiben zu aktivieren. Um aus dem Register zu lesen gibt es zwei Eingänge read\_X\_address\_i und read\_Y\_address\_i um die Register auszuwählen und zwei Ausgänge read\_X\_data\_o read\_Y\_data\_o auf welchen die Daten ausgegeben werden. So können zwei Werte aus dem Register gelesen werden. Über den reset\_i Eingang lässt sich das gesamte Register auf 0-Einträge zurücksetzen.
 \subsection{Instruction Memory}
-\includegraphics[height=0.4\textheight, angle=0]{IP_beschreibung.pdf}\\
+\includegraphics[height=0.5\textheight]{IP_beschreibung.pdf}\\
 Ein Speicher in dem die Instruktionen als 18 Bit Werte gespeichert werden. Der Input(pc\_i) beschreibt die Stelle im Speicher, die derzeit ausgeführt wird und deshalb am Ausgang instruction\_o für den Instruction Decoder bereitliegt. Ändert sich der Input pc\_i ändert sich der Ausgang instruction\_o mit der nächsten steigenden Taktflanke von clk\_i.
 \subsection{CALL/RETURN Stack}
-\includegraphics[width=0.7\textwidth, angle=0]{Stack_beschreibung.pdf}\\
+\includegraphics[height=0.4\textheight]{Stack_beschreibung.pdf}\\
 Ein Stackspeicher, der die Position des Program Counters vor einem Unterfunktionsaufruf speichert. Dabei werden die bei sPC\_i anliegenden Bits auf den Stack gespeichert, wenn write\_or\_read\_i auf 0 gesetzt ist, enable\_i auf 1 gesetzt ist und bei clk\_i ein rising edge vorliegt. Ist dagegen write\_or\_read\_i auf 1, werden bei der nächsten rising edge von clk\_i die oben auf dem Stack liegenden Bits auf den sStack\_o Output übertragen und vom Stack gelöscht. Ist enable\_i auf 0, so werden weder Daten auf den Stack gelegt, noch welche von ihm genommen. \\
 Durch ein setzten von reset\_i auf 1 lässt sich der Stack asynchron resetten und damit leeren.
 
 \subsection{Input/Output}
-\includegraphics[height=0.5\textheight, angle=0]{IO_beschreibung.pdf}\\
+\includegraphics[height=0.5\textheight]{IO_beschreibung.pdf}\\
 Die nach außen zu sendenden Signale(erhalten durch value\_i) werden am Port mit der Nummer gegeben durch port\_id\_i ausgegeben, falls in\_out\_i und enable\_i den Wert 1 enthält. Falls enable\_i den Wert 1 und in\_out\_i 0 enthält, wird der derzeit anliegende Wert beim Port der port\_id\_i in value\_o gespeichert.
 \newpage
 \section{Instruktionen}
@@ -116,10 +116,10 @@ Die nach außen zu sendenden Signale(erhalten durch value\_i) werden am Port mit
          RETURNNZ & Falls Zero-Bit nicht gesetzt, Rückkehr von der Unterfunktion. & If ZERO=0, PC $\leftarrow$ TOS+1  \\ \hline
          RL sX & Rotiert Register sX einen Schritt nach links. &sX $\leftarrow$ {sX[6:0],sX[7]}, CARRY $\leftarrow$ sX[7]  \\ \hline
          RR sX & Rotiert Register sX einen Schritt nach rechts. &sX $\leftarrow$ {sX[0],sX[7:1]},CARRY $\leftarrow$ sX[0]   \\ \hline
-         SL0 sX & Schiebe Register sX links, mit 0 aufgefüllt. &sX $\leftarrow$ {sX[6:1],0}, CARRY $\leftarrow$ sX[7]  \\ \hline
-         SL1 sX & Schiebe Register sX links, mit 1 aufgefüllt. &sX $\leftarrow$ {sX[6:1],1}, CARRY $\leftarrow$ sX[7]  \\ \hline
-         SLA sX & Schiebe Register sX links durch alle Bits, inklusive Carry. &sX $\leftarrow$ {sX[6:1],CARRY}, CARRY $\Leftarrow$ sX[7]  \\ \hline
-         SLX sX & Schiebe Register sX links. Bit sX[0] unbetroffen. &sX $\leftarrow$ {sX[6:1],sX[0]}, CARRY $\leftarrow$ sX[7]  \\ \hline
+         SL0 sX & Schiebe Register sX links, mit 0 aufgefüllt. &sX $\leftarrow$ {sX[6:0],0}, CARRY $\leftarrow$ sX[7]  \\ \hline
+         SL1 sX & Schiebe Register sX links, mit 1 aufgefüllt. &sX $\leftarrow$ {sX[6:0],1}, CARRY $\leftarrow$ sX[7]  \\ \hline
+         SLA sX & Schiebe Register sX links durch alle Bits, inklusive Carry. &sX $\leftarrow$ {sX[6:0],CARRY}, CARRY $\Leftarrow$ sX[7]  \\ \hline
+         SLX sX & Schiebe Register sX links. Bit sX[0] unbetroffen. &sX $\leftarrow$ {sX[6:0],sX[0]}, CARRY $\leftarrow$ sX[7]  \\ \hline
          SR0 sX & Schiebe Register sX rechts, mit 0 aufgefüllt. &sX $\leftarrow$ {0,sX[7:1]}, CARRY $\leftarrow$ sX[0]  \\ \hline
          SR1 sX & Schiebe Register sX rechts, mit 1 aufgefüllt. &sX $\leftarrow$ {1,sX[7:1]}, CARRY $\leftarrow$ sX[0]  \\ \hline
          SRA sX & Schiebe Register sX durch alle bits, inklusive Carry. &sX $\leftarrow$ {CARRY,sX[7:1]}, CARRY $\leftarrow$ sX[0]  \\ \hline
