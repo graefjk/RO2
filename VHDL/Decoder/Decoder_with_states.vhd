@@ -31,7 +31,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity Decoder_with_states is
+entity Decoder is
   Port ( instruction_i: in std_logic_vector(17 downto 0); -- input signals
          clk_i: in std_logic;
          reset_i: in std_logic;
@@ -65,11 +65,11 @@ entity Decoder_with_states is
          
          sRAM_write_or_read_o: out std_logic; -- RAM signals
          sRAM_enable_o: out std_logic);
-end Decoder_with_states;
+end Decoder;
 
-architecture Behavioral of Decoder_with_states is
+architecture Behavioral of Decoder is
 
-constant operation_ADD: std_logic_vector(5 downto 0):= "000000"; -- opcode arthmetics
+constant operation_ADD: std_logic_vector(5 downto 0):= "000000"; -- opcode arethmetics
 constant operation_ADD_kk: std_logic_vector(5 downto 0):= "000001";
 constant operation_ADDCY: std_logic_vector(5 downto 0):= "000010";
 constant operation_ADDCY_kk: std_logic_vector(5 downto 0):= "000011";
@@ -132,7 +132,6 @@ constant operation_INPUT_pp: std_logic_vector(5 downto 0):="010111";
 constant operation_OUTPUT: std_logic_vector(5 downto 0):="010100";
 constant operation_OUTPUT_pp: std_logic_vector(5 downto 0):="010101";
 
-
 type state_t is (PC, IP, ID, REG_read_and_RAM, ALU, REG_write, JUMPS);
 signal State_s : state_t := PC;
 
@@ -140,26 +139,14 @@ begin
 operations: process(clk_i, reset_i)
 begin
  if reset_i='1' then
-    constant_kk_o <= "00000000";
-    constant_aaa_o <= "000000000000";   
-    mux_i_o_select_o <= '0';
-    sIO_write_or_read_o <= '0';
+    sPC_enable_o <= '0';
+    sALU_enable_o <= '0';
 	sIO_enable_o <= '0';
-    mux_register_select_o <= "00";
-    sRegister_X_adresse_o <= "0000";
-    sRegister_Y_adresse_o <= "0000";
-	sRegister_write_enable_o <= '0';
-    mux_ALU_select_o <= '0';
-    sALU_select_o <= "000000";
-    mux_stack_select_o <= '0';
-    sStack_write_or_read_o <= '0';
     sStack_enable_o <= '0';
-    mux_PC_select_o <= '0';
-    sRAM_write_or_read_o <= '0';
     sRAM_enable_o <= '0';
     State_s <= PC;
  else
-    if rising_edge(clk_i) then--falling edge
+    if falling_edge(clk_i) then
         case State_s is
             when PC =>
                 sRegister_write_enable_o <= '0';
@@ -171,168 +158,10 @@ begin
                 State_s <= ID;
             when ID =>
             case instruction_i(17 downto 16) is
-                when "11" =>--Shifts
-                    mux_i_o_select_o <= '0';
-                    sIO_write_or_read_o <= '0';
-                    mux_register_select_o <= "11";
-                    mux_ALU_select_o <= '0';
-                    mux_stack_select_o <= '0';
-                    sStack_write_or_read_o <= '0';
-                    mux_PC_select_o <= '0';
-                    sRAM_write_or_read_o <= '0';
-                    State_s <= REG_read_and_RAM;
                 when "10" =>--Jumps
-                    mux_i_o_select_o <= '0';
-                    sIO_write_or_read_o <= '0';
-                    mux_register_select_o <= "00";
-                    mux_ALU_select_o <= '0';
-                    sRAM_write_or_read_o <= '0';
-                    case instruction_i(17 downto 12) is
-                        when operation_JUMP | operation_CALL =>
-                            mux_PC_select_o <= '1';
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                        when operation_RETURN =>
-                            mux_PC_select_o <= '0';
-                            mux_stack_select_o <= '1';
-                            sStack_write_or_read_o <= '1';
-                    end case;
-                    if carry_i = '1' then
-                        case instruction_i(17 downto 12) is
-                            when operation_JUMPC | operation_CALLC =>
-                                mux_PC_select_o <= '1';
-                                mux_stack_select_o <= '0';
-                                sStack_write_or_read_o <= '0';
-                            when operation_RETURNC =>
-                                mux_PC_select_o <= '0';
-                                mux_stack_select_o <= '1';
-                                sStack_write_or_read_o <= '1';
-                        end case;
-                    else
-                        case instruction_i(17 downto 12) is
-                            when operation_JUMPNC | operation_CALLNC =>
-                                mux_PC_select_o <= '1';
-                                mux_stack_select_o <= '0';
-                                sStack_write_or_read_o <= '0';
-                            when operation_RETURNNC =>
-                                mux_PC_select_o <= '0';
-                                mux_stack_select_o <= '1';
-                                sStack_write_or_read_o <= '1';
-                        end case;
-                    end if;
-                    if zero_i = '1' then
-                        case instruction_i(17 downto 12) is
-                            when operation_JUMPZ | operation_CALLZ =>
-                                mux_PC_select_o <= '1';
-                                mux_stack_select_o <= '0';
-                                sStack_write_or_read_o <= '0';
-                            when operation_RETURNZ =>
-                                mux_PC_select_o <= '0';
-                                mux_stack_select_o <= '1';
-                                sStack_write_or_read_o <= '1';
-                        end case;
-                    else
-                        case instruction_i(17 downto 12) is
-                            when operation_JUMPNZ | operation_CALLNZ =>
-                                mux_PC_select_o <= '1';
-                                mux_stack_select_o <= '0';
-                                sStack_write_or_read_o <= '0';
-                            when operation_RETURNNZ =>
-                                mux_PC_select_o <= '0';
-                                mux_stack_select_o <= '1';
-                                sStack_write_or_read_o <= '1';
-                        end case;
-                    end if;
                     State_s <= JUMPS;
-                when others =>--Constant or register
-                    case instruction_i(17 downto 12) is
-                        when operation_STORE =>
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-                            mux_register_select_o <= "00";
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            mux_PC_select_o <= '0';
-                            sRAM_write_or_read_o <= '0';
-                            mux_ALU_select_o <= '1';
-                        when operation_STORE_ss =>
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-                            mux_register_select_o <= "00";
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            mux_PC_select_o <= '0';
-                            sRAM_write_or_read_o <= '0';
-                            mux_ALU_select_o <= '0';
-                        when operation_FETCH =>
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-                            mux_register_select_o <= "01";
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            mux_PC_select_o <= '0';
-                            sRAM_write_or_read_o <= '1';
-                            mux_ALU_select_o <= '1';
-                        when operation_FETCH_ss =>
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-                            mux_register_select_o <= "01";
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            mux_PC_select_o <= '0';
-                            sRAM_write_or_read_o <= '1';
-                            mux_ALU_select_o <= '0';
-                        when operation_INPUT =>
-                            mux_i_o_select_o <= '1';
-                            sIO_write_or_read_o <= '0';
-                            mux_register_select_o <= "00";
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            mux_PC_select_o <= '0';
-                            sRAM_write_or_read_o <= '0';
-                            mux_ALU_select_o <= '0';
-                        when operation_INPUT_pp =>
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-                            mux_register_select_o <= "00";
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            mux_PC_select_o <= '0';
-                            sRAM_write_or_read_o <= '0';
-                            mux_ALU_select_o <= '0';
-                        when operation_OUTPUT =>
-                            mux_i_o_select_o <= '1';
-                            sIO_write_or_read_o <= '1';
-                            mux_register_select_o <= "00";
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            mux_PC_select_o <= '0';
-                            sRAM_write_or_read_o <= '0';
-                            mux_ALU_select_o <= '0';
-                        when operation_OUTPUT_pp =>
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '1';
-                            mux_register_select_o <= "00";
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            mux_PC_select_o <= '0';
-                            sRAM_write_or_read_o <= '0';
-                            mux_ALU_select_o <= '0';
-                        when others =>
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-                            mux_register_select_o <= "11";
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            mux_PC_select_o <= '0';
-                            sRAM_write_or_read_o <= '0';
-                            if instruction_i(12) = '0' then
-                                mux_ALU_select_o <= '1';
-                            else
-                                mux_ALU_select_o <= '0';
-                            end if;
-                            State_s <= REG_read_and_RAM;
-                    end case;
+                when others =>
+                    State_s <= REG_read_and_RAM;
                 end case;
             when REG_read_and_RAM =>
                 case instruction_i(17 downto 12) is
@@ -401,11 +230,96 @@ begin
                 State_s <= PC;
         end case;
       end if;
-    constant_kk_o <= instruction_i(7 downto 0);
-    constant_aaa_o <= instruction_i(11 downto 0);
-    sRegister_X_adresse_o <= instruction_i(11 downto 8);
-    sRegister_Y_adresse_o <= instruction_i(7 downto 4);
-    sALU_select_o <= instruction_i(17 downto 12);
     end if;
   end process operations;
+
+
+mux_i_o_select_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT_pp or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_OUTPUT else '0';
+    
+sIO_write_or_read_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp
+else
+'1' when instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp else '0';
+    
+mux_ALU_select_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
+    instruction_i(17 downto 12) = operation_STORE_ss or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_FETCH
+else '1' when instruction_i(12) = '0' else '0';
+    
+mux_stack_select_o <= '0' when instruction_i(17 downto 16) = "11" or (instruction_i(17 downto 12) = operation_JUMP) or
+    (instruction_i(17 downto 12) = operation_CALL) or
+    ((instruction_i(17 downto 12) = operation_JUMPC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_JUMPZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNZ) and (zero_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNZ) and (zero_i = '0')) or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when (instruction_i(17 downto 12) = operation_RETURN) or
+    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '0')) else '0';
+    
+sStack_write_or_read_o <= '0' when instruction_i(17 downto 16) = "11" or (instruction_i(17 downto 12) = operation_JUMP) or
+    (instruction_i(17 downto 12) = operation_CALL) or
+    ((instruction_i(17 downto 12) = operation_JUMPC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_JUMPZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNZ) and (zero_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNZ) and (zero_i = '0')) or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when (instruction_i(17 downto 12) = operation_RETURN) or
+    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '0')) else '0';
+    
+mux_PC_select_o <= '0' when instruction_i(17 downto 16) = "11" or (instruction_i(17 downto 12) = operation_RETURN) or
+    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '0')) or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when (instruction_i(17 downto 12) = operation_JUMP) or (instruction_i(17 downto 12) = operation_CALL) or
+    ((instruction_i(17 downto 12) = operation_JUMPC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_JUMPZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNZ) and (zero_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNZ) and (zero_i = '0')) else '0';
+    
+sRAM_write_or_read_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss else '0';
+
+mux_register_select_o <= "00" when instruction_i(17 downto 16) = "10" or instruction_i(17 downto 12) = operation_STORE or
+    instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else  
+"01" when instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss
+else
+"11" when instruction_i(17 downto 16) = "11" else "11";
+
+constant_kk_o <= instruction_i(7 downto 0);
+constant_aaa_o <= instruction_i(11 downto 0);
+sRegister_X_adresse_o <= instruction_i(11 downto 8);
+sRegister_Y_adresse_o <= instruction_i(7 downto 4);
+sALU_select_o <= instruction_i(17 downto 12);
+
 end Behavioral;
