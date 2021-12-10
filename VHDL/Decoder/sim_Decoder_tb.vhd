@@ -169,26 +169,373 @@ uut: Decoder port map(instruction_i_s,-- input signals
     
    -- here we write the defirent simulation cases 
  stimuli: process 
+ variable error_counter: integer :=0;
    begin
-   instruction_i_s<="000000101011100110";  --ADD
+   instruction_i_s<="000000100011100010";  --ADD
    carry_i_s<='1';
    zero_i_s<='1';
    wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="000000")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
    
-   instruction_i_s<="000001101011100110";  --ADDkk
+   instruction_i_s<="000001101010101110";  --ADDkk
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="10101110")and (constant_aaa_o_s="101010101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1010")and
+   (sRegister_Y_adresse_o_s="1010")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="000001")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns; 
+
+   instruction_i_s<="000010111011101110";  --ADDCY
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11101110")and (constant_aaa_o_s="111011101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1110")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="000010")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
+   
+   instruction_i_s<="000011100011100111";  --ADDCYkk
    carry_i_s<='1';
    zero_i_s<='1';
    wait for 20ns; 
-
-   instruction_i_s<="000010101011100110";  --ADDCY
+   if not((constant_kk_o_s="11100111")and (constant_aaa_o_s="100011100111")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="000011")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   
+      instruction_i_s<="000100100011100010";  --SUB
    carry_i_s<='1';
    zero_i_s<='1';
    wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="000100")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
    
-   instruction_i_s<="000000101011100110";  --ADDCYkk
+   instruction_i_s<="000101101010101110";  --SUBKK
    carry_i_s<='1';
    zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="10101110")and (constant_aaa_o_s="101010101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1010")and
+   (sRegister_Y_adresse_o_s="1010")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="000101")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns; 
+
+   instruction_i_s<="000110111011101110";  --SUBCY
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11101110")and (constant_aaa_o_s="111011101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1110")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="000110")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
+   
+   instruction_i_s<="000111100011100111";  --SUBCYKK
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns; 
+   if not((constant_kk_o_s="11100111")and (constant_aaa_o_s="100011100111")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="000111")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   
+       instruction_i_s<="001000100011100010";  --AND
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="001000")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
+   
+   instruction_i_s<="001001101010101110";  --ANDKK
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="10101110")and (constant_aaa_o_s="101010101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1010")and
+   (sRegister_Y_adresse_o_s="1010")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="001001")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns; 
+   
+       instruction_i_s<="001010100011100010";  --OR
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="001010")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
+   
+   instruction_i_s<="001011101010101110";  --ORKK
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="10101110")and (constant_aaa_o_s="101010101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1010")and
+   (sRegister_Y_adresse_o_s="1010")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="001011")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns; 
+   
+       instruction_i_s<="001100100011100010";  --XOR
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="001100")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
+   
+   instruction_i_s<="001101101010101110";  --XORKK
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="10101110")and (constant_aaa_o_s="101010101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1010")and
+   (sRegister_Y_adresse_o_s="1010")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="001101")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns; 
+   
+   instruction_i_s<="011010100011100010";  --COMPARE
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="011010")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
+   
+   instruction_i_s<="011011101010101110";  --COMPAREKK
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="10101110")and (constant_aaa_o_s="101010101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1010")and
+   (sRegister_Y_adresse_o_s="1010")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="011011")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns; 
+   
+   instruction_i_s<="011000100011100010";  --TEST
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="011000")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
+   
+   instruction_i_s<="011001101010101110";  --TESTKK
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="10101110")and (constant_aaa_o_s="101010101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1010")and
+   (sRegister_Y_adresse_o_s="1010")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="011001")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns; 
+   
+instruction_i_s<="001110100011100010";  --LOAD
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='1')and(sALU_select_o_s="001110")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;
+   
+   instruction_i_s<="001111101010101110";  --LOADKK
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="10101110")and (constant_aaa_o_s="101010101110")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='0')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1010")and
+   (sRegister_Y_adresse_o_s="1010")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="001111")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns; 
+   
+   instruction_i_s<="110000100011100010";  --RL
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='1')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="110000")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;   
+   
+      instruction_i_s<="110001100011100010";  --RR
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='1')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="110001")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
    wait for 20ns;  
+   
+      instruction_i_s<="110010100011100010";  --SL0
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='1')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="110010")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;  
+   
+      instruction_i_s<="110011100011100010";  --SL1
+   carry_i_s<='1';
+   zero_i_s<='1';
+   wait for 20ns;
+   if not((constant_kk_o_s="11100010")and (constant_aaa_o_s="100011100010")and 
+   (mux_i_o_select_o_s='0')and(sIO_write_or_read_o_s='1')and(sIO_enable_o_s='0')and
+   (mux_register_select_o_s="11")and(sRegister_X_adresse_o_s="1000")and
+   (sRegister_Y_adresse_o_s="1110")and(sRegister_write_enable_o_s='1')and
+   (mux_ALU_select_o_s='0')and(sALU_select_o_s="110011")and
+   (mux_stack_select_o_s='0')and(sStack_write_or_read_o_s='0')and(sStack_enable_o_s='0')and
+   (mux_PC_select_o_s='0')and (sRAM_write_or_read_o_s='0')and(sRAM_enable_o_s='0'))then
+   error_counter :=error_counter+1;
+   end if;
+   wait for 20ns;  
+   
+   if error_counter=0 then
+   report("Test passed");
+   else
+   report("Test failed");
+   end if;
+   wait;
+    
       
  end process;
 end Behavioral;
