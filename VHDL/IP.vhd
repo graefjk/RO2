@@ -42,30 +42,44 @@ end IP;
 
 architecture Behavioral of IP is
     type rom_type is array (4096 downto 0) of std_ulogic_vector(17 downto 0);
-    impure function InitRamFromFile (RamFileName : in string) return rom_type is 
-        FILE RamFile : text is in RamFileName;
-        variable RamFileLine : line;
+    --initializes the rom from the given file
+    impure function InitRomFromFile (RomFileName : in string) return rom_type is 
+        --The file to be read
+        FILE RomFile : text is in RomFileName;
+        --A Line of the File(Also one instruction)
+        variable RomFileLine : line;
+        --The ROM
         variable ROM : rom_type;
     begin
+        --Iterating over the size of the ROM
         for I in rom_type'range loop
-            readline (RamFile,RamFileLine);
-            read (RamFileLine, ROM(I));
+            --Reading from the file 1 line at a time
+            readline (RomFile,RomFileLine);
+            --Writing the read line into the ROM
+            read (RomFileLine, ROM(I));
         end loop;
+        --Returning the filled ROM
         return ROM; 
     end function;    
-    signal ROM : rom_type := InitRamFromFile("Test.data");
+    --The ROM
+    signal ROM : rom_type := InitRomFromFile("Test.data");
+    --Using BlockRAM for the ROM
     attribute rom_style : string;
     attribute rom_style of ROM : signal is "block";
- 
+    --The old PC value for detection of changes
     signal old_pc: std_ulogic_vector(11 downto 0) := (others => '1');
     
 begin
     -- returns the new instruction synchronous
     process(clk_i)
     begin
+        --Checking for a rising edge
         if (clk_i'event and clk_i = '1') then
+            --Checking for a change in the PC
             if (pc_i /= old_pc) then
+                --Retriving the instruction from the ROM
                 instruction_o <= ROM(to_integer(unsigned(pc_i)));
+                --Storing the new PC as old
                 old_pc <= pc_i;
             end if;
         end if;
