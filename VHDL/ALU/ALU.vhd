@@ -38,6 +38,7 @@ entity ALU is
        opcode_select_i: in std_logic_vector(5 downto 0);
        reset_i: in std_logic;
        clk_i: in std_logic;
+       enable_i: in std_logic;
        
        sALU_o: out std_logic_vector(7 downto 0); -- output signals
        sCARRY_o: out std_logic;
@@ -98,7 +99,7 @@ begin
    carry_s<= '0';
    zero_s<= '0';
  else
-    if rising_edge(clk_i) then
+    if (rising_edge(clk_i) and enable_i='1' ) then
       case opcode_select_i is
       when operation_ADD | operation_ADD_kk => 
           result_s<=  sA_i+ sB_i;
