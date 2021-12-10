@@ -46,7 +46,8 @@ architecture Behavioral of IO is
 begin
     process(clk_i)
     begin
-        if rising_edge(clk_i) and enable_i = '1' then
+        if rising_edge(clk_i) then
+         if enable_i = '1' then
            if in_out_i = "0" then
             for i in 0 to 7 loop 
                 value_o(i) <= port_b(to_integer(unsigned(port_id_i)) + i);
@@ -56,10 +57,11 @@ begin
                 port_b(i) <= value_i(to_integer(unsigned(port_id_i)) + i);
             end loop;
            end if;
-        elsif rising_edge(clk_i) and enable_i = '0' then
+         else
             for i in 0 to 256 loop 
                 port_b(i) <= '0';
             end loop;
+          end if;
         end if;        
     end process;
 end Behavioral;
