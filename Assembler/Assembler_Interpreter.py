@@ -550,7 +550,7 @@ def generateMachinecode():
     text_field_machinecode.insert("end", "Successfully converted assembler to "
                                          "machinecode and copied it to clipboard!" + "\n")
     text_field_machinecode.insert("end", "End state of the register:" + "\n")
-    testCode(text_field_assembler.get("1.0", "end").splitlines())
+    # testCode(text_field_assembler.get("1.0", "end").splitlines())
     i = 0
     for reg in register:
         i += 1
