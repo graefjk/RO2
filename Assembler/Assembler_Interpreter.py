@@ -3,15 +3,15 @@ from tkinter import filedialog
 
 instructionDict = {
     # Block 1: Instructions on registers or constants kk/pp/ss (8 bits). Starting with 0, ending with ?.
-    # The ? is replaced by a 1, if the instruction contains a constant, else it is replaced with 00 or 01.
+    # The ? is replaced by a 1, if the instruction contains a constant, else it is replaced with 0.
     "ADD": "00000?", "ADDCY": "00001?", "SUB": "00010?", "SUBCY": "00011?",
     "AND": "00100?", "OR": "00101?", "XOR": "00110?", "LOAD": "00111?", "STORE": "01000?",
     "FETCH": "01001?", "OUTPUT": "01010?", "INPUT": "01011?", "TEST": "01100?", "COMPARE": "01101?",
-    # Block 2: Instructions on 12 bits constants aaa. Starting with 10.
+    # Block 2: Jumps. Starting with 10.
     "CALL": "100001", "CALLC": "100010", "CALLNC": "100011", "CALLNZ": "100100", "CALLZ": "100101",
     "JUMP": "100110", "JUMPC": "100111", "JUMPNC": "101000", "JUMPNZ": "101001", "JUMPZ": "101010",
-    # Block 3: Instructions on only one register and return instructions. Starting with 11.
-    "RETURN": "111010", "RETURNC": "111011", "RETURNNC": "111100", "RETURNZ": "111101", "RETURNNZ": "111110",
+    "RETURN": "101011", "RETURNC": "101100", "RETURNNC": "101101", "RETURNZ": "101110", "RETURNNZ": "101111",
+    # Block 3: Shifts. Starting with 11.
     "RL": "110000", "RR": "110001", "SL0": "110010", "SL1": "110011",
     "SLA": "110100", "SLX": "110101", "SR0": "110110", "SR1": "110111", "SRA": "111000", "SRX": "111001"}
 
@@ -427,7 +427,7 @@ def changeToBinary(n, bits):
     Binary numbers have to start with prefix "b" and have to be in 2's complement.
     :param n: the number in binary, hexa, dezimal.
     :param bits: length of the bit number.
-    :return: a 8 bit or 12 bit number.
+    :return: an 8 bit or 12 bit number.
     """
     system = n[0]
     if system == "b":
