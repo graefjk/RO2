@@ -77,6 +77,8 @@ constant operation_SUB : std_logic_vector(5 downto 0):="000100";
 constant operation_SUB_kk : std_logic_vector(5 downto 0):="000101";
 constant operation_SUBCY : std_logic_vector(5 downto 0):="000110";
 constant operation_SUBCY_kk : std_logic_vector(5 downto 0):="000111";
+constant operation_LOAD : std_logic_vector(5 downto 0):= "001110";
+constant operation_LOAD_kk : std_logic_vector(5 downto 0):= "001111";
 
 constant operation_RL: std_logic_vector(5 downto 0):="110000"; -- opcode rotation
 constant operation_RR: std_logic_vector(5 downto 0):="110001";
