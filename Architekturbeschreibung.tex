@@ -67,7 +67,8 @@ Ein Speicher in dem die Instruktionen als 18 Bit Werte gespeichert werden. Der I
 \subsection{CALL/RETURN Stack}
 \includegraphics[height=0.4\textheight]{Stack_beschreibung.pdf}\\
 Ein Stackspeicher, der die Position des Program Counters vor einem Unterfunktionsaufruf speichert. Dabei werden die bei sPC\_i anliegenden Bits auf den Stack gespeichert, wenn write\_or\_read\_i auf 0 gesetzt ist, enable\_i auf 1 gesetzt ist und bei clk\_i ein rising edge vorliegt. Ist dagegen write\_or\_read\_i auf 1, werden bei der nächsten rising edge von clk\_i die oben auf dem Stack liegenden Bits auf den sStack\_o Output übertragen und vom Stack gelöscht. Ist enable\_i auf 0, so werden weder Daten auf den Stack gelegt, noch welche von ihm genommen. \\
-Durch ein setzten von reset\_i auf 1 lässt sich der Stack asynchron resetten und damit leeren.
+Durch ein setzten von reset\_i auf 1 lässt sich der Stack asynchron resetten und damit leeren. \\
+Über die Ausgänge full\_o und empty\_o zeigt der Stack, für full\_o = 1, dass er voll ist (somit werden weitere Schreibvorgänge verworfen) oder mit empty\_o = 1, dass er leer ist (somit werden weitere Lesevorgänge nicht ausgeführt).
 
 \subsection{Input/Output}
 \includegraphics[height=0.5\textheight]{IO_beschreibung.pdf}\\
@@ -178,11 +179,11 @@ Die nach außen zu sendenden Signale(erhalten durch value\_i) werden am Port mit
     OR sX, sY & if (sX = 0): ZERO = 1,\newline else: ZERO = 0 & 0 & 001010 \\ \hline
     OUTPUT sX, (sY) & - & - & 010100 \\ \hline
     OUTPUT sX, pp & - & - & 010101 \\ \hline
-    RETURN & - & - & 111010 \\ \hline
-    RETURNC & - & - & 111011 \\ \hline
-    RETURNNC & - & - & 111100 \\ \hline
-    RETURNZ & - & - & 111101 \\ \hline
-    RETURNNZ & - & - & 111110 \\ \hline
+    RETURN & - & - & 101011 \\ \hline
+    RETURNC & - & - & 101100 \\ \hline
+    RETURNNC & - & - & 101101 \\ \hline
+    RETURNZ & - & - & 101110 \\ \hline
+    RETURNNZ & - & - & 101111 \\ \hline
     RL sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
     & CARRY = sX[7] & 110000 \\ \hline
     RR sX & if (sX = 0): ZERO = 1,\newline else: ZERO = 0
