@@ -135,7 +135,7 @@ constant operation_OUTPUT: std_logic_vector(5 downto 0):="010100";
 constant operation_OUTPUT_pp: std_logic_vector(5 downto 0):="010101";
 
 type states is (PC, IP, ID, REG_read_and_RAM, ALU, REG_write, JUMPS);
-signal state_curr, state_next : states;
+signal state_curr : states;
 
 begin
 mealy: process(clk_i, reset_i)
@@ -143,99 +143,29 @@ begin
  if reset_i='1' then
     state_curr <= PC;
  elsif rising_edge(clk_i) then
-    state_curr <= state_next;
- end if;
-end process mealy;
-
-
-operations: process(state_curr, instruction_i)
-begin
-    state_next <= PC;
     case state_curr is
         when PC =>
-            sRegister_write_enable_o <= '0';
-            sStack_enable_o <= '0';
-            sIO_enable_o <= '0';
-            sRAM_enable_o <= '0';
-            sPC_enable_o <= '1';
-            state_next <= IP;
+            state_curr <= IP;
         when IP =>
-            sPC_enable_o <= '0';
-            state_next <= ID;
+            state_curr <= ID;
         when ID =>
             case instruction_i(17 downto 16) is
                 when "10" =>--Jumps
-                    state_next <= JUMPS;
+                    state_curr <= JUMPS;
                 when others =>
-                    state_next <= REG_read_and_RAM;
+                    state_curr <= REG_read_and_RAM;
                 end case;
         when REG_read_and_RAM =>
-            case instruction_i(17 downto 12) is
-                when operation_STORE | operation_STORE_ss | operation_FETCH | operation_FETCH_ss =>
-                    sRAM_enable_o <= '1';
-                when others =>
-                    sRAM_enable_o <= '0';
-            end case;
-            case instruction_i(17 downto 12) is
-                when operation_INPUT | operation_INPUT_pp | operation_OUTPUT | operation_OUTPUT_PP =>
-                    sIO_enable_o <= '1';
-                when others =>
-                    sIO_enable_o <= '0';
-            end case;
-            state_next <= ALU;
+            state_curr <= ALU;
         when ALU =>
-            case instruction_i(17 downto 12) is
-                when operation_STORE | operation_STORE_ss | operation_FETCH | operation_FETCH_ss | operation_INPUT | operation_INPUT_pp | operation_OUTPUT | operation_OUTPUT_PP =>
-                    sALU_enable_o <= '0';
-                when others =>
-                    sALU_enable_o <= '1';
-            end case;
-            sRAM_enable_o <= '0';
-            sIO_enable_o <= '0';
-            state_next <= REG_write;
+            state_curr <= REG_write;
         when REG_write =>
-            sALU_enable_o <= '0';
-            case instruction_i(17 downto 12) is
-                when operation_STORE | operation_STORE_ss | operation_OUTPUT | operation_OUTPUT_PP =>
-                    sRegister_write_enable_o <= '0';
-                when others =>
-                    sRegister_write_enable_o <= '1';
-            end case;
-            state_next <= PC;
+            state_curr <= PC;
         when JUMPS =>
-            case instruction_i(17 downto 12) is
-                when operation_CALL | operation_RETURN =>
-                    sStack_enable_o <= '1';
-                when operation_CALLC | operation_RETURNC =>
-                    if carry_i = '1' then
-                        sStack_enable_o <= '1';
-                    else
-                        sStack_enable_o <= '0';
-                    end if;
-                when operation_CALLNC | operation_RETURNNC =>
-                    if carry_i = '0' then
-                        sStack_enable_o <= '1';
-                    else
-                        sStack_enable_o <= '0';
-                    end if;
-                when operation_CALLZ | operation_RETURNZ =>
-                    if zero_i = '1' then
-                        sStack_enable_o <= '1';
-                    else
-                        sStack_enable_o <= '0';
-                    end if;
-                when operation_CALLNZ | operation_RETURNNZ =>
-                    if zero_i = '0' then
-                        sStack_enable_o <= '1';
-                    else
-                        sStack_enable_o <= '0';
-                    end if;
-                when others =>
-                    sStack_enable_o <= '0';
-            end case;
-            state_next <= PC;
+            state_curr <= PC;
     end case;
-end process operations;
+ end if;
+end process mealy;
         
 
 mux_i_o_select_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
@@ -325,5 +255,43 @@ constant_aaa_o <= instruction_i(11 downto 0);
 sRegister_X_adresse_o <= instruction_i(11 downto 8);
 sRegister_Y_adresse_o <= instruction_i(7 downto 4);
 sALU_select_o <= instruction_i(17 downto 12);
+
+sALU_enable_o <= '1' when (state_curr = ALU and
+    (instruction_i(17 downto 12) /= operation_STORE_ss or instruction_i(17 downto 12) /= operation_FETCH_ss or
+    instruction_i(17 downto 12) /= operation_STORE or instruction_i(17 downto 12) /= operation_FETCH or
+    instruction_i(17 downto 12) /= operation_INPUT_pp or instruction_i(17 downto 12) /= operation_OUTPUT_pp or
+    instruction_i(17 downto 12) /= operation_INPUT or instruction_i(17 downto 12) /= operation_OUTPUT))
+else
+'0';
+
+sRegister_write_enable_o <= '1' when (state_curr = REG_write and
+    (instruction_i(17 downto 12) /= operation_STORE_ss or instruction_i(17 downto 12) /= operation_OUTPUT_pp or
+    instruction_i(17 downto 12) /= operation_STORE or instruction_i(17 downto 12) /= operation_OUTPUT))
+else
+'0';
+
+sStack_enable_o <= '1' when (state_curr = JUMPS and (instruction_i(17 downto 12) = operation_CALL or instruction_i(17 downto 12) = operation_RETURN)) or
+    (state_curr = JUMPS and carry_i = '1' and (instruction_i(17 downto 12) = operation_CALLC or instruction_i(17 downto 12) = operation_RETURNC)) or
+    (state_curr = JUMPS and carry_i = '0' and (instruction_i(17 downto 12) = operation_CALLNC or instruction_i(17 downto 12) = operation_RETURNNC)) or
+    (state_curr = JUMPS and zero_i = '1' and (instruction_i(17 downto 12) = operation_CALLZ or instruction_i(17 downto 12) = operation_RETURNZ)) or
+    (state_curr = JUMPS and zero_i = '0' and (instruction_i(17 downto 12) = operation_CALLNZ or instruction_i(17 downto 12) = operation_RETURNNZ))
+else
+'0';
+
+sIO_enable_o <= '1' when (state_curr = REG_read_and_RAM and
+    (instruction_i(17 downto 12) = operation_INPUT_pp or instruction_i(17 downto 12) = operation_OUTPUT_pp or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_OUTPUT))
+else
+'0';
+
+sRAM_enable_o <= '1' when (state_curr = REG_read_and_RAM and
+    (instruction_i(17 downto 12) = operation_STORE_ss or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_FETCH))
+else
+'0';
+
+sPC_enable_o <= '1' when state_curr = PC
+else
+'0';
 
 end Behavioral;
