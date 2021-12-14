@@ -53,6 +53,7 @@ entity Decoder is
          
          mux_ALU_select_o: out std_logic; --ALU signals
          sALU_select_o: out std_logic_vector(5 downto 0);
+         sALU_enable_o: out std_logic;
          
          
          mux_stack_select_o: out std_logic; --stack signals
@@ -60,6 +61,7 @@ entity Decoder is
          sStack_enable_o: out std_logic;
          
          mux_PC_select_o: out std_logic;-- PC signal
+         sPC_enable_o: out std_logic;
          
          sRAM_write_or_read_o: out std_logic; -- RAM signals
          sRAM_enable_o: out std_logic);
@@ -67,7 +69,7 @@ end Decoder;
 
 architecture Behavioral of Decoder is
 
-constant operation_ADD: std_logic_vector(5 downto 0):= "000000"; -- opcode arthmetics
+constant operation_ADD: std_logic_vector(5 downto 0):= "000000"; -- opcode arethmetics
 constant operation_ADD_kk: std_logic_vector(5 downto 0):= "000001";
 constant operation_ADDCY: std_logic_vector(5 downto 0):= "000010";
 constant operation_ADDCY_kk: std_logic_vector(5 downto 0):= "000011";
@@ -75,6 +77,8 @@ constant operation_SUB : std_logic_vector(5 downto 0):="000100";
 constant operation_SUB_kk : std_logic_vector(5 downto 0):="000101";
 constant operation_SUBCY : std_logic_vector(5 downto 0):="000110";
 constant operation_SUBCY_kk : std_logic_vector(5 downto 0):="000111";
+constant operation_LOAD : std_logic_vector(5 downto 0):= "001110";
+constant operation_LOAD_kk : std_logic_vector(5 downto 0):= "001111";
 
 constant operation_RL: std_logic_vector(5 downto 0):="110000"; -- opcode rotation
 constant operation_RR: std_logic_vector(5 downto 0):="110001";
@@ -106,11 +110,11 @@ constant operation_JUMPNC: std_logic_vector(5 downto 0):= "101000";
 constant operation_JUMPZ: std_logic_vector(5 downto 0):= "101010";
 constant operation_JUMPNZ: std_logic_vector(5 downto 0):= "101001";
 
-constant operation_RETURN: std_logic_vector(5 downto 0):="111010"; -- opcode return
-constant operation_RETURNC: std_logic_vector(5 downto 0):="111011";
-constant operation_RETURNNC: std_logic_vector(5 downto 0):="111100";
-constant operation_RETURNZ: std_logic_vector(5 downto 0):="111101";
-constant operation_RETURNNZ: std_logic_vector(5 downto 0):="111110";
+constant operation_RETURN: std_logic_vector(5 downto 0):="101011"; -- opcode return
+constant operation_RETURNC: std_logic_vector(5 downto 0):="101100";
+constant operation_RETURNNC: std_logic_vector(5 downto 0):="101101";
+constant operation_RETURNZ: std_logic_vector(5 downto 0):="101110";
+constant operation_RETURNNZ: std_logic_vector(5 downto 0):="101111";
 
 constant operation_AND: std_logic_vector(5 downto 0):= "001000"; -- opcode logics
 constant operation_AND_kk: std_logic_vector(5 downto 0):= "001001";
@@ -130,481 +134,196 @@ constant operation_INPUT_pp: std_logic_vector(5 downto 0):="010111";
 constant operation_OUTPUT: std_logic_vector(5 downto 0):="010100";
 constant operation_OUTPUT_pp: std_logic_vector(5 downto 0):="010101";
 
+type states is (PC, IP, ID, REG_read_and_RAM, ALU, REG_write, JUMPS);
+signal state_curr, state_next : states;
+
 begin
-operations: process(clk_i, reset_i)
+mealy: process(clk_i, reset_i)
 begin
  if reset_i='1' then
-    constant_kk_o <= "00000000";
-    constant_aaa_o <= "000000000000";   
-    mux_i_o_select_o <= '0';
-    sIO_write_or_read_o <= '0';
-	sIO_enable_o <= '0';
-    mux_register_select_o <= "00";
-    sRegister_X_adresse_o <= "0000";
-    sRegister_Y_adresse_o <= "0000";
-	sRegister_write_enable_o <= '0';
-    mux_ALU_select_o <= '0';
-    sALU_select_o <= "000000";
-    mux_stack_select_o <= '0';
-    sStack_write_or_read_o <= '0';
-    sStack_enable_o <= '0';
-    mux_PC_select_o <= '0';
-    sRAM_write_or_read_o <= '0';
-    sRAM_enable_o <= '0';
- else
-    if rising_edge(clk_i) then
-        case instruction_i(17 downto 16) is
-            when "11"=>--Returns/Shifts
-                --IO
-                mux_i_o_select_o <= '0';
-                sIO_write_or_read_o <= '0';
-	            sIO_enable_o <= '0';
-	            --ALU
-                mux_ALU_select_o <= '0';
-                --RAM
-                sRAM_write_or_read_o <= '0';
-                sRAM_enable_o <= '0';
-                --stack
-                sStack_write_or_read_o <= '1';
-                case instruction_i(17 downto 12) is
-                    when operation_RETURN=>
-                        --stack
-                        mux_stack_select_o <= '1';
-                        sStack_enable_o <= '1';
-                        --PC
-                        mux_PC_select_o <= '0';
-                        --register
-                        mux_register_select_o <= "00";
-	                    sRegister_write_enable_o <= '0';
-                    when operation_RETURNC=>
-                        if carry_i = '1' then
-                            --stack
-                            mux_stack_select_o <= '1';
-                            sStack_enable_o <= '1';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --register
-                            mux_register_select_o <= "00";
-	                       sRegister_write_enable_o <= '0';
-	                    else
-	                       --stack
-                            mux_stack_select_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --register
-                            mux_register_select_o <= "00";
-	                       sRegister_write_enable_o <= '0';
-                        end if;
-                    when operation_RETURNNC=>
-                        if carry_i = '0' then
-                            --stack
-                            mux_stack_select_o <= '1';
-                            sStack_enable_o <= '1';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --register
-                            mux_register_select_o <= "00";
-	                       sRegister_write_enable_o <= '0';
-	                    else
-	                       --stack
-                            mux_stack_select_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --register
-                            mux_register_select_o <= "00";
-	                       sRegister_write_enable_o <= '0';
-                        end if;
-                    when operation_RETURNZ=>
-                        if zero_i = '1' then
-                            --stack
-                            mux_stack_select_o <= '1';
-                            sStack_enable_o <= '1';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --register
-                            mux_register_select_o <= "00";
-	                       sRegister_write_enable_o <= '0';
-	                    else
-	                       --stack
-                            mux_stack_select_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --register
-                            mux_register_select_o <= "00";
-	                       sRegister_write_enable_o <= '0';
-                        end if;
-                    when operation_RETURNNZ=>
-                        if zero_i = '0' then
-                            --stack
-                            mux_stack_select_o <= '1';
-                            sStack_enable_o <= '1';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --register
-                            mux_register_select_o <= "00";
-	                       sRegister_write_enable_o <= '0';
-	                    else
-	                       --stack
-                            mux_stack_select_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --register
-                            mux_register_select_o <= "00";
-	                       sRegister_write_enable_o <= '0';
-                        end if;
-                    when others=>
-                        --stack
-                        mux_stack_select_o <= '0';
-                        sStack_enable_o <= '0';
-                        --PC
-                        mux_PC_select_o <= '0';
-                        --register
-                        mux_register_select_o <= "11";
-	                    sRegister_write_enable_o <= '1';
-	                end case;
-            when "10"=>--Jumps/Calls
-                --IO
-                mux_i_o_select_o <= '0';
-                sIO_write_or_read_o <= '0';
-	            sIO_enable_o <= '0';
-	            --register
-                mux_register_select_o <= "00";
-	            sRegister_write_enable_o <= '0';
-	            --ALU
-                mux_ALU_select_o <= '0';
-                --RAM
-                sRAM_write_or_read_o <= '0';
-                sRAM_enable_o <= '0';
-                --stack
-                mux_stack_select_o <= '0';
-                sStack_write_or_read_o <= '0';
-                case instruction_i(17 downto 12) is
-                    when operation_JUMP=>
-                        --stack
-                        sStack_enable_o <= '0';
-                        --PC
-                        mux_PC_select_o <= '1';
-                    when operation_JUMPC=>
-                        if carry_i = '1' then
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '1';
-                        else
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                        end if;
-                    when operation_JUMPNC=>
-                        if carry_i = '0' then
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '1';
-                        else
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                        end if;
-                    when operation_JUMPZ=>
-                        if zero_i = '1' then
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '1';
-                        else
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                        end if;
-                    when operation_JUMPNZ=>
-                        if zero_i = '0' then
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '1';
-                        else
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                        end if;
-                    when operation_CALL=>
-                        --stack
-                        sStack_enable_o <= '1';
-                        --PC
-                        mux_PC_select_o <= '1';
-                    when operation_CALLC=>
-                        if carry_i = '1' then
-                            --stack
-                            sStack_enable_o <= '1';
-                            --PC
-                            mux_PC_select_o <= '1';
-                        else
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                        end if;
-                    when operation_CALLNC=>
-                        if carry_i = '0' then
-                            --stack
-                            sStack_enable_o <= '1';
-                            --PC
-                            mux_PC_select_o <= '1';
-                        else
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                        end if;
-                    when operation_CALLZ=>
-                        if zero_i = '1' then
-                            --stack
-                            sStack_enable_o <= '1';
-                            --PC
-                            mux_PC_select_o <= '1';
-                        else
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                        end if;
-                    when operation_CALLNZ=>
-                        if zero_i = '0' then
-                            --stack
-                            sStack_enable_o <= '1';
-                            --PC
-                            mux_PC_select_o <= '1';
-                        else
-                            --stack
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                        end if;
-                    when others=>
-                        --stack
-                        sStack_enable_o <= '0';
-                        --PC
-                        mux_PC_select_o <= '0';
+    state_curr <= PC;
+ elsif rising_edge(clk_i) then
+    state_curr <= state_next;
+ end if;
+end process mealy;
+
+
+operations: process(state_curr, instruction_i)
+begin
+    state_next <= PC;
+    case state_curr is
+        when PC =>
+            sRegister_write_enable_o <= '0';
+            sStack_enable_o <= '0';
+            sIO_enable_o <= '0';
+            sRAM_enable_o <= '0';
+            sPC_enable_o <= '1';
+            state_next <= IP;
+        when IP =>
+            sPC_enable_o <= '0';
+            state_next <= ID;
+        when ID =>
+            case instruction_i(17 downto 16) is
+                when "10" =>--Jumps
+                    state_next <= JUMPS;
+                when others =>
+                    state_next <= REG_read_and_RAM;
                 end case;
-            when others=>
-                case instruction_i(17 downto 12) is
-                    when operation_STORE=>
-                        if instruction_i(12) = '0' then
-                            --IO
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-	                        sIO_enable_o <= '0';
-	                        --register
-                            mux_register_select_o <= "00";
-	                        sRegister_write_enable_o <= '0';
-	                        --ALU
-                            mux_ALU_select_o <= '1';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '0';
-                            sRAM_enable_o <= '1';
-                        else
-                            --IO
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-	                        sIO_enable_o <= '0';
-	                        --register
-                            mux_register_select_o <= "00";
-	                        sRegister_write_enable_o <= '0';
-	                        --ALU
-                            mux_ALU_select_o <= '0';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '0';
-                            sRAM_enable_o <= '1';
-                        end if;
-                    when operation_FETCH=>
-                        if instruction_i(12) = '0' then
-                            --IO
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-	                        sIO_enable_o <= '0';
-	                        --register
-                            mux_register_select_o <= "01";
-	                        sRegister_write_enable_o <= '1';
-	                        --ALU
-                            mux_ALU_select_o <= '1';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '1';
-                            sRAM_enable_o <= '1';
-                        else
-                            --IO
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-	                        sIO_enable_o <= '0';
-	                        --register
-                            mux_register_select_o <= "01";
-	                        sRegister_write_enable_o <= '1';
-	                        --ALU
-                            mux_ALU_select_o <= '0';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '1';
-                            sRAM_enable_o <= '1';
-                        end if;
-                    when operation_INPUT=>
-                        if instruction_i(12) = '0' then
-                            --IO
-                            mux_i_o_select_o <= '1';
-                            sIO_write_or_read_o <= '0';
-	                        sIO_enable_o <= '1';
-	                        --register
-                            mux_register_select_o <= "00";
-	                        sRegister_write_enable_o <= '1';
-	                        --ALU
-                            mux_ALU_select_o <= '1';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '0';
-                            sRAM_enable_o <= '0';
-                        else
-                            --IO
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-	                        sIO_enable_o <= '1';
-	                        --register
-                            mux_register_select_o <= "00";
-	                        sRegister_write_enable_o <= '1';
-	                        --ALU
-                            mux_ALU_select_o <= '1';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '0';
-                            sRAM_enable_o <= '0';
-                        end if;
-                    when operation_OUTPUT=>
-                        if instruction_i(12) = '0' then
-                            --IO
-                            mux_i_o_select_o <= '1';
-                            sIO_write_or_read_o <= '1';
-	                        sIO_enable_o <= '1';
-	                        --register
-                            mux_register_select_o <= "00";
-	                        sRegister_write_enable_o <= '0';
-	                        --ALU
-                            mux_ALU_select_o <= '1';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '0';
-                            sRAM_enable_o <= '0';
-                        else
-                            --IO
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '1';
-	                        sIO_enable_o <= '1';
-	                        --register
-                            mux_register_select_o <= "00";
-	                        sRegister_write_enable_o <= '0';
-	                        --ALU
-                            mux_ALU_select_o <= '1';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '0';
-                            sRAM_enable_o <= '0';
-                        end if;
-                    when others=>
-                        if instruction_i(12) = '0' then
-                            --IO
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-	                        sIO_enable_o <= '0';
-	                        --register
-                            mux_register_select_o <= "11";
-	                        sRegister_write_enable_o <= '1';
-	                        --ALU
-                            mux_ALU_select_o <= '1';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '0';
-                            sRAM_enable_o <= '0';
-                        else
-                            --IO
-                            mux_i_o_select_o <= '0';
-                            sIO_write_or_read_o <= '0';
-	                        sIO_enable_o <= '0';
-	                        --register
-                            mux_register_select_o <= "11";
-	                        sRegister_write_enable_o <= '1';
-	                        --ALU
-                            mux_ALU_select_o <= '0';
-                            --stack
-                            mux_stack_select_o <= '0';
-                            sStack_write_or_read_o <= '0';
-                            sStack_enable_o <= '0';
-                            --PC
-                            mux_PC_select_o <= '0';
-                            --RAM
-                            sRAM_write_or_read_o <= '0';
-                            sRAM_enable_o <= '0';
-                        end if;
-                    end case;
-        end case;
-	constant_kk_o <= instruction_i(7 downto 0);
-  	constant_aaa_o <= instruction_i(11 downto 0);
-  	sRegister_X_adresse_o <= instruction_i(11 downto 8);
-  	sRegister_Y_adresse_o <= instruction_i(7 downto 4);
-  	sALU_select_o <= instruction_i(17 downto 12);
-      end if;
-    end if;
-  end process operations;
+        when REG_read_and_RAM =>
+            case instruction_i(17 downto 12) is
+                when operation_STORE | operation_STORE_ss | operation_FETCH | operation_FETCH_ss =>
+                    sRAM_enable_o <= '1';
+                when others =>
+                    sRAM_enable_o <= '0';
+            end case;
+            case instruction_i(17 downto 12) is
+                when operation_INPUT | operation_INPUT_pp | operation_OUTPUT | operation_OUTPUT_PP =>
+                    sIO_enable_o <= '1';
+                when others =>
+                    sIO_enable_o <= '0';
+            end case;
+            state_next <= ALU;
+        when ALU =>
+            case instruction_i(17 downto 12) is
+                when operation_STORE | operation_STORE_ss | operation_FETCH | operation_FETCH_ss | operation_INPUT | operation_INPUT_pp | operation_OUTPUT | operation_OUTPUT_PP =>
+                    sALU_enable_o <= '0';
+                when others =>
+                    sALU_enable_o <= '1';
+            end case;
+            sRAM_enable_o <= '0';
+            sIO_enable_o <= '0';
+            state_next <= REG_write;
+        when REG_write =>
+            sALU_enable_o <= '0';
+            case instruction_i(17 downto 12) is
+                when operation_STORE | operation_STORE_ss | operation_OUTPUT | operation_OUTPUT_PP =>
+                    sRegister_write_enable_o <= '0';
+                when others =>
+                    sRegister_write_enable_o <= '1';
+            end case;
+            state_next <= PC;
+        when JUMPS =>
+            case instruction_i(17 downto 12) is
+                when operation_CALL | operation_RETURN =>
+                    sStack_enable_o <= '1';
+                when operation_CALLC | operation_RETURNC =>
+                    if carry_i = '1' then
+                        sStack_enable_o <= '1';
+                    else
+                        sStack_enable_o <= '0';
+                    end if;
+                when operation_CALLNC | operation_RETURNNC =>
+                    if carry_i = '0' then
+                        sStack_enable_o <= '1';
+                    else
+                        sStack_enable_o <= '0';
+                    end if;
+                when operation_CALLZ | operation_RETURNZ =>
+                    if zero_i = '1' then
+                        sStack_enable_o <= '1';
+                    else
+                        sStack_enable_o <= '0';
+                    end if;
+                when operation_CALLNZ | operation_RETURNNZ =>
+                    if zero_i = '0' then
+                        sStack_enable_o <= '1';
+                    else
+                        sStack_enable_o <= '0';
+                    end if;
+                when others =>
+                    sStack_enable_o <= '0';
+            end case;
+            state_next <= PC;
+    end case;
+end process operations;
+        
+
+mux_i_o_select_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT_pp or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_OUTPUT else '0';
+    
+sIO_write_or_read_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp
+else
+'1' when instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp else '0';
+    
+mux_ALU_select_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
+    instruction_i(17 downto 12) = operation_STORE_ss or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_FETCH
+else '1' when instruction_i(12) = '0' else '0';
+    
+mux_stack_select_o <= '0' when instruction_i(17 downto 16) = "11" or (instruction_i(17 downto 12) = operation_JUMP) or
+    (instruction_i(17 downto 12) = operation_CALL) or
+    ((instruction_i(17 downto 12) = operation_JUMPC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_JUMPZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNZ) and (zero_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNZ) and (zero_i = '0')) or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when (instruction_i(17 downto 12) = operation_RETURN) or
+    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '0')) else '0';
+    
+sStack_write_or_read_o <= '0' when instruction_i(17 downto 16) = "11" or (instruction_i(17 downto 12) = operation_JUMP) or
+    (instruction_i(17 downto 12) = operation_CALL) or
+    ((instruction_i(17 downto 12) = operation_JUMPC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_JUMPZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNZ) and (zero_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNZ) and (zero_i = '0')) or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when (instruction_i(17 downto 12) = operation_RETURN) or
+    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '0')) else '0';
+    
+mux_PC_select_o <= '0' when instruction_i(17 downto 16) = "11" or (instruction_i(17 downto 12) = operation_RETURN) or
+    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '0')) or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when (instruction_i(17 downto 12) = operation_JUMP) or (instruction_i(17 downto 12) = operation_CALL) or
+    ((instruction_i(17 downto 12) = operation_JUMPC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_JUMPZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNZ) and (zero_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_CALLZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNZ) and (zero_i = '0')) else '0';
+    
+sRAM_write_or_read_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else
+'1' when instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss else '0';
+
+mux_register_select_o <= "00" when instruction_i(17 downto 16) = "10" or instruction_i(17 downto 12) = operation_STORE or
+    instruction_i(17 downto 12) = operation_STORE_ss or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
+    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
+else  
+"01" when instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss
+else
+"11" when instruction_i(17 downto 16) = "11" else "11";
+
+constant_kk_o <= instruction_i(7 downto 0);
+constant_aaa_o <= instruction_i(11 downto 0);
+sRegister_X_adresse_o <= instruction_i(11 downto 8);
+sRegister_Y_adresse_o <= instruction_i(7 downto 4);
+sALU_select_o <= instruction_i(17 downto 12);
+
 end Behavioral;
