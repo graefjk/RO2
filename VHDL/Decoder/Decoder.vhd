@@ -32,8 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity Decoder is
--- port definition the ports are ordered by either it's an in port or an out port,
---furthermore the output port  are ordered by its component
+--port definition: the ports are ordered by either it's an in port or an out port,
+--furthermore the output ports are ordered by components.
   Port ( instruction_i: in std_logic_vector(17 downto 0); -- input signals
          clk_i: in std_logic;
          reset_i: in std_logic;
@@ -75,7 +75,7 @@ end Decoder;
 ---------------------------------------------------------------------------------------------------------------------------
 architecture Behavioral of Decoder is
 
--- We've defined the opcode of the deffirents operations as constants to make it easier to read and work with
+-- We've defined the opcode of the deffirent operations as constants to make it easier to read and work with them.
 
 constant operation_ADD: std_logic_vector(5 downto 0):= "000000"; -- opcode arethmetics
 constant operation_ADD_kk: std_logic_vector(5 downto 0):= "000001";
@@ -142,7 +142,7 @@ constant operation_INPUT_pp: std_logic_vector(5 downto 0):="010111";
 constant operation_OUTPUT: std_logic_vector(5 downto 0):="010100";
 constant operation_OUTPUT_pp: std_logic_vector(5 downto 0):="010101";
 
--- defining a new type which will be used in our state-mealy processor.
+-- defining a new type which will be used for the mealy state machine.
 type states is (PC, IP, ID, REG_read_and_RAM, ALU, REG_write, JUMPS);
 
 -- defining a new signal from type states, giving it the intial value "PC"
@@ -155,15 +155,15 @@ signal state_curr : states:=PC;
 ---------------------------------------------------------------------------------------------------------------------------
 
 begin
--- the main goal of this process is to make sure that all the data are being stable to read by other component
--- moreover the process create a dally which prevents the other components to make unnecessary steps or doing the next step early
--- e.g. fetching the next instruction when the previous instruction still processing, writing back  
---or excuting the same operation more than one time before the result is written back
--- the output port are seted out of the process to make its value independed of the clk signal. 
--- note: the latency of some operation is shorter than the latency of the other(e.g. Jump need shorter time to be fully processed than the addition).  
+-- The main goal of this process is to make sure that all the data is stable to be read by other components.
+-- Moreover the process creates a dally which prevents the other components to make unnecessary steps or doing the next step early,
+-- e.g. fetching the next instruction when the previous instruction is still processing, writing back  
+-- or excuting the same operation more than one time before the result is written back.
+-- The output ports are taken out of the process to make its value independed of the clk signal. 
+-- note: The latency of some operations is shorter than the latency of others(e.g. Jump needs shorter time to be fully processed than the addition).  
 mealy: process(clk_i, reset_i)
 begin
--- asyncron reset: resiting the value of the state_curr signal to its initial value PC when reset_i is equal to '1'
+-- asyncron reset: resetting the value of the state_curr signal to its initial value PC when reset_i is equal to '1'
  if reset_i='1' then 
     state_curr <= PC;
  elsif rising_edge(clk_i) then  -- otherwise the state-machine will do the next step
@@ -193,7 +193,7 @@ end process mealy;
 
 ------------------------------------------------------------- 
 -------------------------------------------------------------        
--- setting the output port depending on what opcode we have--
+-- setting the output ports depending on what opcode we have--
 ------------------------------------------------------------- 
 ------------------------------------------------------------- 
 
