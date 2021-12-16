@@ -43,6 +43,7 @@ component ALU
 		opcode_select_i: in std_logic_vector(5 downto 0);
 		reset_i: in std_logic;
 		clk_i: in std_logic;
+		enable_i: in std_logic;
        
 		sALU_o: out std_logic_vector(7 downto 0); -- output signals
 		sCARRY_o: out std_logic;
@@ -143,33 +144,53 @@ signal clk_s: std_logic;
 
 begin
 
-uut: PC port map (pc_s);
-uut: IP port map (pc_s, clk_s, instruction_s);
-uut: Decoder port map (instruction_s, 
-						clk_s, 
-						reset_s, 
-						carry_s, 
-						zero_s, 
-						constant_kk_s, 
-						constant_aaa_s, 
-						mux_i_o_select_s, 
-						sIO_write_or_read_s, 
-						sIO_enable_s, 
-						mux_register_select_s,
-						sRegister_X_adresse_s,
-						sRegister_Y_adresse_s,
-						sRegister_write_enable_s,
-						mux_ALU_select_s
-						sALU_select_s
-						mux_stack_select_s
-						sStack_write_or_read_s
-						sStack_enable_s
-						mux_PC_select_s
-						sRAM_write_or_read_s
-						sRAM_enable_s);
-uut: IO port map ();
+uut: PC port map (	pc_i => pc_i_s,
+					enable_i => enable_s,
+					reset_i => reset_s,
+					clk_i => clk_s,
+					pc_o => pc_s);
+		
 uut: ADD port map ();
+
 uut: Stack port map ();
+		
+uut: IP port map (	pc_i => pc_s,
+					clk_i => clk_s,
+					instruction_o => instruction_s);
+					
+uut: Decoder port map (	instruction_i => instruction_s,  
+						reset_i => reset_s, 
+						clk_i => clk_s,
+						carry_i => carry_s, 
+						zero_i => zero_s, 
+						constant_kk_o => constant_kk_s, 
+						constant_aaa_o => constant_aaa_s, 
+						mux_i_o_select_o => mux_i_o_select_s, 
+						sIO_write_or_read_o => sIO_write_or_read_s, 
+						sIO_enable_o => sIO_enable_s, 
+						mux_register_select_o => mux_register_select_s,
+						sRegister_X_adresse_o => sRegister_X_adresse_s,
+						sRegister_Y_adresse_o => sRegister_Y_adresse_s,
+						sRegister_write_enable_o => sRegister_write_enable_s,
+						mux_ALU_select_o => mux_ALU_select_s,
+						sALU_select_o => sALU_select_s,
+						sALU_enable_o => sALU_enable_s,
+						mux_stack_select_o => mux_stack_select_s,
+						sStack_write_or_read_o => sStack_write_or_read_s,
+						sStack_enable_o => sStack_enable_s,
+						mux_PC_select_o => mux_PC_select_s,
+						sPC_enable_o => sPC_enable_s,
+						sRAM_write_or_read_o => sRAM_write_or_read_s,
+						sRAM_enable_o => sRAM_enable_s);
+						
+uut: IO port map ( 	port_id_i => port_id_s,
+					value_i => value_i_s,
+					in_out_i => in_out_s,
+					enable_i => enable_s,
+					value_o => value_o_s
+					clk_i => clk_s
+					port_b => port_b_s);
+					
 uut: registers port map ();
 uut: ALU port map ();
 uut: rams_sp_wf port map ();
