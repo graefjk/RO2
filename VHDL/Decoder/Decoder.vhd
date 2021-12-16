@@ -197,87 +197,38 @@ end process mealy;
 ------------------------------------------------------------- 
 ------------------------------------------------------------- 
 
-mux_i_o_select_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
-    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
-    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
-    instruction_i(17 downto 12) = operation_INPUT_pp or instruction_i(17 downto 12) = operation_OUTPUT_pp
-else
-'1' when instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_OUTPUT else '0';
+mux_i_o_select_o <= '1' when instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_OUTPUT else '0';
     
-sIO_write_or_read_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
-    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
-    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
-    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp
-else
-'1' when instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp else '0';
+sIO_write_or_read_o <= '1' when instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp else '0';
     
 mux_ALU_select_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
     instruction_i(17 downto 12) = operation_STORE_ss or instruction_i(17 downto 12) = operation_FETCH_ss or
     instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
     instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
-else
-'1' when instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_FETCH
-else '1' when instruction_i(12) = '0' else '0';
+else '1' when instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_FETCH or instruction_i(12) = '0' else '0';
     
-mux_stack_select_o <= '0' when instruction_i(17 downto 16) = "11" or (instruction_i(17 downto 12) = operation_JUMP) or
-    (instruction_i(17 downto 12) = operation_CALL) or
-    ((instruction_i(17 downto 12) = operation_JUMPC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNC) and (carry_i = '0')) or
-    ((instruction_i(17 downto 12) = operation_CALLC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNC) and (carry_i = '0')) or
-    ((instruction_i(17 downto 12) = operation_JUMPZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNZ) and (zero_i = '0')) or
-    ((instruction_i(17 downto 12) = operation_CALLZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNZ) and (zero_i = '0')) or
-    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
-    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
-    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
-    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
-else
-'1' when (instruction_i(17 downto 12) = operation_RETURN) or
-    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '0')) or
-    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '0')) else '0';
+mux_stack_select_o <= '1' when (instruction_i(17 downto 12) = operation_RETURN) or
+    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNNZ) and (zero_i = '0')) else '0';
     
-sStack_write_or_read_o <= '0' when instruction_i(17 downto 16) = "11" or (instruction_i(17 downto 12) = operation_JUMP) or
-    (instruction_i(17 downto 12) = operation_CALL) or
-    ((instruction_i(17 downto 12) = operation_JUMPC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNC) and (carry_i = '0')) or
-    ((instruction_i(17 downto 12) = operation_CALLC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNC) and (carry_i = '0')) or
-    ((instruction_i(17 downto 12) = operation_JUMPZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNZ) and (zero_i = '0')) or
-    ((instruction_i(17 downto 12) = operation_CALLZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNZ) and (zero_i = '0')) or
-    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
-    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
-    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
-    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
-else
-'1' when (instruction_i(17 downto 12) = operation_RETURN) or
-    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '0')) or
-    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '0')) else '0';
+sStack_write_or_read_o <= '1' when (instruction_i(17 downto 12) = operation_RETURN) or
+    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNNC) and (carry_i = '0')) or
+    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNNZ) and (zero_i = '0')) else '0';
     
-mux_PC_select_o <= '0' when instruction_i(17 downto 16) = "11" or (instruction_i(17 downto 12) = operation_RETURN) or
-    ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNC) and (carry_i = '0')) or
-    ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_RETURNZ) and (zero_i = '0')) or
-    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
-    instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss or
-    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
-    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
-else
-'1' when (instruction_i(17 downto 12) = operation_JUMP) or (instruction_i(17 downto 12) = operation_CALL) or
+mux_PC_select_o <= '1' when (instruction_i(17 downto 12) = operation_JUMP) or (instruction_i(17 downto 12) = operation_CALL) or
     ((instruction_i(17 downto 12) = operation_JUMPC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNC) and (carry_i = '0')) or
     ((instruction_i(17 downto 12) = operation_CALLC) and (carry_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNC) and (carry_i = '0')) or
     ((instruction_i(17 downto 12) = operation_JUMPZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_JUMPNZ) and (zero_i = '0')) or
     ((instruction_i(17 downto 12) = operation_CALLZ) and (zero_i = '1')) or ((instruction_i(17 downto 12) = operation_CALLNZ) and (zero_i = '0')) else '0';
     
-sRAM_write_or_read_o <= '0' when instruction_i(17 downto 16) = "11" or instruction_i(17 downto 16) = "10" or
-    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_STORE_ss or
-    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
-    instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
-else
-'1' when instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss else '0';
+sRAM_write_or_read_o <= '1' when instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss else '0';
 
 mux_register_select_o <= "00" when instruction_i(17 downto 16) = "10" or instruction_i(17 downto 12) = operation_STORE or
     instruction_i(17 downto 12) = operation_STORE_ss or
     instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or
     instruction_i(17 downto 12) = operation_OUTPUT or instruction_i(17 downto 12) = operation_OUTPUT_pp
-else  
-"01" when instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss
-else
-"11" when instruction_i(17 downto 16) = "11" else "11";
+else "01" when instruction_i(17 downto 12) = operation_FETCH or instruction_i(17 downto 12) = operation_FETCH_ss
+else "11" when instruction_i(17 downto 16) = "11" else "11";
 
 constant_kk_o <= instruction_i(7 downto 0);
 constant_aaa_o <= instruction_i(11 downto 0);
@@ -289,38 +240,26 @@ sALU_enable_o <= '1' when (state_curr = ALU and
     (instruction_i(17 downto 12) /= operation_STORE_ss or instruction_i(17 downto 12) /= operation_FETCH_ss or
     instruction_i(17 downto 12) /= operation_STORE or instruction_i(17 downto 12) /= operation_FETCH or
     instruction_i(17 downto 12) /= operation_INPUT_pp or instruction_i(17 downto 12) /= operation_OUTPUT_pp or
-    instruction_i(17 downto 12) /= operation_INPUT or instruction_i(17 downto 12) /= operation_OUTPUT))
-else
-'0';
+    instruction_i(17 downto 12) /= operation_INPUT or instruction_i(17 downto 12) /= operation_OUTPUT)) else '0';
 
 sRegister_write_enable_o <= '1' when (state_curr = REG_write and
     (instruction_i(17 downto 12) /= operation_STORE_ss or instruction_i(17 downto 12) /= operation_OUTPUT_pp or
-    instruction_i(17 downto 12) /= operation_STORE or instruction_i(17 downto 12) /= operation_OUTPUT))
-else
-'0';
+    instruction_i(17 downto 12) /= operation_STORE or instruction_i(17 downto 12) /= operation_OUTPUT)) else '0';
 
 sStack_enable_o <= '1' when (state_curr = JUMPS and (instruction_i(17 downto 12) = operation_CALL or instruction_i(17 downto 12) = operation_RETURN)) or
     (state_curr = JUMPS and carry_i = '1' and (instruction_i(17 downto 12) = operation_CALLC or instruction_i(17 downto 12) = operation_RETURNC)) or
     (state_curr = JUMPS and carry_i = '0' and (instruction_i(17 downto 12) = operation_CALLNC or instruction_i(17 downto 12) = operation_RETURNNC)) or
     (state_curr = JUMPS and zero_i = '1' and (instruction_i(17 downto 12) = operation_CALLZ or instruction_i(17 downto 12) = operation_RETURNZ)) or
-    (state_curr = JUMPS and zero_i = '0' and (instruction_i(17 downto 12) = operation_CALLNZ or instruction_i(17 downto 12) = operation_RETURNNZ))
-else
-'0';
+    (state_curr = JUMPS and zero_i = '0' and (instruction_i(17 downto 12) = operation_CALLNZ or instruction_i(17 downto 12) = operation_RETURNNZ)) else '0';
 
 sIO_enable_o <= '1' when (state_curr = REG_read_and_RAM and
     (instruction_i(17 downto 12) = operation_INPUT_pp or instruction_i(17 downto 12) = operation_OUTPUT_pp or
-    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_OUTPUT))
-else
-'0';
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_OUTPUT)) else '0';
 
 sRAM_enable_o <= '1' when (state_curr = REG_read_and_RAM and
     (instruction_i(17 downto 12) = operation_STORE_ss or instruction_i(17 downto 12) = operation_FETCH_ss or
-    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_FETCH))
-else
-'0';
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_FETCH)) else '0';
 
-sPC_enable_o <= '1' when state_curr = PC
-else
-'0';
+sPC_enable_o <= '1' when state_curr = PC else '0';
 
 end Behavioral;
