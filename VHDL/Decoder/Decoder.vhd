@@ -237,14 +237,14 @@ sRegister_Y_adresse_o <= instruction_i(7 downto 4);
 sALU_select_o <= instruction_i(17 downto 12);
 
 sALU_enable_o <= '1' when (state_curr = ALU and
-    (instruction_i(17 downto 12) /= operation_STORE_ss or instruction_i(17 downto 12) /= operation_FETCH_ss or
-    instruction_i(17 downto 12) /= operation_STORE or instruction_i(17 downto 12) /= operation_FETCH or
-    instruction_i(17 downto 12) /= operation_INPUT_pp or instruction_i(17 downto 12) /= operation_OUTPUT_pp or
-    instruction_i(17 downto 12) /= operation_INPUT or instruction_i(17 downto 12) /= operation_OUTPUT)) else '0';
+    not(instruction_i(17 downto 12) = operation_STORE_ss or instruction_i(17 downto 12) = operation_FETCH_ss or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_FETCH or
+    instruction_i(17 downto 12) = operation_INPUT_pp or instruction_i(17 downto 12) = operation_OUTPUT_pp or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_OUTPUT)) else '0';
 
 sRegister_write_enable_o <= '1' when (state_curr = REG_write and
-    (instruction_i(17 downto 12) /= operation_STORE_ss or instruction_i(17 downto 12) /= operation_OUTPUT_pp or
-    instruction_i(17 downto 12) /= operation_STORE or instruction_i(17 downto 12) /= operation_OUTPUT)) else '0';
+    not(instruction_i(17 downto 12) = operation_STORE_ss or instruction_i(17 downto 12) = operation_OUTPUT_pp or
+    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_OUTPUT)) else '0';
 
 sStack_enable_o <= '1' when (state_curr = JUMPS and (instruction_i(17 downto 12) = operation_CALL or instruction_i(17 downto 12) = operation_RETURN)) or
     (state_curr = JUMPS and carry_i = '1' and (instruction_i(17 downto 12) = operation_CALLC or instruction_i(17 downto 12) = operation_RETURNC)) or
