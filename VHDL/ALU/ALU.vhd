@@ -93,213 +93,220 @@ constant operation_LOAD_kk : std_logic_vector(5 downto 0):="001111";
 begin
 operations: process(clk_i, reset_i)
 begin
- if reset_i='1' then
+ if reset_i='1' then --asyncron reset overrides the output
    result_s<= "00000000";
-
    carry_s<= '0';
    zero_s<= '0';
  else
-    if (rising_edge(clk_i) and enable_i='1' ) then
-      case opcode_select_i is
-      when operation_ADD | operation_ADD_kk => 
-          result_s<=  sA_i+ sB_i;
-          if (('0'&sA_i) +('0'&sB_i)) >"011111111" then 
-           carry_s <= '1';
-           else
-           carry_s <='0';
-          end if;
-          if (sA_i +sB_i) ="00000000" then 
-           zero_s <= '1';
-           else
-           zero_s <='0';
-          end if;
+    if (rising_edge(clk_i)) then
+		if (enable_i='1') then --ALU is active
+			case opcode_select_i is --The operation the ALU is currently supposed to perform.
+			when operation_ADD | operation_ADD_kk => 
+				result_s<=  sA_i+ sB_i;
+				if (('0'&sA_i) +('0'&sB_i)) >"011111111" then 
+					carry_s <= '1';
+				else
+					carry_s <='0';
+				end if;
+				if (sA_i +sB_i) ="00000000" then 
+					zero_s <= '1';
+				else
+					zero_s <='0';
+				end if;
 
-        when operation_ADDCY | operation_ADDCY_kk =>
-          result_s<= sA_i+ sB_i + carry_s ;
-          if ((('0'&sA_i) +('0'&sB_i)) + carry_s) >"011111111" then 
-           carry_s <= '1';
-           else
-           carry_s <='0';
-          end if;
-          if (sA_i +sB_i+ carry_s) ="00000000" then 
-           zero_s <= '1';
-           else
-           zero_s <='0';
-          end if;
+			when operation_ADDCY | operation_ADDCY_kk =>
+				result_s<= sA_i+ sB_i + carry_s ;
+				if ((('0'&sA_i) +('0'&sB_i)) + carry_s) >"011111111" then 
+					carry_s <= '1';
+				else
+					carry_s <='0';
+				end if;
+				if (sA_i +sB_i+ carry_s) ="00000000" then 
+					zero_s <= '1';
+				else
+					zero_s <='0';
+				end if;
         
-        when operation_SUB | operation_SUB_kk =>
-          result_s<= sA_i -sB_i;
-          if (sA_i <sB_i)  then 
-           carry_s <= '1';
-           else
-           carry_s <='0';
-          end if;
-          if (sA_i -sB_i) ="00000000" then 
-           zero_s <= '1';
-           else
-           zero_s <='0';
-          end if;
+			when operation_SUB | operation_SUB_kk =>
+				result_s<= sA_i -sB_i;
+				if (sA_i <sB_i)  then 
+					carry_s <= '1';
+				else
+					carry_s <='0';
+				end if;
+				if (sA_i -sB_i) ="00000000" then 
+					zero_s <= '1';
+				else
+					zero_s <='0';
+				end if;
                     
-        when operation_SUBCY | operation_SUBCY_kk=>
-          result_s<= sA_i -sB_i -carry_s;
-          if (sA_i <(sB_i+carry_s))  then 
-           carry_s <= '1';
-           else
-           carry_s <='0';
-          end if;
-          if (sA_i -sB_i -carry_s)="00000000" then 
-           zero_s <= '1';
-           else
-           zero_s <='0';
-          end if;
+			when operation_SUBCY | operation_SUBCY_kk=>
+				result_s<= sA_i -sB_i -carry_s;
+				if (sA_i <(sB_i+carry_s))  then 
+					carry_s <= '1';
+				else
+					carry_s <='0';
+				end if;
+				if (sA_i -sB_i -carry_s)="00000000" then 
+					zero_s <= '1';
+				else
+					zero_s <='0';
+				end if;
         
-        when operation_RL =>
-            carry_s <= sA_i(7);
-            result_s <= sA_i(6 downto 0) & sA_i(7);
-            if (sA_i(6 downto 0) & sA_i(7) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
+			when operation_RL =>
+				carry_s <= sA_i(7);
+				result_s <= sA_i(6 downto 0) & sA_i(7);
+				if (sA_i(6 downto 0) & sA_i(7) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
         
-        when operation_RR => 
-            carry_s <= sA_i(0);
-            result_s <= sA_i(0) & sA_i(7 downto 1);
-            if (sA_i(0) & sA_i(7 downto 1) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
+			when operation_RR => 
+				carry_s <= sA_i(0);
+				result_s <= sA_i(0) & sA_i(7 downto 1);
+				if (sA_i(0) & sA_i(7 downto 1) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
         
-        when operation_SL0 =>
-            carry_s <= sA_i(7);
-            result_s <= sA_i(6 downto 0) & "0";
-            if (sA_i(6 downto 0) & "0" = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
+			when operation_SL0 =>
+				carry_s <= sA_i(7);
+				result_s <= sA_i(6 downto 0) & "0";
+				if (sA_i(6 downto 0) & "0" = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
         
-        when operation_SL1 =>
-            carry_s <= sA_i(7);
-            result_s <= sA_i(6 downto 0) & "1";
-            if (sA_i(6 downto 0) & "1" = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
+			when operation_SL1 =>
+				carry_s <= sA_i(7);
+				result_s <= sA_i(6 downto 0) & "1";
+				if (sA_i(6 downto 0) & "1" = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
+		
+			when operation_SLA =>
+				result_s <= sA_i(6 downto 0) & carry_s;
+				if (sA_i(6 downto 0) & carry_s = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
+				carry_s <= sA_i(7);
         
-        when operation_SLA =>
-            result_s <= sA_i(6 downto 0) & carry_s;
-            if (sA_i(6 downto 0) & carry_s = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-            carry_s <= sA_i(7);
+			when operation_SLX =>
+				carry_s <= sA_i(7);
+				result_s <= sA_i(6 downto 0) & sA_i(0);
+				if (sA_i(6 downto 0) & sA_i(0) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
         
-        when operation_SLX =>
-            carry_s <= sA_i(7);
-            result_s <= sA_i(6 downto 0) & sA_i(0);
-            if (sA_i(6 downto 0) & sA_i(0) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
+			when operation_SR0 =>
+				carry_s <= sA_i(0);
+				result_s <= "0" & sA_i(7 downto 1);
+				if ("0" & sA_i(7 downto 1) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
         
-        when operation_SR0 =>
-            carry_s <= sA_i(0);
-            result_s <= "0" & sA_i(7 downto 1);
-            if ("0" & sA_i(7 downto 1) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
+			when operation_SR1 =>
+				carry_s <= sA_i(0);
+				result_s <= "1" & sA_i(7 downto 1);
+				if ("1" & sA_i(7 downto 1) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
         
-        when operation_SR1 =>
-            carry_s <= sA_i(0);
-            result_s <= "1" & sA_i(7 downto 1);
-            if ("1" & sA_i(7 downto 1) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
+			when operation_SRA =>
+				result_s <= carry_s & sA_i(7 downto 1);
+				if (carry_s & sA_i(7 downto 1) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
+				carry_s <= sA_i(0);
         
-        when operation_SRA =>
-            result_s <= carry_s & sA_i(7 downto 1);
-            if (carry_s & sA_i(7 downto 1) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-            carry_s <= sA_i(0);
+			when operation_SRX =>
+				carry_s <= sA_i(0);
+				result_s <= sA_i(7) & sA_i(7 downto 1);
+				if (sA_i(7) & sA_i(7 downto 1) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
         
-        when operation_SRX =>
-            carry_s <= sA_i(0);
-            result_s <= sA_i(7) & sA_i(7 downto 1);
-            if (sA_i(7) & sA_i(7 downto 1) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-        
-        when operation_COMPARE | operation_COMPARE_kk =>
-			result_s <= sA_i;
-			if (sA_i < sB_i) then
-                carry_s <= '1';
-            else
-                carry_s <= '0';
-            end if;
-			if (sA_i = sB_i) then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-        when operation_TEST | operation_TEST_kk =>
-			result_s <= sA_i;
-			carry_s <= (sA_i(7) and sB_i(7)) xor (sA_i(6) and sB_i(6)) xor (sA_i(5) and sB_i(5)) xor (sA_i(4) and sB_i(4)) xor (sA_i(3) and sB_i(3)) xor (sA_i(2) and sB_i(2)) xor (sA_i(1) and sB_i(1)) xor (sA_i(0) and sB_i(0));
-			if ((sA_i and sB_i) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-        when operation_AND | operation_AND_kk =>
-			result_s <= sA_i and sB_i;
-			carry_s <= '0';
-			if ((sA_i and sB_i) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-        when operation_OR | operation_OR_kk =>
-			result_s <= sA_i or sB_i;
-			carry_s <= '0';
-			if ((sA_i or sB_i) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-        when operation_XOR | operation_XOR_kk =>
-			result_s <= sA_i xor sB_i;
-			carry_s <= '0';
-			if ((sA_i xor sB_i) = "00000000") then
-                zero_s <= '1';
-            else
-                zero_s <= '0';
-            end if;
-        when operation_LOAD | operation_Load_kk=>
-             result_s <= sB_i;
-             carry_s <= carry_s;
-             zero_s <= zero_s;
-        when others=>
-            result_s <= result_s;
-            carry_s <= carry_s;
-            zero_s <= zero_s;
-      end case;
+			when operation_COMPARE | operation_COMPARE_kk =>
+				result_s <= sA_i;
+				if (sA_i < sB_i) then
+					carry_s <= '1';
+				else
+					carry_s <= '0';
+				end if;
+				if (sA_i = sB_i) then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
+				
+			when operation_TEST | operation_TEST_kk =>
+				result_s <= sA_i;
+				carry_s <= (sA_i(7) and sB_i(7)) xor (sA_i(6) and sB_i(6)) xor (sA_i(5) and sB_i(5)) xor (sA_i(4) and sB_i(4)) xor (sA_i(3) and sB_i(3)) xor (sA_i(2) and sB_i(2)) xor (sA_i(1) and sB_i(1)) xor (sA_i(0) and sB_i(0));
+				if ((sA_i and sB_i) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
+				
+			when operation_AND | operation_AND_kk =>
+				result_s <= sA_i and sB_i;
+				carry_s <= '0';
+				if ((sA_i and sB_i) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
+				
+			when operation_OR | operation_OR_kk =>
+				result_s <= sA_i or sB_i;
+				carry_s <= '0';
+				if ((sA_i or sB_i) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
+				
+			when operation_XOR | operation_XOR_kk =>
+				result_s <= sA_i xor sB_i;
+				carry_s <= '0';
+				if ((sA_i xor sB_i) = "00000000") then
+					zero_s <= '1';
+				else
+					zero_s <= '0';
+				end if;
+				
+			when operation_LOAD | operation_Load_kk=>
+				result_s <= sB_i;
+				carry_s <= carry_s;
+				zero_s <= zero_s;
+			when others=>
+				result_s <= result_s;
+				carry_s <= carry_s;
+				zero_s <= zero_s;
+			end case;
+		end if;
     end if;
  end if;
   
   end process operations;
+  
   sALU_o <= result_s;
   sCARRY_o <= carry_s;
   sZERO_o <= zero_s ;

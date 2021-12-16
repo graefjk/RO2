@@ -43,176 +43,205 @@ component ALU
        opcode_select_i: in std_logic_vector(5 downto 0);
        reset_i: in std_logic;
        clk_i: in std_logic;
+	   enable_i: in std_logic;
        
        sALU_o: out std_logic_vector(7 downto 0); -- output signals
        sCARRY_o: out std_logic;
        sZERO_o: out std_logic);
 end component;
 
-signal sA: std_logic_vector(7downto 0);
-signal sB: std_logic_vector(7downto 0);
-signal opcode_select: std_logic_vector(5 downto 0);
-signal reset: std_logic;
-signal clk: std_logic;
+signal sA_s: std_logic_vector(7 downto 0);
+signal sB_s: std_logic_vector(7 downto 0);
+signal opcode_select_s: std_logic_vector(5 downto 0);
+signal reset_s: std_logic;
+signal clk_s: std_logic;
+signal enable_s: std_logic;
 
-signal sALU: std_logic_vector(7 downto 0);
-signal sCARRY: std_logic;
-signal sZERO: std_logic;
+signal sALU_s: std_logic_vector(7 downto 0);
+signal sCARRY_s: std_logic;
+signal sZERO_s: std_logic;
 
 constant clk_period: time := 20 ns;
 constant waitTime: time := 1 ns;
 
 begin
 
-uut: ALU port map (sA, sB, opcode_select, reset, clk, sALU, sCARRY, sZERO);
+uut: ALU port map (
+			sA_i => sA_s,
+			sB_i => sB_s,
+			opcode_select_i => opcode_select_s, 
+			reset_i => reset_s, 
+			clk_i => clk_s, 
+			enable_i => enable_s,
+			sALU_o => sALU_s, 
+			sCARRY_o => sCARRY_s, 
+			sZERO_o =>sZERO_s);
 
     clk_process: process
     begin
-        clk <= '0';
+        clk_s <= '0';
         wait for clk_period / 2;
-        clk <= '1';
+        clk_s <= '1';
         wait for clk_period / 2;
     end process;
     
     rst_process: process
     begin
-        reset <= '0';
+        reset_s <= '0';
+		wait for 2 ns;
+		reset_s <= '1';
+		wait for 2 ns;
+		reset_s <= '0';
         wait for 275 ns;
-        --reset <= '1';
+        --reset_s <= '1';
         wait for 20 ns;
-        reset <= '0';
+        reset_s <= '0';
         wait;
     end process;
     
     stimuli: process
 	variable err_cnt: integer := 0; 
     begin
-		wait until falling_edge(clk);
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "000000"; --ADD
-		wait until falling_edge(clk);
-		if (not(sALU = "00111100" and sCARRY = '0' and sZERO = '0')) then
+		enable_s <= '1';
+		wait until falling_edge(clk_s);
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "000000"; --ADD
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00111100" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "ADD Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "000100"; --SUB--
-		wait until falling_edge(clk);
-		if (not(sALU = "11001101" and sCARRY = '0' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "000100"; --SUB--
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "11001101" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "SUB Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "110000"; --RL
-		wait until falling_edge(clk);
-		if (not(sALU = "00010010" and sCARRY = '0' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "110000"; --RL
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00010010" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "RL Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "110010"; --SL0
-		wait until falling_edge(clk);
-		if (not(sALU = "00010010" and sCARRY = '0' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "110010"; --SL0
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00010010" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "SL0 Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "110101"; --SLA
-		wait until falling_edge(clk);
-		if (not(sALU = "00010011" and sCARRY = '0' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "110101"; --SLA
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00010011" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "SLA Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "110111"; --SR1
-		wait until falling_edge(clk);
-		if (not(sALU = "10000100" and sCARRY = '1' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "110111"; --SR1
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "10000100" and sCARRY_s = '1' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "SR1 Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "10001001";
-		sB <= "00110011";
-		opcode_select <= "111001"; --SRX
-		wait until falling_edge(clk);
-		if (not(sALU = "11000100" and sCARRY = '1' and sZERO = '0')) then
+		sA_s <= "10001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "111001"; --SRX
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "11000100" and sCARRY_s = '1' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "SRX Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "011011"; --CompareKK
-		wait until falling_edge(clk);
-		if (not(sALU = "00001001" and sCARRY = '1' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "011011"; --CompareKK
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00001001" and sCARRY_s = '1' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "CompareKK Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "011000"; --Test--
-		wait until falling_edge(clk);
-		if (not(sALU = "00001001" and sCARRY = '1' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "011000"; --Test--
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00001001" and sCARRY_s = '1' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "Test Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "001000"; --AND
-		wait until falling_edge(clk);
-		if (not(sALU = "00000001" and sCARRY = '0' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "001000"; --AND
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00000001" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "AND Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "001011"; --ORKK
-		wait until falling_edge(clk);
-		if (not(sALU = "00111011" and sCARRY = '0' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "001011"; --ORKK
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00111011" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "ORKK Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "001100"; --XOR
-		wait until falling_edge(clk);
-		if (not(sALU = "00111010" and sCARRY = '0' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "001100"; --XOR
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00111010" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "XOR Failed";
 		end if;
 		
 		wait for waitTime;
-		sA <= "00001001";
-		sB <= "00110011";
-		opcode_select <= "001111"; --LOAD
-		wait until falling_edge(clk);
-		if (not(sALU = "00110011" and sCARRY = '0' and sZERO = '0')) then
+		sA_s <= "00001001";
+		sB_s<= "00110011";
+		opcode_select_s <= "001111"; --LOAD
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "00110011" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "LOAD Failed";
 		end if;
