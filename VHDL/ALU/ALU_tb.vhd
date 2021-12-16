@@ -105,7 +105,7 @@ uut: ALU port map (
 		enable_s <= '1';
 		wait until falling_edge(clk_s);
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "000000"; --ADD
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -116,18 +116,18 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "000100"; --SUB--
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
-		if (not(sALU_s = "11001101" and sCARRY_s = '0' and sZERO_s = '0')) then
+		if (not(sALU_s = "11010110" and sCARRY_s = '1' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "SUB Failed";
 		end if;
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "110000"; --RL
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -138,7 +138,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "110010"; --SL0
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -149,7 +149,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "110101"; --SLA
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -160,7 +160,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "110111"; --SR1
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -171,7 +171,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "10001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "111001"; --SRX
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -182,7 +182,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "011011"; --CompareKK
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -193,7 +193,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "011000"; --Test--
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -204,7 +204,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "001000"; --AND
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -215,7 +215,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "001011"; --ORKK
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -226,7 +226,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "001100"; --XOR
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
@@ -237,7 +237,7 @@ uut: ALU port map (
 		
 		wait for waitTime;
 		sA_s <= "00001001";
-		sB_s<= "00110011";
+		sB_s <= "00110011";
 		opcode_select_s <= "001111"; --LOAD
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
