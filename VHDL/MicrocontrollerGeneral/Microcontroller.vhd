@@ -130,15 +130,53 @@ component IP
            instruction_o : out STD_LOGIC);
 end component;
 
---signal sA: std_logic_vector(7downto 0);
---signal sB: std_logic_vector(7downto 0);
--- signal opcode_select: std_logic_vector(5 downto 0);
 signal reset_s: std_logic;
 signal clk_s: std_logic;
 
--- signal sALU: std_logic_vector(7 downto 0);
--- signal sCARRY: std_logic;
--- signal sZERO: std_logic;
+signal mux_PC_select_s: std_logic;
+signal mux_stack_select_s: std_logic;
+signal mux_register_select_s: std_logic_vector(1 downto 0);
+signal mux_ALU_select_s: std_logic;
+signal mux_i_o_select_s: std_logic;
+
+signal pc_i_s: std_logic;
+signal pc_s: std_logic;
+signal sADD_x_s: std_logic;
+signal sADD_y_s: std_logic;
+signal sADD_s: std_logic;
+signal sStack_s: std_logic;
+signal full_s: std_logic;
+signal empty_s: std_logic;
+signal instruction_s: std_logic;
+signal port_id_s: std_logic;
+signal value_i_s: std_logic;
+signal value_o_s: std_logic;
+signal port_b_s: std_logic;
+signal write_data_s: std_logic;
+signal sRegister_X_adresse_s: std_logic;
+signal sRegister_Y_adresse_s: std_logic;
+signal read_X_data_s: std_logic;
+signal read_Y_data_s: std_logic;
+signal sB_s: std_logic;
+signal sALU_select_s: std_logic;
+signal sALU_s: std_logic;
+signal sCARRY_s: std_logic;
+signal sZERO_s: std_logic;
+signal sZERO_s: std_logic;
+
+signal constant_kk_s: std_logic;
+signal constant_aaa_s: std_logic;
+
+signal sPC_enable_s: std_logic;
+signal sADD_enable_s: std_logic;
+signal sStack_write_or_read_s: std_logic;
+signal sStack_enable_s: std_logic;
+signal sIO_write_or_read_s: std_logic;
+signal sIO_enable_s: std_logic;
+signal sRegister_write_enable_s: std_logic;
+signal sALU_enable_s: std_logic;
+signal sRAM_write_or_read_s: std_logic;
+signal read_data_s: std_logic;
 
 -- constant clk_period: time := 20 ns;
 
@@ -152,7 +190,7 @@ uut: PC port map (	pc_i => pc_i_s,
 		
 uut: ADD port map (	sADD_x_i => sADD_x_s,
 					sADD_y_i => sADD_y_s,
-					enable_i => enable_s,
+					enable_i => sADD_enable_s,
 					reset_i => reset_s,
 					clk_i => clk_s,
 					sADD_o => sADD_s);
@@ -213,7 +251,7 @@ uut: registers port map (	write_data_i => write_data_s,
 							read_X_data_o => read_X_data_s,
 							read_Y_data_o => read_Y_data_s);
 							
-uut: ALU port map (	sA_i => sA_s,
+uut: ALU port map (	sA_i => read_X_data_s,
 					sB_i => sB_s,
 					opcode_select_i => sALU_select_s,
 					reset_i => reset_s,
@@ -226,7 +264,7 @@ uut: ALU port map (	sA_i => sA_s,
 uut: rams_sp_wf port map (	clk_i => clk_s,
 							write_or_read_i => sRAM_write_or_read_s,
 							enable_i => sRAM_enable_s,
-							address_i => address_s,
+							address_i => sB_s,
 							write_data_i => read_X_data_s,
 							read_data_o => read_data_s);
 
