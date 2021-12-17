@@ -223,7 +223,12 @@ uut: ALU port map (	sA_i => sA_s,
 					sCARRY_o => sCARRY_s,
 					sZERO_o => sZERO_s);
 					
-uut: rams_sp_wf port map ();
+uut: rams_sp_wf port map (	clk_i => clk_s,
+							write_or_read_i => sRAM_write_or_read_s,
+							enable_i => sRAM_enable_s,
+							address_i => address_s,
+							write_data_i => read_X_data_s,
+							read_data_o => read_data_s);
 
     clk_process: process
     begin
