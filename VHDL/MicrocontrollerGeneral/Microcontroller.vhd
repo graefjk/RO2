@@ -173,8 +173,8 @@ uut: IP port map (	pc_i => pc_s,
 uut: Decoder port map (	instruction_i => instruction_s,  
 						reset_i => reset_s, 
 						clk_i => clk_s,
-						carry_i => carry_s, 
-						zero_i => zero_s, 
+						carry_i => sCARRY_s, 
+						zero_i => sZERO_s, 
 						constant_kk_o => constant_kk_s, 
 						constant_aaa_o => constant_aaa_s, 
 						mux_i_o_select_o => mux_i_o_select_s, 
@@ -203,8 +203,26 @@ uut: IO port map ( 	port_id_i => port_id_s,
 					clk_i => clk_s
 					port_b => port_b_s);
 					
-uut: registers port map ();
-uut: ALU port map ();
+uut: registers port map (	write_data_i => write_data_s,
+							write_address_i => sRegister_X_adresse_s,
+							write_enable_i => sRegister_write_enable_s,
+							read_X_address_i => sRegister_X_adresse_s,
+							read_Y_address_i => sRegister_Y_adresse_s,
+							reset_i => reset_s,
+							clk_i => clk_s,
+							read_X_data_o => read_X_data_s,
+							read_Y_data_o => read_Y_data_s);
+							
+uut: ALU port map (	sA_i => sA_s,
+					sB_i => sB_s,
+					opcode_select_i => sALU_select_s,
+					reset_i => reset_s,
+					clk_i => clk_s,
+					enable_i => sALU_enable_s,
+					sALU_o => sALU_s,
+					sCARRY_o => sCARRY_s,
+					sZERO_o => sZERO_s);
+					
 uut: rams_sp_wf port map ();
 
     clk_process: process
