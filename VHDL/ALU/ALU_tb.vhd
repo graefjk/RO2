@@ -62,7 +62,7 @@ signal sCARRY_s: std_logic;
 signal sZERO_s: std_logic;
 
 constant clk_period: time := 20 ns;
-constant waitTime: time := 1 ns;
+constant waitTime: time := 0 ns;
 
 begin
 
@@ -85,25 +85,19 @@ uut: ALU port map (
         wait for clk_period / 2;
     end process;
     
-    rst_process: process
-    begin
-        reset_s <= '0';
-		wait for 2 ns;
-		reset_s <= '1';
-		wait for 2 ns;
-		reset_s <= '0';
-        wait for 275 ns;
-        --reset_s <= '1';
-        wait for 20 ns;
-        reset_s <= '0';
-        wait;
-    end process;
+
     
     stimuli: process
 	variable err_cnt: integer := 0; 
     begin
 		enable_s <= '1';
-		wait until falling_edge(clk_s);
+		reset_s <= '0';
+		sA_s <= "00000000";
+		sB_s <= "00000000";
+		opcode_select_s <= "111111";
+		wait for 120 ns;
+		
+		wait for waitTime;
 		sA_s <= "00001001";
 		sB_s <= "00110011";
 		opcode_select_s <= "000000"; --ADD
@@ -112,6 +106,17 @@ uut: ALU port map (
 		if (not(sALU_s = "00111100" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "ADD Failed";
+		end if;
+		
+		wait for waitTime;
+		sA_s <= "01001000";
+		sB_s <= "00000011";
+		opcode_select_s <= "000010"; --ADDCY
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "01001011" and sCARRY_s = '0' and sZERO_s = '0')) then
+			err_cnt := err_cnt+1;
+			report "ADDCY Failed";
 		end if;
 		
 		wait for waitTime;
@@ -128,12 +133,34 @@ uut: ALU port map (
 		wait for waitTime;
 		sA_s <= "00001001";
 		sB_s <= "00110011";
+		opcode_select_s <= "000110"; --SUBCY--
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "11010101" and sCARRY_s = '1' and sZERO_s = '0')) then
+			err_cnt := err_cnt+1;
+			report "SUBCY Failed";
+		end if;
+		
+		wait for waitTime;
+		sA_s <= "00001001";
+		sB_s <= "00110011";
 		opcode_select_s <= "110000"; --RL
 		wait until rising_edge(clk_s);
 		wait until falling_edge(clk_s);
 		if (not(sALU_s = "00010010" and sCARRY_s = '0' and sZERO_s = '0')) then
 			err_cnt := err_cnt+1;
 			report "RL Failed";
+		end if;
+		
+		wait for waitTime;
+		sA_s <= "00001001";
+		sB_s <= "00110011";
+		opcode_select_s <= "110001"; --RR
+		wait until rising_edge(clk_s);
+		wait until falling_edge(clk_s);
+		if (not(sALU_s = "10000100" and sCARRY_s = '1' and sZERO_s = '0')) then
+			err_cnt := err_cnt+1;
+			report "RR Failed";
 		end if;
 		
 		wait for waitTime;
@@ -247,9 +274,9 @@ uut: ALU port map (
 		end if;
 	
 		if err_cnt = 0 then
-            report "Ovedrall Test Passed";
+            report "Overall Test Passed";
         else
-            report "Ovedrall Test Failed";
+            report "Overall Test Failed";
         end if;       
         wait;
     end process;
