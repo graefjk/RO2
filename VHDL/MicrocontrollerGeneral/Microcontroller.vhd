@@ -145,14 +145,26 @@ signal clk_s: std_logic;
 begin
 
 uut: PC port map (	pc_i => pc_i_s,
-					enable_i => enable_s,
+					enable_i => sPC_enable_s,
 					reset_i => reset_s,
 					clk_i => clk_s,
 					pc_o => pc_s);
 		
-uut: ADD port map ();
+uut: ADD port map (	sADD_x_i => sADD_x_s,
+					sADD_y_i => sADD_y_s,
+					enable_i => enable_s,
+					reset_i => reset_s,
+					clk_i => clk_s,
+					sADD_o => sADD_s);
 
-uut: Stack port map ();
+uut: Stack port map (	sPC_i => pc_s,
+						write_or_read_i => sStack_write_or_read_s,
+						enable_i => sStack_enable_s,
+						reset_i => reset_s,
+						clk_i => clk_s,
+						sStack_o => sStack_s,
+						full_o => full_s,
+						empty_o => empty_s);
 		
 uut: IP port map (	pc_i => pc_s,
 					clk_i => clk_s,
@@ -185,8 +197,8 @@ uut: Decoder port map (	instruction_i => instruction_s,
 						
 uut: IO port map ( 	port_id_i => port_id_s,
 					value_i => value_i_s,
-					in_out_i => in_out_s,
-					enable_i => enable_s,
+					in_out_i => sIO_write_or_read_s,
+					enable_i => sIO_enable_s,
 					value_o => value_o_s
 					clk_i => clk_s
 					port_b => port_b_s);
