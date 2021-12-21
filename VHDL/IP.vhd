@@ -41,7 +41,7 @@ entity IP is
 end IP;
 
 architecture Behavioral of IP is
-    type rom_type is array (4096 downto 0) of std_ulogic_vector(17 downto 0);
+    type rom_type is array (4095 downto 0) of std_ulogic_vector(17 downto 0);
     --initializes the rom from the given file
     impure function InitRomFromFile (RomFileName : in string) return rom_type is 
         --The file to be read
