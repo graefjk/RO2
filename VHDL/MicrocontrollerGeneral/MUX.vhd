@@ -22,18 +22,18 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+
 entity MUX is
-	generic(mux_width_g: integer := 8);
-	Port (	mux_s0_i: in std_logic_vector(mux_width_g - 1 downto 0); -- input signals
-			mux_s1_i: in std_logic_vector(mux_width_g - 1 downto 0);
-			mux_select_i: in std_logic;
+    generic(    mux_width_g: integer := 8);
+	port(	    mux_s0_i: in std_ulogic_vector(mux_width_g - 1 downto 0); -- input signals
+			    mux_s1_i: in std_ulogic_vector(mux_width_g - 1 downto 0);
+			    mux_select_i: in std_ulogic; -- select signals
 		 
-			mux_o : in std_logic_vector(mux_width_g - 1 downto 0); -- output signals
+			    mux_o : out std_ulogic_vector(mux_width_g - 1 downto 0)); -- output signals
 end MUX;
 
 architecture Behavioral of MUX is
 begin
-mux_o <= mux_s0_i when mux_select_i = '0' 
-else mux_s1_i when mux_select_i = '1'; 
-
+mux_o <=   mux_s0_i when mux_select_i = '0' else 
+           mux_s1_i; 
 end Behavioral;
