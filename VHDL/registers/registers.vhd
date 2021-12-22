@@ -23,10 +23,13 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
+library work;
+use work.microcontroller_package.all;
+
 
 entity registers is
-    generic(    register_width_g: integer := 8; 
-                register_select_size_g: integer := 4);
+    generic(    register_width_g: integer := architecture_width_c; 
+                register_select_size_g: integer := register_select_size_c);
     Port(   write_data_i : in std_ulogic_vector(register_width_g -1 downto 0);
             write_address_i : in std_ulogic_vector(register_select_size_g -1 downto 0);
             write_enable_i : in std_ulogic;

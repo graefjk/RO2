@@ -23,11 +23,14 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
+library work;
+use work.microcontroller_package.all;
+
 
 entity ram is
-    generic(    ram_width_g: integer := 8; 
-                ram_select_size_g: integer := 8;
-                ram_style_g: string := "distributed"); -- "registers", "distributed" or "block" can be used here
+    generic(    ram_width_g: integer := architecture_width_c;
+                ram_select_size_g: integer := ram_select_size_c;
+                ram_style_g: string := ram_style_c);
     port(       write_data_i : in std_ulogic_vector(ram_width_g -1 downto 0);
                 address_i : in std_ulogic_vector(ram_select_size_g -1 downto 0);
                 write_or_read_i : in std_ulogic;

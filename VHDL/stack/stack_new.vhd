@@ -22,11 +22,13 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+library work;
+use work.microcontroller_package.all;
 
 entity stack_new is
-    generic(    instruction_address_g: integer := 12;
-                stack_depth_g: integer := 128;
-                stack_style_g: string := "distributed"); -- "registers", "distributed" or "block" can be used here
+    generic(    instruction_address_g: integer := instruction_address_c;
+                stack_depth_g: integer := stack_depth_c;
+                stack_style_g: string := stack_style_c); -- "registers", "distributed" or "block" can be used here
     port(   sPC_i : in std_ulogic_vector( instruction_address_g -1 downto 0);
             write_or_read_i: in std_ulogic; -- 0 for write, 1 for read
             enable_i: in std_ulogic;
