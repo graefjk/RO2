@@ -24,10 +24,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 
 entity stack is
-    generic(    instruction_width_g: integer := 12;
+    generic(    instruction_address_g: integer := 12;
                 stack_depth_g: integer := 128;
                 stack_style_g: string := "distributed"); -- "registers", "distributed" or "block" can be used here
-    port(   sPC_i : in std_ulogic_vector( instruction_width_g -1 downto 0);
+    port(   sPC_i : in std_ulogic_vector( instruction_address_g -1 downto 0);
             write_or_read_i: in std_ulogic; -- 0 for write, 1 for read
             enable_i: in std_ulogic;
             reset_i: in std_ulogic;
@@ -36,11 +36,11 @@ entity stack is
             full_o: out std_ulogic;
             empty_o: out std_ulogic;
             
-            sStack_o: out std_ulogic_vector( instruction_width_g -1 downto 0)); 
+            sStack_o: out std_ulogic_vector( instruction_address_g -1 downto 0)); 
 end stack;
 
 architecture Behavioral of stack is
-    type stack_type is array (stack_depth_g downto 1) of std_ulogic_vector( instruction_width_g -1 downto 0);
+    type stack_type is array (stack_depth_g downto 1) of std_ulogic_vector( instruction_address_g -1 downto 0);
     signal stack_s : stack_type := (others => (others => '0'));
     attribute ram_style : string;
     attribute ram_style of stack_s : signal is stack_style_g;
