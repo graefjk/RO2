@@ -51,7 +51,7 @@ signal empty_s: std_ulogic;
 
 signal mux_PC_select_s: std_logic;
 signal mux_stack_select_s: std_logic;
-signal mux_register_select_s: std_logic_vector(1 downto 0);
+signal mux_register_select_s: std_ulogic_vector(1 downto 0);
 signal mux_ALU_select_s: std_logic;
 signal mux_i_o_select_s: std_logic;
 
@@ -60,7 +60,7 @@ signal pc_s: std_ulogic_vector(instruction_address_c -1 downto 0);
 signal sADD_x_s: std_logic;
 signal sADD_y_s: std_logic;
 signal sADD_s: std_logic;
-signal instruction_s: std_ulogic_vector;
+signal instruction_s: std_ulogic_vector(17 downto 0);
 signal port_id_s: std_logic;
 signal value_i_s: std_logic;
 signal value_o_s: std_logic;
@@ -86,14 +86,15 @@ signal sStack_enable_s: std_ulogic;
 
 
 
-signal sALU_select_s: std_logic;
-signal sALU_s: std_logic;
+signal sALU_select_s: std_ulogic_vector(5 downto 0);
+signal sALU_s: std_ulogic_vector(7 downto 0);
 signal sCARRY_s: std_logic;
 signal sZERO_s: std_logic;
+signal sB_s: std_ulogic_vector(7 downto 0);
 
 
-signal constant_kk_s: std_logic;
-signal constant_aaa_s: std_logic;
+signal constant_kk_s: std_ulogic_vector(7 downto 0);
+signal constant_aaa_s: std_ulogic_vector(11 downto 0);
 
 signal sPC_enable_s: std_logic;
 signal sADD_enable_s: std_logic;

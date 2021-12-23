@@ -42,40 +42,41 @@ package microcontroller_package is
 
 
     component ALU
-        port(   sA_i: in std_logic_vector(7 downto 0); --input signals
-		        sB_i: in std_logic_vector(7 downto 0);
-		        opcode_select_i: in std_logic_vector(5 downto 0);
+        port(   sA_i: in std_ulogic_vector(7 downto 0); --input signals
+		        sB_i: in std_ulogic_vector(7 downto 0);
+		        opcode_select_i: in std_ulogic_vector(5 downto 0);
 		        reset_i: in std_logic;
 		        clk_i: in std_logic;
 		        enable_i: in std_logic;
        
-		        sALU_o: out std_logic_vector(7 downto 0); -- output signals
+		        sALU_o: out std_ulogic_vector(7 downto 0); -- output signals
 		        sCARRY_o: out std_logic;
 		        sZERO_o: out std_logic);
     end component;
 
     component Decoder
-	    port(   instruction_i: in std_logic_vector(17 downto 0); -- input signals
+	    port(   instruction_i: in std_ulogic_vector(17 downto 0); -- input signals
                 clk_i: in std_logic;
                 reset_i: in std_logic;
         
                 carry_i: in std_logic;--carry/zero
                 zero_i: in std_logic;
         
-                constant_kk_o: out std_logic_vector(7 downto 0); -- output signals -- Constant
-                constant_aaa_o: out std_logic_vector(11 downto 0);
+                constant_kk_o: out std_ulogic_vector(7 downto 0); -- output signals -- Constant
+                constant_aaa_o: out std_ulogic_vector(11 downto 0);
         
                 mux_i_o_select_o: out std_logic; -- i/o signals
 		        sIO_write_or_read_o: out std_logic;
 		        sIO_enable_o: out std_logic;
         
-                mux_register_select_o: out std_logic_vector(1 downto 0); --register signals
-	            sRegister_X_adresse_o: out std_logic_vector(3 downto 0); 
-                sRegister_Y_adresse_o: out std_logic_vector(3 downto 0);
+                mux_register_select_o: out std_ulogic_vector(1 downto 0); --register signals
+	            sRegister_X_adresse_o: out std_ulogic_vector(3 downto 0); 
+                sRegister_Y_adresse_o: out std_ulogic_vector(3 downto 0);
 	            sRegister_write_enable_o: out std_logic;
         
                 mux_ALU_select_o: out std_logic; --ALU signals
-                sALU_select_o: out std_logic_vector(5 downto 0);
+                sALU_select_o: out std_ulogic_vector(5 downto 0);
+				sALU_enable_o: out std_logic;
         
         
                 mux_stack_select_o: out std_logic; --stack signals
@@ -83,6 +84,7 @@ package microcontroller_package is
                 sStack_enable_o: out std_logic;
         
                 mux_PC_select_o: out std_logic;-- PC signal
+				sPC_enable_o: out std_logic;
         
                 sRAM_write_or_read_o: out std_logic; -- RAM signals
                 sRAM_enable_o: out std_logic);
