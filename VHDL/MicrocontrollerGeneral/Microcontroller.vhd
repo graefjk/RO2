@@ -55,16 +55,18 @@ signal mux_register_select_s: std_ulogic_vector(1 downto 0);
 signal mux_ALU_select_s: std_logic;
 signal mux_i_o_select_s: std_logic;
 
-signal pc_i_s: std_logic;
+signal mux_register_s: std_ulogic_vector(architecture_width_c -1 downto 0);
+
+signal pc_i_s: std_ulogic_vector(instruction_address_c -1 downto 0);
 signal pc_s: std_ulogic_vector(instruction_address_c -1 downto 0);
-signal sADD_x_s: std_logic;
-signal sADD_y_s: std_logic;
-signal sADD_s: std_logic;
+signal sADD_x_s: std_ulogic_vector(architecture_width_c -1 downto 0);
+signal sADD_y_s: std_ulogic_vector(architecture_width_c -1 downto 0);
+signal sADD_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 signal instruction_s: std_ulogic_vector(17 downto 0);
 signal port_id_s: std_logic;
-signal value_i_s: std_logic;
-signal value_o_s: std_logic;
-signal port_b_s: std_logic;
+signal value_i_s: std_ulogic_vector(architecture_width_c -1 downto 0);
+signal value_o_s: std_ulogic_vector(architecture_width_c -1 downto 0);
+signal port_b_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 
 --register input signals
 signal write_data_s: std_ulogic_vector(architecture_width_c -1 downto 0);
@@ -188,7 +190,39 @@ alu_instance: ALU
 				sALU_o => sALU_s,
 				sCARRY_o => sCARRY_s,
 				sZERO_o => sZERO_s);
+
 				
+				
+mux_PC_instance: MUX
+    port map(   mux_s0_i => sADD_s,
+				mux_s1_i => constant_aaa_s,
+				mux_select_i => mux_PC_select_s,
+				mux_o => pc_i_s);	
+
+				
+				
+mux_Stack_instance: MUX
+    port map(   mux_s0_i => pc_s,
+				mux_s1_i => sStack_s,
+				mux_select_i => mux_stack_select_s,
+				mux_o => sADD_y_s);	
+				
+
+				
+mux_register1_instance: MUX
+    port map(   mux_s0_i => value_i_s,
+				mux_s1_i => mux_register_s,
+				mux_select_i => mux_register_select_s(0),
+				mux_o => write_data_s);		
+				
+
+				
+mux_register2_instance: MUX
+    port map(   mux_s0_i => sRAM_read_data_s,
+				mux_s1_i => sALU_s,
+				mux_select_i => mux_register_select_s(1),
+				mux_o => mux_register_s);	
+									
 
 				
 mux_ALU_instance: MUX
@@ -196,7 +230,17 @@ mux_ALU_instance: MUX
 				mux_s1_i => read_Y_data_s,
 				mux_select_i => mux_ALU_select_s,
 				mux_o => sB_s);	
-					
+									
+
+				
+mux_i_o_instance: MUX
+    port map(   mux_s0_i => constant_kk_s,
+				mux_s1_i => read_Y_data_s,
+				mux_select_i => mux_i_o_select_s,
+				mux_o => port_b_s);	
+				
+				
+				
 --top level mapping					
 clk_s <= clk_i;
 reset_s <= reset_i;
