@@ -188,7 +188,14 @@ alu_instance: ALU
 				sALU_o => sALU_s,
 				sCARRY_o => sCARRY_s,
 				sZERO_o => sZERO_s);
-					
+				
+
+				
+mux_ALU_instance: MUX
+    port map(   mux_s0_i => constant_kk_s,
+				mux_s1_i => read_Y_data_s,
+				mux_select_i => mux_ALU_select_s,
+				mux_o => sB_s);	
 					
 --top level mapping					
 clk_s <= clk_i;

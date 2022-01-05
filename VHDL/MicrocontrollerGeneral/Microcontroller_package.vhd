@@ -137,5 +137,13 @@ package microcontroller_package is
                 clk_i : in std_ulogic;
                 instruction_o : out std_ulogic_vector(17 downto 0));
     end component;
+	
+	component MUX
+		generic(    mux_width_g: integer := architecture_width_c);
+		port(	    mux_s0_i: in std_ulogic_vector(mux_width_g - 1 downto 0); -- input signals
+					mux_s1_i: in std_ulogic_vector(mux_width_g - 1 downto 0);
+					mux_select_i: in std_ulogic; -- select signals
+					mux_o : out std_ulogic_vector(mux_width_g - 1 downto 0)); -- output signals
+    end component;
 
 end package microcontroller_package;
