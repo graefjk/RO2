@@ -179,7 +179,19 @@ decoder_instance: Decoder
 				sRAM_enable_o => sRAM_enable_s);	
 					
 
-							
+
+io_instance: IO
+    port map(   port_id_i => port_b_s,
+				value_i => read_X_data_s, 
+				in_out_i => sIO_write_or_read_s,
+				enable_i => sIO_enable_s,
+				value_o => value_i_s,
+				clk_i => clk_s,
+				mio_b => ,
+				port_b =>);
+
+				
+											
 alu_instance: ALU
     port map(   sA_i => read_X_data_s,
 				sB_i => sB_s,
@@ -190,6 +202,25 @@ alu_instance: ALU
 				sALU_o => sALU_s,
 				sCARRY_o => sCARRY_s,
 				sZERO_o => sZERO_s);
+				
+	
+					
+
+pc_instance: PC
+    port map(   pc_i => pc_i_s,
+                enable_i => sPC_enable_s,
+                reset_i => reset_s,
+                clk_i => clk_s,
+                pc_o => pc_s);
+				
+				
+				
+add_instance: ADD
+    port map(   sA_i => sADD_y_s,
+				sB_i => "0000",
+				reset_i => reset_s,
+				clk_i => clk_s,
+				sC_o => sADD_s);
 
 				
 				

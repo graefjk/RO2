@@ -40,6 +40,14 @@ package microcontroller_package is
     constant stack_depth_c : integer := 128; -- depth of the stack
     constant stack_style_c : string := "distributed"; -- "registers", "distributed" or "block" can be used here
 
+	component ADD
+        port(   sA_i: in std_ulogic_vector(7 downto 0); --input signals
+		        sB_i: in std_ulogic_vector(7 downto 0);
+		        reset_i: in std_logic;
+		        clk_i: in std_logic;
+       
+		        sC_o: out std_ulogic_vector(7 downto 0)); -- output signals);
+    end component;
 
     component ALU
         port(   sA_i: in std_ulogic_vector(7 downto 0); --input signals
@@ -89,6 +97,51 @@ package microcontroller_package is
                 sRAM_write_or_read_o: out std_logic; -- RAM signals
                 sRAM_enable_o: out std_logic);
     end component;
+	
+	component IO
+		Port ( 	port_id_i : in std_ulogic_vector(7 downto 0);
+				value_i : in std_ulogic_vector(7 downto 0);
+				in_out_i : in std_ulogic_vector(7 downto 0);
+				enable_i : in std_ulogic;
+				value_o : out std_ulogic_vector(7 downto 0);
+				clk_i : in std_ulogic;
+				mio_b : inout std_ulogic_vector (53 downto 0);
+				port_b : inout std_ulogic_vector (11 downto 0));
+    end component;
+	
+	component IP
+        port(   pc_i : in std_ulogic_vector(11 downto 0);
+                clk_i : in std_ulogic;
+                instruction_o : out std_ulogic_vector(17 downto 0));
+    end component;
+	
+	component MUX
+		generic(    mux_width_g: integer := architecture_width_c);
+		port(	    mux_s0_i: in std_ulogic_vector(mux_width_g - 1 downto 0); -- input signals
+					mux_s1_i: in std_ulogic_vector(mux_width_g - 1 downto 0);
+					mux_select_i: in std_ulogic; -- select signals
+					mux_o : out std_ulogic_vector(mux_width_g - 1 downto 0)); -- output signals
+    end component;
+    	
+	component PC
+		port (    pc_i : in std_logic_vector(11 downto 0); -- input signals
+                  enable_i : in std_logic;
+                  reset_i : in std_logic;
+                  clk_i : in std_logic;
+                  pc_o : out std_logic_vector(11 downto 0)); -- output signals
+    end component;
+
+    component ram 
+        generic(    ram_width_g: integer := architecture_width_c; 
+                    ram_select_size_g: integer := ram_select_size_c;
+                    ram_style_g: string := ram_style_c); -- "registers", "distributed" or "block" can be used here
+        port(       write_data_i : in std_ulogic_vector(ram_width_g -1 downto 0);
+                    address_i : in std_ulogic_vector(ram_select_size_g -1 downto 0);
+                    write_or_read_i : in std_ulogic;
+                    enable_i : in std_ulogic;
+                    clk_i : in std_ulogic;
+                    read_data_o : out std_ulogic_vector(ram_width_g -1 downto 0));
+    end component;
 
     component registers
         generic(    register_width_g: integer := architecture_width_c; 
@@ -102,18 +155,6 @@ package microcontroller_package is
                     clk_i : in std_logic;
                     read_X_data_o : out std_ulogic_vector(register_width_g -1 downto 0);
                     read_Y_data_o : out std_ulogic_vector(register_width_g -1 downto 0));
-    end component;
-
-    component ram 
-        generic(    ram_width_g: integer := architecture_width_c; 
-                    ram_select_size_g: integer := ram_select_size_c;
-                    ram_style_g: string := ram_style_c); -- "registers", "distributed" or "block" can be used here
-        port(       write_data_i : in std_ulogic_vector(ram_width_g -1 downto 0);
-                    address_i : in std_ulogic_vector(ram_select_size_g -1 downto 0);
-                    write_or_read_i : in std_ulogic;
-                    enable_i : in std_ulogic;
-                    clk_i : in std_ulogic;
-                    read_data_o : out std_ulogic_vector(ram_width_g -1 downto 0));
     end component;
     
     component stack
@@ -130,20 +171,6 @@ package microcontroller_package is
                 empty_o: out std_ulogic;
             
                 sStack_o: out std_ulogic_vector( instruction_address_g -1 downto 0)); 
-    end component;
-
-    component IP
-        port(   pc_i : in std_ulogic_vector(11 downto 0);
-                clk_i : in std_ulogic;
-                instruction_o : out std_ulogic_vector(17 downto 0));
-    end component;
-	
-	component MUX
-		generic(    mux_width_g: integer := architecture_width_c);
-		port(	    mux_s0_i: in std_ulogic_vector(mux_width_g - 1 downto 0); -- input signals
-					mux_s1_i: in std_ulogic_vector(mux_width_g - 1 downto 0);
-					mux_select_i: in std_ulogic; -- select signals
-					mux_o : out std_ulogic_vector(mux_width_g - 1 downto 0)); -- output signals
     end component;
 
 end package microcontroller_package;
