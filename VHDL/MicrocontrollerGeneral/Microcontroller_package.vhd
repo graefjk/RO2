@@ -101,7 +101,7 @@ package microcontroller_package is
 	component IO
 		Port ( 	port_id_i : in std_ulogic_vector(7 downto 0);
 				value_i : in std_ulogic_vector(7 downto 0);
-				in_out_i : in std_ulogic_vector(7 downto 0);
+				in_out_i : in std_ulogic;
 				enable_i : in std_ulogic;
 				value_o : out std_ulogic_vector(7 downto 0);
 				clk_i : in std_ulogic;
