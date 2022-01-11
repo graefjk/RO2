@@ -98,15 +98,39 @@ package microcontroller_package is
                 sRAM_enable_o: out std_logic);
     end component;
 	
-	component IO
-		Port ( 	port_id_i : in std_ulogic_vector(7 downto 0);
-				value_i : in std_ulogic_vector(7 downto 0);
-				in_out_i : in std_ulogic;
-				enable_i : in std_ulogic;
-				value_o : out std_ulogic_vector(7 downto 0);
-				clk_i : in std_ulogic;
-				mio_b : inout std_ulogic_vector (53 downto 0);
-				port_b : inout std_ulogic_vector (11 downto 0));
+	component design_1_wrapper
+		port (
+    DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );
+    DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
+    DDR_cas_n : inout STD_LOGIC;
+    DDR_ck_n : inout STD_LOGIC;
+    DDR_ck_p : inout STD_LOGIC;
+    DDR_cke : inout STD_LOGIC;
+    DDR_cs_n : inout STD_LOGIC;
+    DDR_dm : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+    DDR_dq : inout STD_LOGIC_VECTOR ( 31 downto 0 );
+    DDR_dqs_n : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+    DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+    DDR_odt : inout STD_LOGIC;
+    DDR_ras_n : inout STD_LOGIC;
+    DDR_reset_n : inout STD_LOGIC;
+    DDR_we_n : inout STD_LOGIC;
+    FIXED_IO_ddr_vrn : inout STD_LOGIC;
+    FIXED_IO_ddr_vrp : inout STD_LOGIC;
+    FIXED_IO_mio : inout STD_LOGIC_VECTOR ( 53 downto 0 );
+    FIXED_IO_ps_clk : inout STD_LOGIC;
+    FIXED_IO_ps_porb : inout STD_LOGIC;
+    FIXED_IO_ps_srstb : inout STD_LOGIC;
+    port_id_i : IN std_ulogic_vector(7 DOWNTO 0);
+    value_i : IN std_ulogic_vector(7 DOWNTO 0);
+    in_out_i : IN STD_LOGIC;
+    enable_i : IN STD_LOGIC;
+    value_o : OUT std_ulogic_vector(7 DOWNTO 0);
+    clk_i : in STD_LOGIC;
+    port_b : inout STD_LOGIC_VECTOR ( 71 downto 0 );
+    port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    port_o : out STD_LOGIC_VECTOR ( 7 downto 0 )
+  );
     end component;
 	
 	component IP
@@ -124,11 +148,11 @@ package microcontroller_package is
     end component;
     	
 	component PC
-		port (    pc_i : in std_logic_vector(11 downto 0); -- input signals
+		port (    pc_i : in std_ulogic_vector(11 downto 0); -- input signals
                   enable_i : in std_logic;
                   reset_i : in std_logic;
                   clk_i : in std_logic;
-                  pc_o : out std_logic_vector(11 downto 0)); -- output signals
+                  pc_o : out std_ulogic_vector(11 downto 0)); -- output signals
     end component;
 
     component ram 
