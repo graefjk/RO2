@@ -26,32 +26,32 @@ use work.microcontroller_package.all;
 
 entity Microcontroller is
     port(   clk_i: in std_ulogic;
-            reset_i: in std_ulogic; --TODO: define IO ports here
+            reset_i: in std_ulogic;
             --
-            DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );
-    DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
-    DDR_cas_n : inout STD_LOGIC;
-    DDR_ck_n : inout STD_LOGIC;
-    DDR_ck_p : inout STD_LOGIC;
-    DDR_cke : inout STD_LOGIC;
-    DDR_cs_n : inout STD_LOGIC;
-    DDR_dm : inout STD_LOGIC_VECTOR ( 3 downto 0 );
-    DDR_dq : inout STD_LOGIC_VECTOR ( 31 downto 0 );
-    DDR_dqs_n : inout STD_LOGIC_VECTOR ( 3 downto 0 );
-    DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 );
-    DDR_odt : inout STD_LOGIC;
-    DDR_ras_n : inout STD_LOGIC;
-    DDR_reset_n : inout STD_LOGIC;
-    DDR_we_n : inout STD_LOGIC;
-    FIXED_IO_ddr_vrn : inout STD_LOGIC;
-    FIXED_IO_ddr_vrp : inout STD_LOGIC;
-    FIXED_IO_mio : inout STD_LOGIC_VECTOR ( 53 downto 0 );
-    FIXED_IO_ps_clk : inout STD_LOGIC;
-    FIXED_IO_ps_porb : inout STD_LOGIC;
-    FIXED_IO_ps_srstb : inout STD_LOGIC;
-    port_b : inout STD_LOGIC_VECTOR ( 71 downto 0 );
-    port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
-    port_o : out STD_LOGIC_VECTOR ( 7 downto 0 ));
+            DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );--IO ports
+            DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
+            DDR_cas_n : inout STD_LOGIC;
+            DDR_ck_n : inout STD_LOGIC;
+            DDR_ck_p : inout STD_LOGIC;
+            DDR_cke : inout STD_LOGIC;
+            DDR_cs_n : inout STD_LOGIC;
+            DDR_dm : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+            DDR_dq : inout STD_LOGIC_VECTOR ( 31 downto 0 );
+            DDR_dqs_n : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+            DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+            DDR_odt : inout STD_LOGIC;
+            DDR_ras_n : inout STD_LOGIC;
+            DDR_reset_n : inout STD_LOGIC;
+            DDR_we_n : inout STD_LOGIC;
+            FIXED_IO_ddr_vrn : inout STD_LOGIC;
+            FIXED_IO_ddr_vrp : inout STD_LOGIC;
+            FIXED_IO_mio : inout STD_LOGIC_VECTOR ( 53 downto 0 );
+            FIXED_IO_ps_clk : inout STD_LOGIC;
+            FIXED_IO_ps_porb : inout STD_LOGIC;
+            FIXED_IO_ps_srstb : inout STD_LOGIC;
+            port_b : inout STD_LOGIC_VECTOR ( 71 downto 0 );
+            port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
+            port_o : out STD_LOGIC_VECTOR ( 7 downto 0 ));
 end Microcontroller;
 
 architecture Behavioral of Microcontroller is
