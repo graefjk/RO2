@@ -61,9 +61,9 @@ component Microcontroller
             FIXED_IO_ps_clk : inout STD_LOGIC;
             FIXED_IO_ps_porb : inout STD_LOGIC;
             FIXED_IO_ps_srstb : inout STD_LOGIC;
-            port_b : inout STD_LOGIC_VECTOR ( 71 downto 0 );
-            port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
-            port_o : out STD_LOGIC_VECTOR ( 7 downto 0 ));
+            port_b : inout std_ulogic_vector ( 71 downto 0 );
+            port_i : in std_ulogic_vector ( 19 downto 0 );
+            port_o : out std_ulogic_vector ( 7 downto 0 ));
 end component;
 
 signal reset_s: std_logic;
@@ -90,9 +90,9 @@ signal FIXED_IO_mio : STD_LOGIC_VECTOR ( 53 downto 0 );
 signal FIXED_IO_ps_clk : STD_LOGIC;
 signal FIXED_IO_ps_porb : STD_LOGIC;
 signal FIXED_IO_ps_srstb : STD_LOGIC;
-signal port_b : STD_LOGIC_VECTOR ( 71 downto 0 );
-signal port_i : STD_LOGIC_VECTOR ( 19 downto 0 );
-signal port_o : STD_LOGIC_VECTOR ( 7 downto 0 );
+signal port_b : std_ulogic_vector ( 71 downto 0 );
+signal port_i : std_ulogic_vector ( 19 downto 0 );
+signal port_o : std_ulogic_vector ( 7 downto 0 );
 
 constant clk_period: time := 20 ns;
 constant waitTime: time := 0 ns;

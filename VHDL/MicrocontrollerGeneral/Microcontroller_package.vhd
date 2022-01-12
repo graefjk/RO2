@@ -127,9 +127,9 @@ package microcontroller_package is
     enable_i : IN STD_LOGIC;
     value_o : OUT std_ulogic_vector(7 DOWNTO 0);
     clk_i : in STD_LOGIC;
-    port_b : inout STD_LOGIC_VECTOR ( 71 downto 0 );
-    port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
-    port_o : out STD_LOGIC_VECTOR ( 7 downto 0 )
+    port_b : inout std_ulogic_vector ( 71 downto 0 );
+    port_i : in std_ulogic_vector ( 19 downto 0 );
+    port_o : out std_ulogic_vector ( 7 downto 0 )
   );
     end component;
 	

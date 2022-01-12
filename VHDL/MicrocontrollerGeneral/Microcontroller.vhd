@@ -49,9 +49,9 @@ entity Microcontroller is
             FIXED_IO_ps_clk : inout STD_LOGIC;
             FIXED_IO_ps_porb : inout STD_LOGIC;
             FIXED_IO_ps_srstb : inout STD_LOGIC;
-            port_b : inout STD_LOGIC_VECTOR ( 71 downto 0 );
-            port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
-            port_o : out STD_LOGIC_VECTOR ( 7 downto 0 ));
+            port_b : inout std_ulogic_vector ( 71 downto 0 );
+            port_i : in std_ulogic_vector ( 19 downto 0 );
+            port_o : out std_ulogic_vector ( 7 downto 0 ));
 end Microcontroller;
 
 architecture Behavioral of Microcontroller is

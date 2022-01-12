@@ -34,15 +34,15 @@ entity design_1 is
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
-    port_id_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-    value_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    port_id_i : IN std_ulogic_vector(7 DOWNTO 0);
+    value_i : IN std_ulogic_vector(7 DOWNTO 0);
     in_out_i : IN STD_LOGIC;
     enable_i : IN STD_LOGIC;
-    value_o : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+    value_o : OUT std_ulogic_vector(7 DOWNTO 0);
     clk_i : in STD_LOGIC;
-    port_b : inout STD_LOGIC_VECTOR ( 71 downto 0 );
-    port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
-    port_o : out STD_LOGIC_VECTOR ( 7 downto 0 )
+    port_b : inout std_ulogic_vector ( 71 downto 0 );
+    port_i : in std_ulogic_vector ( 19 downto 0 );
+    port_o : out std_ulogic_vector ( 7 downto 0 )
   );
   attribute core_generation_info : string;
   attribute core_generation_info of design_1 : entity is "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=2,numReposBlks=2,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=1,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=26,da_board_cnt=1,da_ps7_cnt=3,synth_mode=Global}";
@@ -199,16 +199,16 @@ architecture STRUCTURE of design_1 is
   end component design_1_processing_system7_0_0;
   component design_1_IO_0_0 is
   port (
-    port_id_i : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    value_i : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    port_id_i : in std_ulogic_vector ( 7 downto 0 );
+    value_i : in std_ulogic_vector ( 7 downto 0 );
     in_out_i : in STD_LOGIC;
     enable_i : in STD_LOGIC;
-    value_o : out STD_LOGIC_VECTOR ( 7 downto 0 );
+    value_o : out std_ulogic_vector ( 7 downto 0 );
     clk_i : in STD_LOGIC;
-    mio_b : inout STD_LOGIC_VECTOR ( 53 downto 0 );
-    port_b : inout STD_LOGIC_VECTOR ( 71 downto 0 );
-    port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
-    port_o : out STD_LOGIC_VECTOR ( 7 downto 0 )
+    mio_b : inout std_ulogic_vector ( 53 downto 0 );
+    port_b : inout std_ulogic_vector ( 71 downto 0 );
+    port_i : in std_ulogic_vector ( 19 downto 0 );
+    port_o : out std_ulogic_vector ( 7 downto 0 )
   );
   end component design_1_IO_0_0;
   signal processing_system7_0_DDR_ADDR : STD_LOGIC_VECTOR ( 14 downto 0 );
@@ -232,7 +232,7 @@ architecture STRUCTURE of design_1 is
   signal processing_system7_0_FIXED_IO_PS_CLK : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_PS_PORB : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_PS_SRSTB : STD_LOGIC;
-  signal NLW_IO_0_mio_b_UNCONNECTED : STD_LOGIC_VECTOR ( 53 downto 0 );
+  signal NLW_IO_0_mio_b_UNCONNECTED : std_ulogic_vector ( 53 downto 0 );
   signal NLW_processing_system7_0_CAN0_PHY_TX_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_CAN1_PHY_TX_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_ENET0_MDIO_MDC_UNCONNECTED : STD_LOGIC;

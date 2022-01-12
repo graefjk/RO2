@@ -33,60 +33,60 @@ use ieee.std_logic_unsigned.all;
 --use UNISIM.VComponents.all;
 
 entity ALU is
- Port (sA_i: in std_logic_vector(7 downto 0); --input signals
-       sB_i: in std_logic_vector(7 downto 0);
-       opcode_select_i: in std_logic_vector(5 downto 0);
+ Port (sA_i: in std_ulogic_vector(7 downto 0); --input signals
+       sB_i: in std_ulogic_vector(7 downto 0);
+       opcode_select_i: in std_ulogic_vector(5 downto 0);
        reset_i: in std_logic;
        clk_i: in std_logic;
        enable_i: in std_logic;
        
-       sALU_o: out std_logic_vector(7 downto 0); -- output signals
+       sALU_o: out std_ulogic_vector(7 downto 0); -- output signals
        sCARRY_o: out std_logic;
        sZERO_o: out std_logic);
 end ALU;
 
 architecture Behavioral of ALU is
 
-signal result_s : std_logic_vector(7 downto 0) := "00000000"; -- results signals
+signal result_s : std_ulogic_vector(7 downto 0) := "00000000"; -- results signals
 signal carry_s : std_logic := '0'; 
 signal zero_s : std_logic := '0';
 
-constant operation_ADD: std_logic_vector(5 downto 0):= "000000"; -- opcode arthmetics
-constant operation_ADD_kk: std_logic_vector(5 downto 0):= "000001";
-constant operation_ADDCY: std_logic_vector(5 downto 0):= "000010";
-constant operation_ADDCY_kk: std_logic_vector(5 downto 0):= "000011";
-constant operation_SUB : std_logic_vector(5 downto 0):="000100";
-constant operation_SUB_kk : std_logic_vector(5 downto 0):="000101";
-constant operation_SUBCY : std_logic_vector(5 downto 0):="000110";
-constant operation_SUBCY_kk : std_logic_vector(5 downto 0):="000111";
+constant operation_ADD: std_ulogic_vector(5 downto 0):= "000000"; -- opcode arthmetics
+constant operation_ADD_kk: std_ulogic_vector(5 downto 0):= "000001";
+constant operation_ADDCY: std_ulogic_vector(5 downto 0):= "000010";
+constant operation_ADDCY_kk: std_ulogic_vector(5 downto 0):= "000011";
+constant operation_SUB : std_ulogic_vector(5 downto 0):="000100";
+constant operation_SUB_kk : std_ulogic_vector(5 downto 0):="000101";
+constant operation_SUBCY : std_ulogic_vector(5 downto 0):="000110";
+constant operation_SUBCY_kk : std_ulogic_vector(5 downto 0):="000111";
 
-constant operation_RL: std_logic_vector(5 downto 0):="110000"; -- opcode rotation
-constant operation_RR: std_logic_vector(5 downto 0):="110001";
+constant operation_RL: std_ulogic_vector(5 downto 0):="110000"; -- opcode rotation
+constant operation_RR: std_ulogic_vector(5 downto 0):="110001";
 
-constant operation_SL0: std_logic_vector(5 downto 0):="110010"; -- opcode shift
-constant operation_SL1: std_logic_vector(5 downto 0):="110011";
-constant operation_SLA: std_logic_vector(5 downto 0):="110100";
-constant operation_SLX: std_logic_vector(5 downto 0):="110101";
-constant operation_SR0: std_logic_vector(5 downto 0):="110110";
-constant operation_SR1: std_logic_vector(5 downto 0):="110111";
-constant operation_SRA: std_logic_vector(5 downto 0):="111000";
-constant operation_SRX: std_logic_vector(5 downto 0):="111001";
+constant operation_SL0: std_ulogic_vector(5 downto 0):="110010"; -- opcode shift
+constant operation_SL1: std_ulogic_vector(5 downto 0):="110011";
+constant operation_SLA: std_ulogic_vector(5 downto 0):="110100";
+constant operation_SLX: std_ulogic_vector(5 downto 0):="110101";
+constant operation_SR0: std_ulogic_vector(5 downto 0):="110110";
+constant operation_SR1: std_ulogic_vector(5 downto 0):="110111";
+constant operation_SRA: std_ulogic_vector(5 downto 0):="111000";
+constant operation_SRX: std_ulogic_vector(5 downto 0):="111001";
 
-constant operation_COMPARE: std_logic_vector(5 downto 0):= "011010"; -- opcode compare
-constant operation_COMPARE_kk: std_logic_vector(5 downto 0):= "011011";
+constant operation_COMPARE: std_ulogic_vector(5 downto 0):= "011010"; -- opcode compare
+constant operation_COMPARE_kk: std_ulogic_vector(5 downto 0):= "011011";
 
-constant operation_TEST : std_logic_vector(5 downto 0):="011000"; --opcode test
-constant operation_TEST_kk : std_logic_vector(5 downto 0):="011001";
+constant operation_TEST : std_ulogic_vector(5 downto 0):="011000"; --opcode test
+constant operation_TEST_kk : std_ulogic_vector(5 downto 0):="011001";
 
-constant operation_AND: std_logic_vector(5 downto 0):= "001000"; -- opcode logics
-constant operation_AND_kk: std_logic_vector(5 downto 0):= "001001";
-constant operation_OR: std_logic_vector(5 downto 0):= "001010";
-constant operation_OR_kk: std_logic_vector(5 downto 0):= "001011";
-constant operation_XOR : std_logic_vector(5 downto 0):="001100";
-constant operation_XOR_kk : std_logic_vector(5 downto 0):="001101";
+constant operation_AND: std_ulogic_vector(5 downto 0):= "001000"; -- opcode logics
+constant operation_AND_kk: std_ulogic_vector(5 downto 0):= "001001";
+constant operation_OR: std_ulogic_vector(5 downto 0):= "001010";
+constant operation_OR_kk: std_ulogic_vector(5 downto 0):= "001011";
+constant operation_XOR : std_ulogic_vector(5 downto 0):="001100";
+constant operation_XOR_kk : std_ulogic_vector(5 downto 0):="001101";
 
-constant operation_LOAD : std_logic_vector(5 downto 0):="001110"; -- Load
-constant operation_LOAD_kk : std_logic_vector(5 downto 0):="001111";
+constant operation_LOAD : std_ulogic_vector(5 downto 0):="001110"; -- Load
+constant operation_LOAD_kk : std_ulogic_vector(5 downto 0):="001111";
 
 
 begin
