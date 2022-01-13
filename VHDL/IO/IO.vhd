@@ -40,9 +40,11 @@ entity IO is
            value_o : out std_ulogic_vector(7 downto 0);
            clk_i : in std_ulogic;
            mio_b : inout std_ulogic_vector (53 downto 0);
-           port_b : inout std_ulogic_vector (71 downto 0);
+           port_b : inout std_ulogic_vector (70 downto 0);
            port_i : in std_ulogic_vector (19 downto 0);
-           port_o : out std_ulogic_vector (7 downto 0));
+           port_o : out std_ulogic_vector (7 downto 0);
+           port_reset_i: in std_ulogic;
+           reset_o: out std_ulogic);
 end IO;
 
 architecture Behavioral of IO is
@@ -89,6 +91,7 @@ architecture Behavioral of IO is
 
     
 begin
+    reset_o <= port_reset_i;
     process(clk_i, mio_b(36), mio_b(48)) is
     
     variable usb_0_to_send_rst: std_ulogic := '0';

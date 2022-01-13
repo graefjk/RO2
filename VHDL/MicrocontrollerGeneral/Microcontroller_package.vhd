@@ -123,13 +123,14 @@ package microcontroller_package is
     FIXED_IO_ps_srstb : inout STD_LOGIC;
     port_id_i : IN std_ulogic_vector(7 DOWNTO 0);
     value_i : IN std_ulogic_vector(7 DOWNTO 0);
-    in_out_i : IN STD_LOGIC;
-    enable_i : IN STD_LOGIC;
+    in_out_i : IN STD_ULOGIC;
+    enable_i : IN STD_ULOGIC;
     value_o : OUT std_ulogic_vector(7 DOWNTO 0);
     clk_i : in STD_LOGIC;
-    port_b : inout std_ulogic_vector ( 71 downto 0 );
+    port_b : inout std_ulogic_vector ( 70 downto 0 );
     port_i : in std_ulogic_vector ( 19 downto 0 );
-    port_o : out std_ulogic_vector ( 7 downto 0 )
+    port_o : out std_ulogic_vector ( 7 downto 0 );
+    reset_o : out STD_ULOGIC
   );
     end component;
 	

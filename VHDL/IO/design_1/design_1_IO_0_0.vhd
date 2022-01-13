@@ -55,16 +55,18 @@ USE ieee.numeric_std.ALL;
 
 ENTITY design_1_IO_0_0 IS
   PORT (
-    port_id_i : IN std_ulogic_vector(7 DOWNTO 0);
-    value_i : IN std_ulogic_vector(7 DOWNTO 0);
+    port_id_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    value_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
     in_out_i : IN STD_LOGIC;
     enable_i : IN STD_LOGIC;
-    value_o : OUT std_ulogic_vector(7 DOWNTO 0);
+    value_o : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
     clk_i : IN STD_LOGIC;
-    mio_b : INOUT std_ulogic_vector(53 DOWNTO 0);
-    port_b : INOUT std_ulogic_vector(71 DOWNTO 0);
-    port_i : IN std_ulogic_vector(19 DOWNTO 0);
-    port_o : OUT std_ulogic_vector(7 DOWNTO 0)
+    mio_b : INOUT STD_LOGIC_VECTOR(53 DOWNTO 0);
+    port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0);
+    port_i : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+    port_o : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+    port_reset_i : IN STD_LOGIC;
+    reset_o : OUT STD_LOGIC
   );
 END design_1_IO_0_0;
 
@@ -73,16 +75,18 @@ ARCHITECTURE design_1_IO_0_0_arch OF design_1_IO_0_0 IS
   ATTRIBUTE DowngradeIPIdentifiedWarnings OF design_1_IO_0_0_arch: ARCHITECTURE IS "yes";
   COMPONENT IO IS
     PORT (
-      port_id_i : IN std_ulogic_vector(7 DOWNTO 0);
-      value_i : IN std_ulogic_vector(7 DOWNTO 0);
+      port_id_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+      value_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
       in_out_i : IN STD_LOGIC;
       enable_i : IN STD_LOGIC;
-      value_o : OUT std_ulogic_vector(7 DOWNTO 0);
+      value_o : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
       clk_i : IN STD_LOGIC;
-      mio_b : INOUT std_ulogic_vector(53 DOWNTO 0);
-      port_b : INOUT std_ulogic_vector(71 DOWNTO 0);
-      port_i : IN std_ulogic_vector(19 DOWNTO 0);
-      port_o : OUT std_ulogic_vector(7 DOWNTO 0)
+      mio_b : INOUT STD_LOGIC_VECTOR(53 DOWNTO 0);
+      port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0);
+      port_i : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
+      port_o : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+      port_reset_i : IN STD_LOGIC;
+      reset_o : OUT STD_LOGIC
     );
   END COMPONENT IO;
   ATTRIBUTE X_CORE_INFO : STRING;
@@ -93,6 +97,10 @@ ARCHITECTURE design_1_IO_0_0_arch OF design_1_IO_0_0 IS
   ATTRIBUTE CORE_GENERATION_INFO OF design_1_IO_0_0_arch: ARCHITECTURE IS "design_1_IO_0_0,IO,{x_ipProduct=Vivado 2020.2,x_ipVendor=xilinx.com,x_ipLibrary=module_ref,x_ipName=IO,x_ipVersion=1.0,x_ipCoreRevision=1,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED}";
   ATTRIBUTE IP_DEFINITION_SOURCE : STRING;
   ATTRIBUTE IP_DEFINITION_SOURCE OF design_1_IO_0_0_arch: ARCHITECTURE IS "module_ref";
+  ATTRIBUTE X_INTERFACE_INFO : STRING;
+  ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
+  ATTRIBUTE X_INTERFACE_PARAMETER OF reset_o: SIGNAL IS "XIL_INTERFACENAME reset_o, POLARITY ACTIVE_LOW, INSERT_VIP 0";
+  ATTRIBUTE X_INTERFACE_INFO OF reset_o: SIGNAL IS "xilinx.com:signal:reset:1.0 reset_o RST";
 BEGIN
   U0 : IO
     PORT MAP (
@@ -105,6 +113,8 @@ BEGIN
       mio_b => mio_b,
       port_b => port_b,
       port_i => port_i,
-      port_o => port_o
+      port_o => port_o,
+      port_reset_i => port_reset_i,
+      reset_o => reset_o
     );
 END design_1_IO_0_0_arch;

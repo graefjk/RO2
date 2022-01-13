@@ -1,7 +1,7 @@
 --Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
---Date        : Sun Jan  9 18:04:47 2022
+--Date        : Thu Jan 13 20:57:18 2022
 --Host        : DESKTOP-PUMQHVF running 64-bit major release  (build 9200)
 --Command     : generate_target design_1.bd
 --Design      : design_1
@@ -34,20 +34,21 @@ entity design_1 is
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
-    port_id_i : IN std_ulogic_vector(7 DOWNTO 0);
-    value_i : IN std_ulogic_vector(7 DOWNTO 0);
-    in_out_i : IN STD_LOGIC;
-    enable_i : IN STD_LOGIC;
-    value_o : OUT std_ulogic_vector(7 DOWNTO 0);
     clk_i : in STD_LOGIC;
-    port_b : inout std_ulogic_vector ( 71 downto 0 );
-    port_i : in std_ulogic_vector ( 19 downto 0 );
-    port_o : out std_ulogic_vector ( 7 downto 0 )
+    enable_i : in STD_LOGIC;
+    in_out_i : in STD_LOGIC;
+    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 );
+    port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    port_id_i : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    port_o : out STD_LOGIC_VECTOR ( 7 downto 0 );
+    reset_o : out STD_LOGIC;
+    value_i : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    value_o : out STD_LOGIC_VECTOR ( 7 downto 0 )
   );
-  attribute core_generation_info : string;
-  attribute core_generation_info of design_1 : entity is "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=2,numReposBlks=2,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=1,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=26,da_board_cnt=1,da_ps7_cnt=3,synth_mode=Global}";
-  attribute hw_handoff : string;
-  attribute hw_handoff of design_1 : entity is "design_1.hwdef";
+  attribute CORE_GENERATION_INFO : string;
+  attribute CORE_GENERATION_INFO of design_1 : entity is "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=2,numReposBlks=2,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=1,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=26,da_board_cnt=1,da_ps7_cnt=3,synth_mode=Global}";
+  attribute HW_HANDOFF : string;
+  attribute HW_HANDOFF of design_1 : entity is "design_1.hwdef";
 end design_1;
 
 architecture STRUCTURE of design_1 is
@@ -99,10 +100,6 @@ architecture STRUCTURE of design_1 is
     I2C1_SCL_I : in STD_LOGIC;
     I2C1_SCL_O : out STD_LOGIC;
     I2C1_SCL_T : out STD_LOGIC;
-    PJTAG_TCK : in STD_LOGIC;
-    PJTAG_TMS : in STD_LOGIC;
-    PJTAG_TDI : in STD_LOGIC;
-    PJTAG_TDO : out STD_LOGIC;
     SDIO0_CLK : out STD_LOGIC;
     SDIO0_CLK_FB : in STD_LOGIC;
     SDIO0_CMD_O : out STD_LOGIC;
@@ -199,18 +196,29 @@ architecture STRUCTURE of design_1 is
   end component design_1_processing_system7_0_0;
   component design_1_IO_0_0 is
   port (
-    port_id_i : in std_ulogic_vector ( 7 downto 0 );
-    value_i : in std_ulogic_vector ( 7 downto 0 );
+    port_id_i : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    value_i : in STD_LOGIC_VECTOR ( 7 downto 0 );
     in_out_i : in STD_LOGIC;
     enable_i : in STD_LOGIC;
-    value_o : out std_ulogic_vector ( 7 downto 0 );
+    value_o : out STD_LOGIC_VECTOR ( 7 downto 0 );
     clk_i : in STD_LOGIC;
-    mio_b : inout std_ulogic_vector ( 53 downto 0 );
-    port_b : inout std_ulogic_vector ( 71 downto 0 );
-    port_i : in std_ulogic_vector ( 19 downto 0 );
-    port_o : out std_ulogic_vector ( 7 downto 0 )
+    mio_b : inout STD_LOGIC_VECTOR ( 53 downto 0 );
+    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 );
+    port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    port_o : out STD_LOGIC_VECTOR ( 7 downto 0 );
+    port_reset_i : in STD_LOGIC;
+    reset_o : out STD_LOGIC
   );
   end component design_1_IO_0_0;
+  signal IO_0_port_o : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal IO_0_reset_o : STD_LOGIC;
+  signal IO_0_value_o : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal Net : STD_LOGIC_VECTOR ( 70 downto 0 );
+  signal clk_i_1 : STD_LOGIC;
+  signal enable_i_0_1 : STD_LOGIC;
+  signal in_out_i_0_1 : STD_LOGIC;
+  signal port_i_0_1 : STD_LOGIC_VECTOR ( 19 downto 0 );
+  signal port_id_i_0_1 : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal processing_system7_0_DDR_ADDR : STD_LOGIC_VECTOR ( 14 downto 0 );
   signal processing_system7_0_DDR_BA : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal processing_system7_0_DDR_CAS_N : STD_LOGIC;
@@ -226,13 +234,15 @@ architecture STRUCTURE of design_1 is
   signal processing_system7_0_DDR_RAS_N : STD_LOGIC;
   signal processing_system7_0_DDR_RESET_N : STD_LOGIC;
   signal processing_system7_0_DDR_WE_N : STD_LOGIC;
+  signal processing_system7_0_FCLK_RESET0_N : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_DDR_VRN : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_DDR_VRP : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_MIO : STD_LOGIC_VECTOR ( 53 downto 0 );
   signal processing_system7_0_FIXED_IO_PS_CLK : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_PS_PORB : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_PS_SRSTB : STD_LOGIC;
-  signal NLW_IO_0_mio_b_UNCONNECTED : std_ulogic_vector ( 53 downto 0 );
+  signal value_i_0_1 : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal NLW_IO_0_mio_b_UNCONNECTED : STD_LOGIC_VECTOR ( 53 downto 0 );
   signal NLW_processing_system7_0_CAN0_PHY_TX_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_CAN1_PHY_TX_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_ENET0_MDIO_MDC_UNCONNECTED : STD_LOGIC;
@@ -241,7 +251,6 @@ architecture STRUCTURE of design_1 is
   signal NLW_processing_system7_0_ENET1_MDIO_MDC_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_ENET1_MDIO_O_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_ENET1_MDIO_T_UNCONNECTED : STD_LOGIC;
-  signal NLW_processing_system7_0_FCLK_RESET0_N_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_I2C0_SCL_O_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_I2C0_SCL_T_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_I2C0_SDA_O_UNCONNECTED : STD_LOGIC;
@@ -250,7 +259,6 @@ architecture STRUCTURE of design_1 is
   signal NLW_processing_system7_0_I2C1_SCL_T_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_I2C1_SDA_O_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_I2C1_SDA_T_UNCONNECTED : STD_LOGIC;
-  signal NLW_processing_system7_0_PJTAG_TDO_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_SDIO0_BUSPOW_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_SDIO0_CLK_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_SDIO0_CMD_O_UNCONNECTED : STD_LOGIC;
@@ -301,44 +309,57 @@ architecture STRUCTURE of design_1 is
   signal NLW_processing_system7_0_SDIO1_DATA_T_UNCONNECTED : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal NLW_processing_system7_0_USB0_PORT_INDCTL_UNCONNECTED : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal NLW_processing_system7_0_USB1_PORT_INDCTL_UNCONNECTED : STD_LOGIC_VECTOR ( 1 downto 0 );
-  attribute x_interface_info : string;
-  attribute x_interface_info of DDR_cas_n : signal is "xilinx.com:interface:ddrx:1.0 DDR CAS_N";
-  attribute x_interface_info of DDR_ck_n : signal is "xilinx.com:interface:ddrx:1.0 DDR CK_N";
-  attribute x_interface_info of DDR_ck_p : signal is "xilinx.com:interface:ddrx:1.0 DDR CK_P";
-  attribute x_interface_info of DDR_cke : signal is "xilinx.com:interface:ddrx:1.0 DDR CKE";
-  attribute x_interface_info of DDR_cs_n : signal is "xilinx.com:interface:ddrx:1.0 DDR CS_N";
-  attribute x_interface_info of DDR_odt : signal is "xilinx.com:interface:ddrx:1.0 DDR ODT";
-  attribute x_interface_info of DDR_ras_n : signal is "xilinx.com:interface:ddrx:1.0 DDR RAS_N";
-  attribute x_interface_info of DDR_reset_n : signal is "xilinx.com:interface:ddrx:1.0 DDR RESET_N";
-  attribute x_interface_info of DDR_we_n : signal is "xilinx.com:interface:ddrx:1.0 DDR WE_N";
-  attribute x_interface_info of FIXED_IO_ddr_vrn : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO DDR_VRN";
-  attribute x_interface_parameter : string;
-  attribute x_interface_parameter of FIXED_IO_ddr_vrn : signal is "XIL_INTERFACENAME FIXED_IO, CAN_DEBUG false";
-  attribute x_interface_info of FIXED_IO_ddr_vrp : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO DDR_VRP";
-  attribute x_interface_info of FIXED_IO_ps_clk : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_CLK";
-  attribute x_interface_info of FIXED_IO_ps_porb : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_PORB";
-  attribute x_interface_info of FIXED_IO_ps_srstb : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_SRSTB";
-  attribute x_interface_info of DDR_addr : signal is "xilinx.com:interface:ddrx:1.0 DDR ADDR";
-  attribute x_interface_parameter of DDR_addr : signal is "XIL_INTERFACENAME DDR, AXI_ARBITRATION_SCHEME TDM, BURST_LENGTH 8, CAN_DEBUG false, CAS_LATENCY 11, CAS_WRITE_LATENCY 11, CS_ENABLED true, DATA_MASK_ENABLED true, DATA_WIDTH 8, MEMORY_TYPE COMPONENTS, MEM_ADDR_MAP ROW_COLUMN_BANK, SLOT Single, TIMEPERIOD_PS 1250";
-  attribute x_interface_info of DDR_ba : signal is "xilinx.com:interface:ddrx:1.0 DDR BA";
-  attribute x_interface_info of DDR_dm : signal is "xilinx.com:interface:ddrx:1.0 DDR DM";
-  attribute x_interface_info of DDR_dq : signal is "xilinx.com:interface:ddrx:1.0 DDR DQ";
-  attribute x_interface_info of DDR_dqs_n : signal is "xilinx.com:interface:ddrx:1.0 DDR DQS_N";
-  attribute x_interface_info of DDR_dqs_p : signal is "xilinx.com:interface:ddrx:1.0 DDR DQS_P";
-  attribute x_interface_info of FIXED_IO_mio : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO MIO";
+  attribute X_INTERFACE_INFO : string;
+  attribute X_INTERFACE_INFO of DDR_cas_n : signal is "xilinx.com:interface:ddrx:1.0 DDR CAS_N";
+  attribute X_INTERFACE_INFO of DDR_ck_n : signal is "xilinx.com:interface:ddrx:1.0 DDR CK_N";
+  attribute X_INTERFACE_INFO of DDR_ck_p : signal is "xilinx.com:interface:ddrx:1.0 DDR CK_P";
+  attribute X_INTERFACE_INFO of DDR_cke : signal is "xilinx.com:interface:ddrx:1.0 DDR CKE";
+  attribute X_INTERFACE_INFO of DDR_cs_n : signal is "xilinx.com:interface:ddrx:1.0 DDR CS_N";
+  attribute X_INTERFACE_INFO of DDR_odt : signal is "xilinx.com:interface:ddrx:1.0 DDR ODT";
+  attribute X_INTERFACE_INFO of DDR_ras_n : signal is "xilinx.com:interface:ddrx:1.0 DDR RAS_N";
+  attribute X_INTERFACE_INFO of DDR_reset_n : signal is "xilinx.com:interface:ddrx:1.0 DDR RESET_N";
+  attribute X_INTERFACE_INFO of DDR_we_n : signal is "xilinx.com:interface:ddrx:1.0 DDR WE_N";
+  attribute X_INTERFACE_INFO of FIXED_IO_ddr_vrn : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO DDR_VRN";
+  attribute X_INTERFACE_PARAMETER : string;
+  attribute X_INTERFACE_PARAMETER of FIXED_IO_ddr_vrn : signal is "XIL_INTERFACENAME FIXED_IO, CAN_DEBUG false";
+  attribute X_INTERFACE_INFO of FIXED_IO_ddr_vrp : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO DDR_VRP";
+  attribute X_INTERFACE_INFO of FIXED_IO_ps_clk : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_CLK";
+  attribute X_INTERFACE_INFO of FIXED_IO_ps_porb : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_PORB";
+  attribute X_INTERFACE_INFO of FIXED_IO_ps_srstb : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_SRSTB";
+  attribute X_INTERFACE_INFO of reset_o : signal is "xilinx.com:signal:reset:1.0 RST.RESET_O RST";
+  attribute X_INTERFACE_PARAMETER of reset_o : signal is "XIL_INTERFACENAME RST.RESET_O, INSERT_VIP 0, POLARITY ACTIVE_LOW";
+  attribute X_INTERFACE_INFO of DDR_addr : signal is "xilinx.com:interface:ddrx:1.0 DDR ADDR";
+  attribute X_INTERFACE_PARAMETER of DDR_addr : signal is "XIL_INTERFACENAME DDR, AXI_ARBITRATION_SCHEME TDM, BURST_LENGTH 8, CAN_DEBUG false, CAS_LATENCY 11, CAS_WRITE_LATENCY 11, CS_ENABLED true, DATA_MASK_ENABLED true, DATA_WIDTH 8, MEMORY_TYPE COMPONENTS, MEM_ADDR_MAP ROW_COLUMN_BANK, SLOT Single, TIMEPERIOD_PS 1250";
+  attribute X_INTERFACE_INFO of DDR_ba : signal is "xilinx.com:interface:ddrx:1.0 DDR BA";
+  attribute X_INTERFACE_INFO of DDR_dm : signal is "xilinx.com:interface:ddrx:1.0 DDR DM";
+  attribute X_INTERFACE_INFO of DDR_dq : signal is "xilinx.com:interface:ddrx:1.0 DDR DQ";
+  attribute X_INTERFACE_INFO of DDR_dqs_n : signal is "xilinx.com:interface:ddrx:1.0 DDR DQS_N";
+  attribute X_INTERFACE_INFO of DDR_dqs_p : signal is "xilinx.com:interface:ddrx:1.0 DDR DQS_P";
+  attribute X_INTERFACE_INFO of FIXED_IO_mio : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO MIO";
 begin
+  clk_i_1 <= clk_i;
+  enable_i_0_1 <= enable_i;
+  in_out_i_0_1 <= in_out_i;
+  port_i_0_1(19 downto 0) <= port_i(19 downto 0);
+  port_id_i_0_1(7 downto 0) <= port_id_i(7 downto 0);
+  port_o(7 downto 0) <= IO_0_port_o(7 downto 0);
+  reset_o <= IO_0_reset_o;
+  value_i_0_1(7 downto 0) <= value_i(7 downto 0);
+  value_o(7 downto 0) <= IO_0_value_o(7 downto 0);
 IO_0: component design_1_IO_0_0
      port map (
-      clk_i => clk_i,
-      enable_i => enable_i,
-      in_out_i => in_out_i,
+      clk_i => clk_i_1,
+      enable_i => enable_i_0_1,
+      in_out_i => in_out_i_0_1,
       mio_b(53 downto 0) => NLW_IO_0_mio_b_UNCONNECTED(53 downto 0),
-      port_b(71 downto 0) => port_b(71 downto 0),
-      port_i(19 downto 0) => port_i(19 downto 0),
-      port_id_i(7 downto 0) => port_id_i(7 downto 0),
-      port_o(7 downto 0) => port_o(7 downto 0),
-      value_i(7 downto 0) => value_i(7 downto 0),
-      value_o(7 downto 0) => value_o(7 downto 0)
+      port_b(70 downto 0) => port_b(70 downto 0),
+      port_i(19 downto 0) => port_i_0_1(19 downto 0),
+      port_id_i(7 downto 0) => port_id_i_0_1(7 downto 0),
+      port_o(7 downto 0) => IO_0_port_o(7 downto 0),
+      port_reset_i => processing_system7_0_FCLK_RESET0_N,
+      reset_o => IO_0_reset_o,
+      value_i(7 downto 0) => value_i_0_1(7 downto 0),
+      value_o(7 downto 0) => IO_0_value_o(7 downto 0)
     );
 processing_system7_0: component design_1_processing_system7_0_0
      port map (
@@ -393,7 +414,7 @@ processing_system7_0: component design_1_processing_system7_0_0
       ENET1_MDIO_MDC => NLW_processing_system7_0_ENET1_MDIO_MDC_UNCONNECTED,
       ENET1_MDIO_O => NLW_processing_system7_0_ENET1_MDIO_O_UNCONNECTED,
       ENET1_MDIO_T => NLW_processing_system7_0_ENET1_MDIO_T_UNCONNECTED,
-      FCLK_RESET0_N => NLW_processing_system7_0_FCLK_RESET0_N_UNCONNECTED,
+      FCLK_RESET0_N => processing_system7_0_FCLK_RESET0_N,
       I2C0_SCL_I => '0',
       I2C0_SCL_O => NLW_processing_system7_0_I2C0_SCL_O_UNCONNECTED,
       I2C0_SCL_T => NLW_processing_system7_0_I2C0_SCL_T_UNCONNECTED,
@@ -407,10 +428,6 @@ processing_system7_0: component design_1_processing_system7_0_0
       I2C1_SDA_O => NLW_processing_system7_0_I2C1_SDA_O_UNCONNECTED,
       I2C1_SDA_T => NLW_processing_system7_0_I2C1_SDA_T_UNCONNECTED,
       MIO(53 downto 0) => FIXED_IO_mio(53 downto 0),
-      PJTAG_TCK => '0',
-      PJTAG_TDI => '0',
-      PJTAG_TDO => NLW_processing_system7_0_PJTAG_TDO_UNCONNECTED,
-      PJTAG_TMS => '0',
       PS_CLK => FIXED_IO_ps_clk,
       PS_PORB => FIXED_IO_ps_porb,
       PS_SRSTB => FIXED_IO_ps_srstb,
