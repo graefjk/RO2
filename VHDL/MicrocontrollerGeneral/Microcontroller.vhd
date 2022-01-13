@@ -85,8 +85,8 @@ signal mux_register_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 signal pc_i_s: std_ulogic_vector(instruction_address_c -1 downto 0);
 signal pc_s: std_ulogic_vector(instruction_address_c -1 downto 0);
 signal sADD_x_s: std_ulogic_vector(architecture_width_c -1 downto 0);
-signal sADD_y_s: std_ulogic_vector(architecture_width_c -1 downto 0);
-signal sADD_s: std_ulogic_vector(architecture_width_c -1 downto 0);
+signal sADD_y_s: std_ulogic_vector(instruction_address_c -1 downto 0);
+signal sADD_s: std_ulogic_vector(instruction_address_c -1 downto 0);
 signal instruction_s: std_ulogic_vector(17 downto 0);
 signal port_id_s: std_logic;
 signal value_i_s: std_ulogic_vector(architecture_width_c -1 downto 0);
@@ -264,7 +264,7 @@ pc_instance: PC
 				
 add_instance: ADD
     port map(   sA_i => sADD_y_s,
-				sB_i => "0000",
+				sB_i => "000000000001",
 				reset_i => reset_s,
 				clk_i => clk_s,
 				sC_o => sADD_s);

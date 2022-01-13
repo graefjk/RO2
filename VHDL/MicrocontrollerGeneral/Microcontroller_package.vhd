@@ -41,12 +41,12 @@ package microcontroller_package is
     constant stack_style_c : string := "distributed"; -- "registers", "distributed" or "block" can be used here
 
 	component ADD
-        port(   sA_i: in std_ulogic_vector(7 downto 0); --input signals
-		        sB_i: in std_ulogic_vector(7 downto 0);
+        port(   sA_i: in std_ulogic_vector(instruction_address_c - 1 downto 0); --input signals
+		        sB_i: in std_ulogic_vector(instruction_address_c - 1 downto 0);
 		        reset_i: in std_logic;
 		        clk_i: in std_logic;
        
-		        sC_o: out std_ulogic_vector(7 downto 0)); -- output signals);
+		        sC_o: out std_ulogic_vector(instruction_address_c - 1 downto 0)); -- output signals);
     end component;
 
     component ALU
