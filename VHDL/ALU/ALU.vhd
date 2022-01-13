@@ -48,8 +48,8 @@ end ALU;
 architecture Behavioral of ALU is
 
 signal result_s : std_ulogic_vector(7 downto 0) := "00000000"; -- results signals
-signal carry_s : std_logic := '0'; 
-signal zero_s : std_logic := '0';
+signal carry_s : std_ulogic := '0'; 
+signal zero_s : std_ulogic := '0';
 
 constant operation_ADD: std_ulogic_vector(5 downto 0):= "000000"; -- opcode arthmetics
 constant operation_ADD_kk: std_ulogic_vector(5 downto 0):= "000001";
@@ -93,60 +93,60 @@ begin
 operations: process(clk_i, reset_i)
 begin
  if reset_i='1' then --asyncron reset overrides the output
-   result_s<= "00000000";
-   carry_s<= '0';
-   zero_s<= '0';
+   result_s <= "00000000";
+   carry_s <= '0';
+   zero_s <= '0';
  else
     if (rising_edge(clk_i)) then
 		if (enable_i='1') then --ALU is active
 			case opcode_select_i is --The operation the ALU is currently supposed to perform.
 			when operation_ADD | operation_ADD_kk => 
-				result_s <=  sA_i + sB_i;
-				if (('0'&sA_i) + ('0'&sB_i)) > "011111111" then 
+				result_s <=  to_stdulogicvector(to_stdlogicvector(sA_i) + to_stdlogicvector(sB_i));
+				if (('0'&to_stdlogicvector(sA_i)) + ('0'&to_stdlogicvector(sB_i))) > "011111111" then 
 					carry_s <= '1';
 				else
 					carry_s <= '0';
 				end if;
-				if (sA_i + sB_i) = "00000000" then 
+				if (to_stdlogicvector(sA_i) + to_stdlogicvector(sB_i)) = "00000000" then 
 					zero_s <= '1';
 				else
 					zero_s <='0';
 				end if;
 
 			when operation_ADDCY | operation_ADDCY_kk =>
-				result_s <= sA_i + sB_i + carry_s ;
-				if ((('0'&sA_i) + ('0'&sB_i)) + carry_s) > "011111111" then 
+				result_s <= to_stdulogicvector(to_stdlogicvector(sA_i) + to_stdlogicvector(sB_i) + carry_s);
+				if ((('0'&to_stdlogicvector(sA_i)) + ('0'&to_stdlogicvector(sB_i))) + carry_s) > "011111111" then 
 					carry_s <= '1';
 				else
 					carry_s <= '0';
 				end if;
-				if (sA_i + sB_i + carry_s) = "00000000" then 
+				if (to_stdlogicvector(sA_i) + to_stdlogicvector(sB_i) + carry_s) = "00000000" then 
 					zero_s <= '1';
 				else
 					zero_s <= '0';
 				end if;
         
 			when operation_SUB | operation_SUB_kk =>
-				result_s <= sA_i - sB_i;
+				result_s <= to_stdulogicvector(to_stdlogicvector(sA_i) - to_stdlogicvector(sB_i));
 				if (sA_i < sB_i)  then 
 					carry_s <= '1';
 				else
 					carry_s <= '0';
 				end if;
-				if (sA_i - sB_i) = "00000000" then 
+				if (to_stdlogicvector(sA_i) - to_stdlogicvector(sB_i)) = "00000000" then 
 					zero_s <= '1';
 				else
 					zero_s <='0';
 				end if;
                     
 			when operation_SUBCY | operation_SUBCY_kk=>
-				result_s <= sA_i -sB_i -carry_s;
-				if (sA_i < (sB_i + carry_s))  then 
+				result_s <= to_stdulogicvector(to_stdlogicvector(sA_i) - to_stdlogicvector(sB_i) - carry_s);
+				if (to_stdlogicvector(sA_i) < (to_stdlogicvector(sB_i) + carry_s))  then 
 					carry_s <= '1';
 				else
 					carry_s <= '0';
 				end if;
-				if (sA_i - sB_i - carry_s) = "00000000" then 
+				if (to_stdlogicvector(sA_i) - to_stdlogicvector(sB_i) - carry_s) = "00000000" then 
 					zero_s <= '1';
 				else
 					zero_s <= '0';
