@@ -37,27 +37,26 @@ end sim_ALU_tb;
 
 architecture Behavioral of sim_ALU_tb is
 component ALU
-    Port (
-       sA_i: in std_logic_vector(7 downto 0); --input signals
-       sB_i: in std_logic_vector(7 downto 0);
-       opcode_select_i: in std_logic_vector(5 downto 0);
+ Port (sA_i: in std_ulogic_vector(7 downto 0); --input signals
+       sB_i: in std_ulogic_vector(7 downto 0);
+       opcode_select_i: in std_ulogic_vector(5 downto 0);
        reset_i: in std_logic;
        clk_i: in std_logic;
-	   enable_i: in std_logic;
+       enable_i: in std_logic;
        
-       sALU_o: out std_logic_vector(7 downto 0); -- output signals
+       sALU_o: out std_ulogic_vector(7 downto 0); -- output signals
        sCARRY_o: out std_logic;
        sZERO_o: out std_logic);
 end component;
 
-signal sA_s: std_logic_vector(7 downto 0);
-signal sB_s: std_logic_vector(7 downto 0);
-signal opcode_select_s: std_logic_vector(5 downto 0);
+signal sA_s: std_ulogic_vector(7 downto 0);
+signal sB_s: std_ulogic_vector(7 downto 0);
+signal opcode_select_s: std_ulogic_vector(5 downto 0);
 signal reset_s: std_logic;
 signal clk_s: std_logic;
 signal enable_s: std_logic;
 
-signal sALU_s: std_logic_vector(7 downto 0);
+signal sALU_s: std_ulogic_vector(7 downto 0);
 signal sCARRY_s: std_logic;
 signal sZERO_s: std_logic;
 
@@ -95,7 +94,7 @@ uut: ALU port map (
 		sA_s <= "00000000";
 		sB_s <= "00000000";
 		opcode_select_s <= "111111";
-		wait for 120 ns;
+		wait for 10 ns;
 		
 		wait for waitTime;
 		sA_s <= "00001001";
