@@ -88,7 +88,7 @@ signal sADD_x_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 signal sADD_y_s: std_ulogic_vector(instruction_address_c -1 downto 0);
 signal sADD_s: std_ulogic_vector(instruction_address_c -1 downto 0);
 signal instruction_s: std_ulogic_vector(17 downto 0);
-signal port_id_s: std_logic;
+--signal port_id_s: std_logic;
 signal value_i_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 signal value_o_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 signal port_b_s: std_ulogic_vector(architecture_width_c -1 downto 0);
