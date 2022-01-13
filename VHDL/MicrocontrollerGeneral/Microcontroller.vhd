@@ -272,6 +272,7 @@ add_instance: ADD
 				
 				
 mux_PC_instance: MUX
+    generic map(mux_width_g => 12)
     port map(   mux_s0_i => sADD_s,
 				mux_s1_i => constant_aaa_s,
 				mux_select_i => mux_PC_select_s,
@@ -280,6 +281,7 @@ mux_PC_instance: MUX
 				
 				
 mux_Stack_instance: MUX
+    generic map(mux_width_g => 12)
     port map(   mux_s0_i => pc_s,
 				mux_s1_i => sStack_s,
 				mux_select_i => mux_stack_select_s,
