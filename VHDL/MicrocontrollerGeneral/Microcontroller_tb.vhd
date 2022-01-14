@@ -61,7 +61,7 @@ component Microcontroller
             FIXED_IO_ps_clk : inout STD_LOGIC;
             FIXED_IO_ps_porb : inout STD_LOGIC;
             FIXED_IO_ps_srstb : inout STD_LOGIC;
-            port_b : inout std_ulogic_vector ( 71 downto 0 );
+            port_b : inout std_ulogic_vector ( 70 downto 0 );
             port_i : in std_ulogic_vector ( 19 downto 0 );
             port_o : out std_ulogic_vector ( 7 downto 0 ));
 end component;
@@ -123,7 +123,7 @@ uut: Microcontroller port map (
             FIXED_IO_ps_clk => FIXED_IO_ps_clk,
             FIXED_IO_ps_porb => FIXED_IO_ps_porb,
             FIXED_IO_ps_srstb => FIXED_IO_ps_srstb,
-            port_b(71 downto 0) => port_b(71 downto 0),
+            port_b(70 downto 0) => port_b(70 downto 0),
             port_i(19 downto 0) => port_i(19 downto 0),
             port_o(7 downto 0) => port_o(7 downto 0));
 
