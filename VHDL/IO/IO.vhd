@@ -48,7 +48,7 @@ entity IO is
 end IO;
 
 architecture Behavioral of IO is
-    type input_buffer_type is array (255 downto 0) of std_ulogic_vector(7 downto 0);
+    type input_buffer_type is array (255 downto 0) of std_logic_vector(7 downto 0);
     signal input_buffer : input_buffer_type ;--63: next systemside unused input
     
     type output_buffer_type is array (127 downto 0) of std_ulogic_vector(7 downto 0);
@@ -104,12 +104,12 @@ begin
         if rising_edge(clk_i) then
          if enable_i = '1' then
            if in_out_i = '0' then
-            value_o <= input_buffer(to_integer(unsigned(port_id_i)));
+            value_o <= to_stdulogicvector(input_buffer(to_integer(unsigned(port_id_i))));
            else 
             if port_id_i(7) = '0' then  --Buffer output
             output_buffer(to_integer(unsigned(port_id_i))) <= value_i; 
             elsif port_id_i(7) = '1' then --Intermediate Storage
-            input_buffer(to_integer(unsigned(port_id_i))) <= value_i; 
+            input_buffer(to_integer(unsigned(port_id_i))) <= to_stdlogicvector(value_i); 
 --                storage(to_integer(unsigned(port_id_i(6 downto 0)))) <= value_i; 
 --            if port_id_i(6 downto 0) = "0000000" then --USB0   
 --            elsif port_id_i(6 downto 0) = "0000001" then --USB1
@@ -169,11 +169,11 @@ begin
             if pmod_out_enabled(i) = '1' then
                 port_b(16 + 8 * i downto 9 + 8 * i) <= to_stdlogicvector(output_buffer(i + 20));
             else
-                if to_stdlogicvector(input_buffer(i + 20)) /= port_b(16 + 8 * i downto 9 + 8 * i) then
+                if input_buffer(i + 20) /= port_b(16 + 8 * i downto 9 + 8 * i) then
                     input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(i + 20);-- transfer old value to empty input field
-                    input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_ulogic_vector(to_unsigned(i + 20, 8));-- store port_id
-                    input_buffer(63) <= std_ulogic_vector(unsigned(input_buffer(63))+ 2);
-                    input_buffer(i + 20) <= to_stdulogicvector(port_b(16 + 8 * i downto 9 + 8 * i));
+                    input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(i + 20, 8));-- store port_id
+                    input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
+                    input_buffer(i + 20) <= port_b(16 + 8 * i downto 9 + 8 * i);
                 end if;
             end if;
            end loop;
@@ -247,7 +247,7 @@ begin
             end if;
         end if;
         if unsigned(input_buffer(63)) > 127 then
-            input_buffer(63) <= std_ulogic_vector(to_unsigned(64, 8));
+            input_buffer(63) <= std_logic_vector(to_unsigned(64, 8));
         end if;
      end process;
      
@@ -338,11 +338,11 @@ begin
         variable  led_clk_counter: integer := 256;
      begin
      if(rising_edge(clk_i)) then
-        if to_stdlogicvector(input_buffer(62)) /= port_b(60 downto 53) then
+        if input_buffer(62) /= port_b(60 downto 53) then
            input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(62);-- transfer old value to empty input field
-           input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_ulogic_vector(to_unsigned(62, 8));-- store port_id
-           input_buffer(63) <= std_ulogic_vector(unsigned(input_buffer(63))+ 2);
-           input_buffer(62) <= to_stdulogicvector(port_b(60 downto 53));
+           input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(62, 8));-- store port_id
+           input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
+           input_buffer(62) <= port_b(60 downto 53);
         end if;
      end if;
      end process;
@@ -359,11 +359,11 @@ begin
             if lp_clk_cnt > 3 then
                 lp_clk_cnt := "00";
                 if output_buffer(26)(0) = '1' then
-                    if input_buffer(61) /= lp_buffer then
+                    if input_buffer(61) /= to_stdlogicvector(lp_buffer) then
                         input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(61);-- transfer old value to empty input field
-                        input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_ulogic_vector(to_unsigned(61, 8));-- store port_id
-                        input_buffer(63) <= std_ulogic_vector(unsigned(input_buffer(63))+ 2);
-                        input_buffer(61) <= lp_buffer;
+                        input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(61, 8));-- store port_id
+                        input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
+                        input_buffer(61) <= to_stdlogicvector(lp_buffer);
                     end if;
                 end if;
             end if;
@@ -382,11 +382,11 @@ begin
             if hs_clk_cnt > 3 then
                 hs_clk_cnt := "00";
                 if output_buffer(26)(1) = '1' then
-                    if input_buffer(60) /= hs_buffer then
+                    if input_buffer(60) /= to_stdlogicvector(hs_buffer) then
                         input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(60);-- transfer old value to empty input field
-                        input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_ulogic_vector(to_unsigned(60, 8));-- store port_id
-                        input_buffer(63) <= std_ulogic_vector(unsigned(input_buffer(63))+ 2);
-                        input_buffer(60) <= hs_buffer;
+                        input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(60, 8));-- store port_id
+                        input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
+                        input_buffer(60) <= to_stdlogicvector(hs_buffer);
                     end if;
                 end if;
             end if;
