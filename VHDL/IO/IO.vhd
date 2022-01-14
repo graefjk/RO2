@@ -40,7 +40,7 @@ entity IO is
            value_o : out std_ulogic_vector(7 downto 0);
            clk_i : in std_ulogic;
            mio_b : inout std_ulogic_vector (53 downto 0);
-           port_b : inout std_ulogic_vector (70 downto 0);
+           port_b : inout std_logic_vector (70 downto 0);
            port_i : in std_ulogic_vector (19 downto 0);
            port_o : out std_ulogic_vector (7 downto 0);
            port_reset_i: in std_ulogic;
@@ -167,13 +167,13 @@ begin
            --Pmod
            for i in 0 to 3 loop
             if pmod_out_enabled(i) = '1' then
-                port_b(16 + 8 * i downto 9 + 8 * i) <= output_buffer(i + 20);
+                port_b(16 + 8 * i downto 9 + 8 * i) <= to_stdlogicvector(output_buffer(i + 20));
             else
-                if input_buffer(i + 20) /= port_b(16 + 8 * i downto 9 + 8 * i) then
+                if to_stdlogicvector(input_buffer(i + 20)) /= port_b(16 + 8 * i downto 9 + 8 * i) then
                     input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(i + 20);-- transfer old value to empty input field
                     input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_ulogic_vector(to_unsigned(i + 20, 8));-- store port_id
                     input_buffer(63) <= std_ulogic_vector(unsigned(input_buffer(63))+ 2);
-                    input_buffer(i + 20) <= port_b(16 + 8 * i downto 9 + 8 * i);
+                    input_buffer(i + 20) <= to_stdulogicvector(port_b(16 + 8 * i downto 9 + 8 * i));
                 end if;
             end if;
            end loop;
@@ -338,11 +338,11 @@ begin
         variable  led_clk_counter: integer := 256;
      begin
      if(rising_edge(clk_i)) then
-        if input_buffer(62) /= port_b(60 downto 53) then
+        if to_stdlogicvector(input_buffer(62)) /= port_b(60 downto 53) then
            input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(62);-- transfer old value to empty input field
            input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_ulogic_vector(to_unsigned(62, 8));-- store port_id
            input_buffer(63) <= std_ulogic_vector(unsigned(input_buffer(63))+ 2);
-           input_buffer(62) <= port_b(60 downto 53);
+           input_buffer(62) <= to_stdulogicvector(port_b(60 downto 53));
         end if;
      end if;
      end process;
@@ -491,8 +491,8 @@ begin
             clk_cnt := (clk_cnt + 1) mod 10;
         end if;
     end process hdmi_serial;
-    port_o(0) <= port_b(45);
-    port_o(1) <= not port_b(45);
+    --port_o(0) <= port_b(45);
+    --port_o(1) <= not port_b(45);
 end Behavioral;
 
 				 

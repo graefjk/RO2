@@ -37,7 +37,7 @@ entity design_1 is
     clk_i : in STD_LOGIC;
     enable_i : in STD_LOGIC;
     in_out_i : in STD_LOGIC;
-    port_b : inout STD_ULOGIC_VECTOR ( 70 downto 0 );
+    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 );
     port_i : in STD_ULOGIC_VECTOR ( 19 downto 0 );
     port_id_i : in STD_ULOGIC_VECTOR ( 7 downto 0 );
     port_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
@@ -203,7 +203,7 @@ architecture STRUCTURE of design_1 is
     value_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
     clk_i : in STD_LOGIC;
     mio_b : inout STD_ULOGIC_VECTOR ( 53 downto 0 );
-    port_b : inout STD_ULOGIC_VECTOR ( 70 downto 0 );
+    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 );
     port_i : in STD_ULOGIC_VECTOR ( 19 downto 0 );
     port_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
     port_reset_i : in STD_LOGIC;
@@ -342,7 +342,7 @@ begin
   in_out_i_0_1 <= in_out_i;
   port_i_0_1(19 downto 0) <= port_i(19 downto 0);
   port_id_i_0_1(7 downto 0) <= port_id_i(7 downto 0);
-  port_o(7 downto 0) <= IO_0_port_o(7 downto 0);
+  --port_o(7 downto 0) <= IO_0_port_o(7 downto 0);
   reset_o <= IO_0_reset_o;
   value_i_0_1(7 downto 0) <= value_i(7 downto 0);
   value_o(7 downto 0) <= IO_0_value_o(7 downto 0);
@@ -355,7 +355,7 @@ IO_0: component design_1_IO_0_0
       port_b(70 downto 0) => port_b(70 downto 0),
       port_i(19 downto 0) => port_i_0_1(19 downto 0),
       port_id_i(7 downto 0) => port_id_i_0_1(7 downto 0),
-      port_o(7 downto 0) => IO_0_port_o(7 downto 0),
+      port_o(7 downto 0) => port_o(7 downto 0),
       port_reset_i => processing_system7_0_FCLK_RESET0_N,
       reset_o => IO_0_reset_o,
       value_i(7 downto 0) => value_i_0_1(7 downto 0),

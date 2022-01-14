@@ -38,7 +38,7 @@ end Microcontroller_tb;
 architecture Behavioral of Microcontroller_tb is
 component Microcontroller
     port(   clk_i: in std_ulogic;
-            --reset_i: in std_ulogic;
+            reset_i: in std_ulogic;
             --
             DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );--IO ports
             DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
@@ -61,7 +61,7 @@ component Microcontroller
             FIXED_IO_ps_clk : inout STD_LOGIC;
             FIXED_IO_ps_porb : inout STD_LOGIC;
             FIXED_IO_ps_srstb : inout STD_LOGIC;
-            port_b : inout std_ulogic_vector ( 70 downto 0 );
+            port_b : inout std_logic_vector ( 70 downto 0 );
             port_i : in std_ulogic_vector ( 19 downto 0 );
             port_o : out std_ulogic_vector ( 7 downto 0 ));
 end component;
@@ -90,7 +90,7 @@ signal FIXED_IO_mio : STD_LOGIC_VECTOR ( 53 downto 0 );
 signal FIXED_IO_ps_clk : STD_LOGIC;
 signal FIXED_IO_ps_porb : STD_LOGIC;
 signal FIXED_IO_ps_srstb : STD_LOGIC;
-signal port_b : std_ulogic_vector ( 71 downto 0 );
+signal port_b : std_logic_vector ( 70 downto 0 );
 signal port_i : std_ulogic_vector ( 19 downto 0 );
 signal port_o : std_ulogic_vector ( 7 downto 0 );
 
@@ -100,7 +100,7 @@ constant waitTime: time := 0 ns;
 begin
 
 uut: Microcontroller port map (
-			--reset_i => reset_s, 
+			reset_i => reset_s, 
 			clk_i => clk_s,
 			DDR_addr(14 downto 0) => DDR_addr(14 downto 0),
             DDR_ba(2 downto 0) => DDR_ba(2 downto 0),
