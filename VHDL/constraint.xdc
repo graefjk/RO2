@@ -71,7 +71,7 @@ set_property -dict {PACKAGE_PIN U13 IOSTANDARD LVCMOS33} [get_ports {port_b[70]}
 #HDMI Clock
 #create_clock -period 0.6734 -waveform {0.000 0.3367} [get_ports {port_b[45]}]
 set_property -dict {PACKAGE_PIN P19 IOSTANDARD LVCMOS33} [get_ports {port_b[45]}]
-#set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets {port_b[45]}]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets {port_b[45]}]
 
 #HDMI RX
 set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33} [get_ports {port_b[46]}]

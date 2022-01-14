@@ -22,7 +22,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
-
+library unisim;
+use unisim.vcomponents.all;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -77,6 +78,7 @@ architecture Behavioral of IO is
     signal dc_bias_2, cnt_t_3, cnt_t_2 : cnt := ("00000","00000","00000"); 
     signal pC0_1, pC1_1, pVde_1, pC0_2, pC1_2, pVde_2 : std_ulogic_vector(2 downto 0);
     signal cond_not_balanced_2, cond_balanced_2 : std_ulogic_vector(2 downto 0);
+    signal hdmi_data: std_ulogic_vector(2 downto 0);
     
     function sum_bits(u : std_ulogic_vector) return unsigned is
        variable sum : unsigned(3 downto 0);
@@ -479,9 +481,9 @@ begin
         variable clk_cnt: unsigned(3 downto 0):= "0000";
     begin
         if Rising_Edge(port_b(45)) then
-            for i in 1 to 3 loop
-                port_o(i*2) <= pDataOutRaw(i - 1)(to_integer(clk_cnt));
-                port_o(i*2 + 1) <= not pDataOutRaw(i - 1)(to_integer(clk_cnt));
+            for i in 0 to 2 loop
+                hdmi_data(i) <= pDataOutRaw(i)(to_integer(clk_cnt));
+                
             end loop;
             if clk_cnt < 4 then
                 pxl_clk <= '0';
@@ -491,8 +493,18 @@ begin
             clk_cnt := (clk_cnt + 1) mod 10;
         end if;
     end process hdmi_serial;
-    --port_o(0) <= port_b(45);
-    --port_o(1) <= not port_b(45);
+    obuf : OBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (I=>port_b(45), O=>port_o(0), OB=>port_o(1));
+    obufdata1 : OBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (I=>hdmi_data(0), O=>port_o(2), OB=>port_o(3));
+    obufdata2 : OBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (I=>hdmi_data(1), O=>port_o(4), OB=>port_o(5));
+    obufdata3 : OBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (I=>hdmi_data(2), O=>port_o(6), OB=>port_o(7));
 end Behavioral;
 
 				 

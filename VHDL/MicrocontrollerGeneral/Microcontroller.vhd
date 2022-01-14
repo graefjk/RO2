@@ -26,7 +26,7 @@ use work.microcontroller_package.all;
 
 entity Microcontroller is
     port(   clk_i: in std_ulogic;
-            reset_i: in std_ulogic;
+            --reset_i: in std_ulogic;
             --
             DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );--IO ports
             DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
@@ -323,6 +323,6 @@ mux_i_o_instance: MUX
 				
 --top level mapping					
 clk_s <= clk_i;
-reset_s <= reset_i or reset_IO_s;
+--reset_s <= reset_i or reset_IO_s;
 
 end Behavioral;
