@@ -37,10 +37,10 @@ entity design_1_wrapper is
     clk_i : in STD_ULOGIC;
     enable_i : in STD_ULOGIC;
     in_out_i : in STD_ULOGIC;
-    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 );
-    port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    port_b : inout STD_ULOGIC_VECTOR ( 70 downto 0 );
+    port_i : in STD_ULOGIC_VECTOR ( 19 downto 0 );
     port_id_i : in STD_ULOGIC_VECTOR ( 7 downto 0 );
-    port_o : out STD_LOGIC_VECTOR ( 7 downto 0 );
+    port_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
     reset_o : out STD_ULOGIC;
     value_i : in STD_ULOGIC_VECTOR ( 7 downto 0 );
     value_o : out STD_ULOGIC_VECTOR ( 7 downto 0 )
@@ -51,7 +51,7 @@ architecture STRUCTURE of design_1_wrapper is
   component design_1 is
   port (
     clk_i : in STD_ULOGIC;
-    port_o : out STD_LOGIC_VECTOR ( 7 downto 0 );
+    port_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
     enable_i : in STD_ULOGIC;
     in_out_i : in STD_ULOGIC;
     port_id_i : in STD_ULOGIC_VECTOR ( 7 downto 0 );
@@ -78,8 +78,8 @@ architecture STRUCTURE of design_1_wrapper is
     DDR_dq : inout STD_LOGIC_VECTOR ( 31 downto 0 );
     DDR_dqs_n : inout STD_LOGIC_VECTOR ( 3 downto 0 );
     DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 );
-    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 );
-    port_i : in STD_LOGIC_VECTOR ( 19 downto 0 );
+    port_b : inout STD_ULOGIC_VECTOR ( 70 downto 0 );
+    port_i : in STD_ULOGIC_VECTOR ( 19 downto 0 );
     reset_o : out STD_ULOGIC
   );
   end component design_1;
