@@ -42,11 +42,7 @@ package microcontroller_package is
 
 	component ADD
         port(   sA_i: in std_ulogic_vector(instruction_address_c - 1 downto 0); --input signals
-		        sB_i: in std_ulogic_vector(instruction_address_c - 1 downto 0);
-		        reset_i: in std_logic;
-		        clk_i: in std_logic;
-       
-		        sC_o: out std_ulogic_vector(instruction_address_c - 1 downto 0)); -- output signals);
+		        sB_o: out std_ulogic_vector(instruction_address_c - 1 downto 0)); -- output signals);
     end component;
 
     component ALU
