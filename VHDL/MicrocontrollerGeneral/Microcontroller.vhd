@@ -26,6 +26,7 @@ use work.microcontroller_package.all;
 
 entity Microcontroller is
     port(   clk_i: in std_ulogic;
+            reset_i: in std_ulogic;
             --
             DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );--IO ports
             DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
@@ -48,16 +49,17 @@ entity Microcontroller is
             FIXED_IO_ps_clk : inout STD_LOGIC;
             FIXED_IO_ps_porb : inout STD_LOGIC;
             FIXED_IO_ps_srstb : inout STD_LOGIC;
-            port_b : inout std_ulogic_vector ( 70 downto 0 );
+            port_b : inout std_logic_vector ( 70 downto 0 );
             port_i : in std_ulogic_vector ( 19 downto 0 );
-            port_o : out std_ulogic_vector ( 7 downto 0 );
-            reset_o: in std_ulogic);
+            port_o : out std_ulogic_vector ( 7 downto 0 ));
+            --reset_o: in std_ulogic);
 end Microcontroller;
 
 architecture Behavioral of Microcontroller is
 
 --inputs on toplevel
 signal reset_s: std_ulogic;
+signal reset_IO_s: std_ulogic;
 signal clk_s: std_ulogic;
 
 --register outputs:
@@ -233,7 +235,7 @@ io_instance: design_1_wrapper
                 port_b(70 downto 0) => port_b(70 downto 0),
                 port_i(19 downto 0) => port_i(19 downto 0),
                 port_o(7 downto 0) => port_o(7 downto 0),
-                reset_o => reset_s);
+                reset_o => reset_IO_s);
 
 				
 											
@@ -321,6 +323,6 @@ mux_i_o_instance: MUX
 				
 --top level mapping					
 clk_s <= clk_i;
-
+reset_s <= reset_i or reset_IO_s;
 
 end Behavioral;

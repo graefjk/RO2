@@ -55,16 +55,16 @@ USE ieee.numeric_std.ALL;
 
 ENTITY design_1_IO_0_0 IS
   PORT (
-    port_id_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-    value_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+    port_id_i : IN STD_ULOGIC_VECTOR(7 DOWNTO 0);
+    value_i : IN STD_ULOGIC_VECTOR(7 DOWNTO 0);
     in_out_i : IN STD_LOGIC;
     enable_i : IN STD_LOGIC;
-    value_o : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+    value_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
     clk_i : IN STD_LOGIC;
-    mio_b : INOUT STD_LOGIC_VECTOR(53 DOWNTO 0);
+    mio_b : INOUT STD_ULOGIC_VECTOR(53 DOWNTO 0);
     port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0);
-    port_i : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-    port_o : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+    port_i : IN STD_ULOGIC_VECTOR(19 DOWNTO 0);
+    port_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
     port_reset_i : IN STD_LOGIC;
     reset_o : OUT STD_LOGIC
   );
@@ -75,16 +75,16 @@ ARCHITECTURE design_1_IO_0_0_arch OF design_1_IO_0_0 IS
   ATTRIBUTE DowngradeIPIdentifiedWarnings OF design_1_IO_0_0_arch: ARCHITECTURE IS "yes";
   COMPONENT IO IS
     PORT (
-      port_id_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-      value_i : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+      port_id_i : IN STD_ULOGIC_VECTOR(7 DOWNTO 0);
+      value_i : IN STD_ULOGIC_VECTOR(7 DOWNTO 0);
       in_out_i : IN STD_LOGIC;
       enable_i : IN STD_LOGIC;
-      value_o : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+      value_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
       clk_i : IN STD_LOGIC;
-      mio_b : INOUT STD_LOGIC_VECTOR(53 DOWNTO 0);
+      mio_b : INOUT STD_ULOGIC_VECTOR(53 DOWNTO 0);
       port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0);
-      port_i : IN STD_LOGIC_VECTOR(19 DOWNTO 0);
-      port_o : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+      port_i : IN STD_ULOGIC_VECTOR(19 DOWNTO 0);
+      port_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
       port_reset_i : IN STD_LOGIC;
       reset_o : OUT STD_LOGIC
     );
