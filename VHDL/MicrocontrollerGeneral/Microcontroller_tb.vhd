@@ -38,7 +38,7 @@ end Microcontroller_tb;
 architecture Behavioral of Microcontroller_tb is
 component Microcontroller
     port(   clk_i: in std_ulogic;
-            reset_i: in std_ulogic;
+            --reset_i: in std_ulogic;
             --
             DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );--IO ports
             DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
@@ -100,7 +100,7 @@ constant waitTime: time := 0 ns;
 begin
 
 uut: Microcontroller port map (
-			reset_i => reset_s, 
+			--reset_i => reset_s, 
 			clk_i => clk_s,
 			DDR_addr(14 downto 0) => DDR_addr(14 downto 0),
             DDR_ba(2 downto 0) => DDR_ba(2 downto 0),

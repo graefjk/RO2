@@ -324,5 +324,6 @@ mux_i_o_instance: MUX
 --top level mapping					
 clk_s <= clk_i;
 --reset_s <= reset_i or reset_IO_s;
+reset_s <= reset_IO_s;
 
 end Behavioral;
