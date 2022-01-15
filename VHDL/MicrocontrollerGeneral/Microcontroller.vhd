@@ -97,7 +97,6 @@ signal port_b_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 
 --register input signals
 signal write_data_s: std_ulogic_vector(architecture_width_c -1 downto 0);
-signal write_address_s:std_ulogic_vector(register_select_size_c -1 downto 0);
 signal sRegister_X_adresse_s: std_ulogic_vector(register_select_size_c -1 downto 0);
 signal sRegister_Y_adresse_s: std_ulogic_vector(register_select_size_c -1 downto 0);
 signal sRegister_write_enable_s: std_ulogic;
@@ -138,7 +137,7 @@ registers_instance: registers
                     register_select_size_g => register_select_size_c)
     port map(       write_data_i => write_data_s,
 				    write_address_i => write_address_s,
-				    write_enable_i => sRegister_write_enable_s,
+				    write_enable_i => sRegister_X_adresse_s,
 				    read_X_address_i => sRegister_X_adresse_s,
 				    read_Y_address_i => sRegister_Y_adresse_s,
 				    reset_i => reset_s,
