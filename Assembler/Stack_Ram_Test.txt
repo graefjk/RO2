@@ -1,9 +1,9 @@
 load x0, 3
 load x1, 5
 store x0, x1
-Call 5
+Call 6
 fetch x0, 5
-Jump 8
+Jump 9
 //----------
 sub x0, 3
 add x1, -5
