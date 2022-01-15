@@ -3,7 +3,7 @@ load x0, 3
 load x1, 5
 store x0, x1
 Call 5
-fetch x0, 6
+fetch x0, 5
 Jump 8
 //----------
 sub x0, 3
