@@ -1,0 +1,11 @@
+//Stack and Ram Test
+load x0, 3
+load x1, 5
+store x0, x1
+Call 5
+fetch x0, 6
+Jump 8
+//----------
+sub x0, 3
+add x1, -5
+Return
