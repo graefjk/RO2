@@ -136,8 +136,8 @@ registers_instance: registers
     generic map(    register_width_g => architecture_width_c,
                     register_select_size_g => register_select_size_c)
     port map(       write_data_i => write_data_s,
-				    write_address_i => write_address_s,
-				    write_enable_i => sRegister_X_adresse_s,
+				    write_address_i => sRegister_X_adresse_s,
+				    write_enable_i => sRegister_write_enable_s,
 				    read_X_address_i => sRegister_X_adresse_s,
 				    read_Y_address_i => sRegister_Y_adresse_s,
 				    reset_i => reset_s,
