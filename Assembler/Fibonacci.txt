@@ -8,8 +8,8 @@ LOAD x3, 0 //counter
 
 //While counter < steps, run fib-loop.
 COMPARE x3, x2
-JUMPC 8 //Jump to Fib-loop
-JUMP 15 //Jump to End
+JUMPC 7 //Jump to Fib-loop
+JUMP 14 //Jump to End
 
 //Fib-loop:
 LOAD x4, 0
@@ -18,7 +18,7 @@ ADD x4, x1
 LOAD x0, x1
 LOAD x1, x4
 ADD x3, 1
-JUMP 5
+JUMP 4
 
 //End:
 LOAD x0, x0
