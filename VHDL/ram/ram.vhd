@@ -49,7 +49,7 @@ architecture Behavioral of ram is
     io_process: process (clk_i) is
         begin
             if (rising_edge(clk_i) and  enable_i = '1') then
-                if(write_or_read_i = '0') then
+                if(write_or_read_i = '1') then
                     read_data_o <= ram_s(to_integer(unsigned(address_i)));
                 else
                     ram_s(to_integer(unsigned(address_i))) <= write_data_i;
