@@ -104,8 +104,6 @@ signal sRegister_write_enable_s: std_ulogic;
 --ram input signals
 signal sRAM_write_or_read_s: std_ulogic;
 signal sRAM_enable_s: std_logic;
-signal sRAM_address_s: std_ulogic_vector(ram_select_size_c -1 downto 0);
-signal sRAM_write_data_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 
 
 --stack input signals
@@ -152,8 +150,8 @@ ram_instance: ram
     port map(   clk_i => clk_s,
 				write_or_read_i => sRAM_write_or_read_s,
 				enable_i => sRAM_enable_s,
-				address_i => sRAM_address_s,
-				write_data_i => sRAM_write_data_s,
+				address_i => sB_s,
+				write_data_i => read_X_data_s,
 				read_data_o => sRAM_read_data_s);
 
 
