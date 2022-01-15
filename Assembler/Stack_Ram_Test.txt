@@ -1,4 +1,3 @@
-//Stack and Ram Test
 load x0, 3
 load x1, 5
 store x0, x1
