@@ -13,13 +13,13 @@ end PC;
 
 architecture Behavioral of PC is
 
-    signal tmp_s : std_ulogic_vector(11 downto 0) := "000000000000"; --temporary value of next instruction
+    signal tmp_s : std_ulogic_vector(11 downto 0) := "111111111111"; --temporary value of next instruction
 
 begin
     operations : process (clk_i, reset_i, enable_i, pc_i)
     begin
         if reset_i = '1' then
-            tmp_s <= "000000000000";
+            tmp_s <= "111111111111";
         else
             if enable_i = '1' then
                 if rising_edge(clk_i) then
