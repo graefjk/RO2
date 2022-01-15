@@ -43,7 +43,7 @@ end registers;
 
 architecture Behavioral of registers is  
     type register_type is array (2 ** register_select_size_g -1 downto 0) of std_ulogic_vector(register_width_g -1 downto 0);
-    signal register_s : register_type;  
+    signal register_s : register_type := (others => (others => '0'));
     attribute ram_style : string;
     attribute ram_style of register_s : signal is "registers";
   

@@ -13,7 +13,7 @@ end PC;
 
 architecture Behavioral of PC is
 
-    signal tmp_s : std_ulogic_vector(11 downto 0) := "111111111111"; --temporary value of next instruction
+    signal tmp_s : std_ulogic_vector(11 downto 0) := (others => '1'); --temporary value of next instruction
 
 begin
     operations : process (clk_i, reset_i, enable_i, pc_i)
