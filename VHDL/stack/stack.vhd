@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.std_logic_unsigned.all;
 
 library work;
 use work.microcontroller_package.all;
@@ -46,6 +47,8 @@ architecture Behavioral of stack is
     signal stack_s : stack_type := (others => (others => '0'));
     attribute ram_style : string;
     attribute ram_style of stack_s : signal is stack_style_g;
+    
+    signal sPC_i_temp : std_ulogic_vector(11 downto 0) := "000000000001";
 
     begin
         stack_process: process(clk_i, reset_i) is
@@ -69,7 +72,7 @@ architecture Behavioral of stack is
                      else --Writing
                         if full = '0' then
                             stack_pointer := stack_pointer + 1;
-                            stack_s(stack_pointer) <= sPC_i;
+                            stack_s(stack_pointer) <= to_stdulogicvector(to_stdlogicvector(sPC_i_temp) + to_stdlogicvector(sPC_i));
                         end if; -- no else here, if stack is full nothing will be written
                      end if;
                 end if;
