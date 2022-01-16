@@ -57,7 +57,9 @@ set_property -dict {PACKAGE_PIN N17 IOSTANDARD LVCMOS33} [get_ports {port_b[8]}]
 
 
 #Additional Ethernet signals
-set_property -dict {PACKAGE_PIN F16 IOSTANDARD LVCMOS33 PULLUP true} [get_ports {port_b[68]}]
+set_property PACKAGE_PIN F16 [get_ports {port_b[68]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {port_b[68]}]
+set_property PULLUP true [get_ports {port_b[68]}]
 set_property -dict {PACKAGE_PIN E17 IOSTANDARD LVCMOS33} [get_ports {port_b[69]}]
 
 
@@ -94,14 +96,14 @@ set_property -dict {PACKAGE_PIN N20 IOSTANDARD TMDS_33} [get_ports {port_i[7]}]
 set_property -dict {PACKAGE_PIN E18 IOSTANDARD LVCMOS33} [get_ports {port_b[49]}]
 set_property -dict {PACKAGE_PIN G17 IOSTANDARD LVCMOS33} [get_ports {port_b[50]}]
 set_property -dict {PACKAGE_PIN G18 IOSTANDARD LVCMOS33} [get_ports {port_b[51]}]
-set_property -dict {PACKAGE_PIN H17 IOSTANDARD TMDS_33} [get_ports {port_o[0]}]
-set_property -dict {PACKAGE_PIN H16 IOSTANDARD TMDS_33} [get_ports {port_o[1]}]
-set_property -dict {PACKAGE_PIN D20 IOSTANDARD TMDS_33} [get_ports {port_o[2]}]
-set_property -dict {PACKAGE_PIN D19 IOSTANDARD TMDS_33} [get_ports {port_o[3]}]
-set_property -dict {PACKAGE_PIN B20 IOSTANDARD TMDS_33} [get_ports {port_o[4]}]
-set_property -dict {PACKAGE_PIN C20 IOSTANDARD TMDS_33} [get_ports {port_o[5]}]
-set_property -dict {PACKAGE_PIN A20 IOSTANDARD TMDS_33} [get_ports {port_o[6]}]
-set_property -dict {PACKAGE_PIN B19 IOSTANDARD TMDS_33} [get_ports {port_o[7]}]
+set_property -dict {PACKAGE_PIN H16 IOSTANDARD TMDS_33} [get_ports {port_o[0]}]
+set_property -dict {PACKAGE_PIN H17 IOSTANDARD TMDS_33} [get_ports {port_o[1]}]
+set_property -dict {PACKAGE_PIN D19 IOSTANDARD TMDS_33} [get_ports {port_o[2]}]
+set_property -dict {PACKAGE_PIN D20 IOSTANDARD TMDS_33} [get_ports {port_o[3]}]
+set_property -dict {PACKAGE_PIN B19 IOSTANDARD TMDS_33} [get_ports {port_o[4]}]
+set_property -dict {PACKAGE_PIN A20 IOSTANDARD TMDS_33} [get_ports {port_o[5]}]
+set_property -dict {PACKAGE_PIN C20 IOSTANDARD TMDS_33} [get_ports {port_o[6]}]
+set_property -dict {PACKAGE_PIN B20 IOSTANDARD TMDS_33} [get_ports {port_o[7]}]
 
 #HDMI TX CEC
 set_property -dict {PACKAGE_PIN E19 IOSTANDARD LVCMOS33} [get_ports {port_b[52]}]
@@ -167,22 +169,24 @@ set_property -dict {PACKAGE_PIN Y17 IOSTANDARD LVCMOS33} [get_ports {port_b[40]}
 #create_clock -period 2.976 -waveform {0.000 1.488} [get_ports {port_b[71]}]
 create_clock -period 2.976 -waveform {0.000 1.488} [get_ports {port_i[15]}]
 set_property INTERNAL_VREF 0.6 [get_iobanks 35]
-set_property -dict {PACKAGE_PIN J19 IOSTANDARD HSUL_12} [get_ports {port_i[8]}]; 
-set_property -dict {PACKAGE_PIN H20 IOSTANDARD HSUL_12} [get_ports {port_i[9]}];  
-set_property -dict {PACKAGE_PIN M18 IOSTANDARD HSUL_12} [get_ports {port_i[10]}];  
-set_property -dict {PACKAGE_PIN L19 IOSTANDARD HSUL_12} [get_ports {port_i[11]}];  
-set_property -dict {PACKAGE_PIN L20 IOSTANDARD HSUL_12} [get_ports {port_i[12]}];  
-set_property -dict {PACKAGE_PIN J20 IOSTANDARD HSUL_12} [get_ports {port_i[13]}];  
-set_property -dict {PACKAGE_PIN H18 IOSTANDARD LVDS_25} [get_ports {port_i[14]}];  
-set_property -dict {PACKAGE_PIN J18 IOSTANDARD LVDS_25} [get_ports {port_i[15]}];  
-set_property -dict {PACKAGE_PIN M20 IOSTANDARD LVDS_25} [get_ports {port_i[16]}];  
-set_property -dict {PACKAGE_PIN M19 IOSTANDARD LVDS_25} [get_ports {port_i[17]}];  
-set_property -dict {PACKAGE_PIN L17 IOSTANDARD LVDS_25} [get_ports {port_i[18]}];  
-set_property -dict {PACKAGE_PIN L16 IOSTANDARD LVDS_25} [get_ports {port_i[19]}];  
-set_property -dict {PACKAGE_PIN G19 IOSTANDARD LVCMOS33} [get_ports {port_b[41]}]; 
-set_property -dict {PACKAGE_PIN G20 IOSTANDARD LVCMOS33 PULLUP true} [get_ports {port_b[42]}]; 
-set_property -dict {PACKAGE_PIN F20 IOSTANDARD LVCMOS33} [get_ports {port_b[43]}]; 
-set_property -dict {PACKAGE_PIN F19 IOSTANDARD LVCMOS33} [get_ports {port_b[44]}]; 
+set_property -dict {PACKAGE_PIN J19 IOSTANDARD HSUL_12} [get_ports {port_i[8]}]
+set_property -dict {PACKAGE_PIN H20 IOSTANDARD HSUL_12} [get_ports {port_i[9]}]
+set_property -dict {PACKAGE_PIN M18 IOSTANDARD HSUL_12} [get_ports {port_i[10]}]
+set_property -dict {PACKAGE_PIN L19 IOSTANDARD HSUL_12} [get_ports {port_i[11]}]
+set_property -dict {PACKAGE_PIN L20 IOSTANDARD HSUL_12} [get_ports {port_i[12]}]
+set_property -dict {PACKAGE_PIN J20 IOSTANDARD HSUL_12} [get_ports {port_i[13]}]
+set_property -dict {PACKAGE_PIN H18 IOSTANDARD LVDS_25} [get_ports {port_i[14]}]
+set_property -dict {PACKAGE_PIN J18 IOSTANDARD LVDS_25} [get_ports {port_i[15]}]
+set_property -dict {PACKAGE_PIN M20 IOSTANDARD LVDS_25} [get_ports {port_i[16]}]
+set_property -dict {PACKAGE_PIN M19 IOSTANDARD LVDS_25} [get_ports {port_i[17]}]
+set_property -dict {PACKAGE_PIN L17 IOSTANDARD LVDS_25} [get_ports {port_i[18]}]
+set_property -dict {PACKAGE_PIN L16 IOSTANDARD LVDS_25} [get_ports {port_i[19]}]
+set_property -dict {PACKAGE_PIN G19 IOSTANDARD LVCMOS33} [get_ports {port_b[41]}]
+set_property PACKAGE_PIN G20 [get_ports {port_b[42]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {port_b[42]}]
+set_property PULLUP true [get_ports {port_b[42]}]
+set_property -dict {PACKAGE_PIN F20 IOSTANDARD LVCMOS33} [get_ports {port_b[43]}]
+set_property -dict {PACKAGE_PIN F19 IOSTANDARD LVCMOS33} [get_ports {port_b[44]}]
 
 
 #Unloaded Crypto Chip SWI (for future use)
@@ -877,3 +881,4 @@ set_property PACKAGE_PIN C2 [get_ports {DDR_dqs_p[0]}]
 set_property PACKAGE_PIN G2 [get_ports {DDR_dqs_p[1]}]
 set_property PACKAGE_PIN R2 [get_ports {DDR_dqs_p[2]}]
 set_property SLEW FAST [get_ports FIXED_IO_ps_clk]
+

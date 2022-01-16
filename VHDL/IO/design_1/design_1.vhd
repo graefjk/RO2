@@ -344,8 +344,8 @@ begin
   port_id_i_0_1(7 downto 0) <= port_id_i(7 downto 0);
   --port_o(7 downto 0) <= IO_0_port_o(7 downto 0);
   reset_o <= IO_0_reset_o;
-  value_i_0_1(7 downto 0) <= value_i(7 downto 0);
-  value_o(7 downto 0) <= IO_0_value_o(7 downto 0);
+  --value_i_0_1(7 downto 0) <= value_i(7 downto 0);
+  --value_o(7 downto 0) <= IO_0_value_o(7 downto 0);
 IO_0: component design_1_IO_0_0
      port map (
       clk_i => clk_i_1,
@@ -358,8 +358,8 @@ IO_0: component design_1_IO_0_0
       port_o(7 downto 0) => port_o(7 downto 0),
       port_reset_i => processing_system7_0_FCLK_RESET0_N,
       reset_o => IO_0_reset_o,
-      value_i(7 downto 0) => value_i_0_1(7 downto 0),
-      value_o(7 downto 0) => IO_0_value_o(7 downto 0)
+      value_i(7 downto 0) => value_i(7 downto 0),
+      value_o(7 downto 0) => value_o(7 downto 0)
     );
 processing_system7_0: component design_1_processing_system7_0_0
      port map (
