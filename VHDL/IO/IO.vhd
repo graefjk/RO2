@@ -41,7 +41,7 @@ entity IO is
            value_o : out std_ulogic_vector(7 downto 0);
            clk_i : in std_ulogic;
            mio_b : inout std_ulogic_vector (53 downto 0);
-           port_b : inout std_logic_vector (70 downto 0);
+           port_b : inout std_logic_vector (70 downto 0):= (others => 'Z');
            port_i : in std_ulogic_vector (19 downto 0);
            port_o : out std_ulogic_vector (7 downto 0);
            port_reset_i: in std_ulogic;
@@ -50,7 +50,7 @@ end IO;
 
 architecture Behavioral of IO is
     type input_buffer_type is array (255 downto 0) of std_logic_vector(7 downto 0);
-    signal input_buffer : input_buffer_type ;--63: next systemside unused input
+    signal input_buffer : input_buffer_type := (others => (others => 'Z'));--63: next systemside unused input
     
     type output_buffer_type is array (127 downto 0) of std_ulogic_vector(7 downto 0);
     signal output_buffer : output_buffer_type ;
@@ -93,7 +93,10 @@ architecture Behavioral of IO is
 
     
 begin
+    
+    
     reset_o <= port_reset_i;
+    value_o <= to_stdulogicvector(input_buffer(to_integer(unsigned(port_id_i)))) when in_out_i = '0' and enable_i = '1' else (others => 'Z');
     process(clk_i, mio_b(36), mio_b(48)) is
     
     variable usb_0_to_send_rst: std_ulogic := '0';
@@ -105,9 +108,7 @@ begin
     begin
         if rising_edge(clk_i) then
          if enable_i = '1' then
-           if in_out_i = '0' then
-            value_o <= to_stdulogicvector(input_buffer(to_integer(unsigned(port_id_i))));
-           else 
+           if in_out_i = '1' then
             if port_id_i(7) = '0' then  --Buffer output
             output_buffer(to_integer(unsigned(port_id_i))) <= value_i; 
             elsif port_id_i(7) = '1' then --Intermediate Storage
@@ -156,13 +157,13 @@ begin
                 pVde_1(2 downto 0) <= "111";
             elsif port_id_i(6 downto 0) = "0011101" then --Send HDMI Green 
             elsif port_id_i(6 downto 0) = "0011110" then --Send HDMI Blue
-            elsif port_id_i(6 downto 0) = "0111000" then --activate LED 1 with value/256 percent brightness
-            elsif port_id_i(6 downto 0) = "0111001" then --activate LED 2 with value/256 percent brightness
-            elsif port_id_i(6 downto 0) = "0111010" then --activate LED 3 with value/256 percent brightness
-            elsif port_id_i(6 downto 0) = "0111011" then --activate LED 4 with value/256 percent brightness
-            elsif port_id_i(6 downto 0) = "0111100" then --activate LED 5 Red with value/256 percent brightness
-            elsif port_id_i(6 downto 0) = "0111001" then --activate LED 5 Green with value/256 percent brightness
-            elsif port_id_i(6 downto 0) = "0111010" then --activate LED 5 Blue with value/256 percent brightness
+            elsif port_id_i(6 downto 0) = "0111000" then --activate LED 1 with value/255 percent brightness
+            elsif port_id_i(6 downto 0) = "0111001" then --activate LED 2 with value/255 percent brightness
+            elsif port_id_i(6 downto 0) = "0111010" then --activate LED 3 with value/255 percent brightness
+            elsif port_id_i(6 downto 0) = "0111011" then --activate LED 4 with value/255 percent brightness
+            elsif port_id_i(6 downto 0) = "0111100" then --activate LED 5 Red with value/255 percent brightness
+            elsif port_id_i(6 downto 0) = "0111001" then --activate LED 5 Green with value/255 percent brightness
+            elsif port_id_i(6 downto 0) = "0111010" then --activate LED 5 Blue with value/255 percent brightness
             end if;
            end if;
            
@@ -261,7 +262,7 @@ begin
      
      
      --MDIO clock
-     process(clk_i) is
+     MDIO_clock:process(clk_i) is
      variable  mdio_clk_counter: integer := 50;
      begin
      if(rising_edge(clk_i)) then
@@ -277,6 +278,7 @@ begin
      --Audio clocks
      --Master
      --port_b(1) <= port_b(1);
+     --port_b(1) <= 'Z';
      --Serial
      port_b(0) <= port_b(1);
      --Record
@@ -287,7 +289,7 @@ begin
      port_b(7) <= port_b(1);
      
      --Audio
-     process(port_b(1)) is
+     Audio:process(port_b(1)) is
      begin
      if(rising_edge(port_b(1))) then
         if playbackCounter < 8 then
@@ -314,30 +316,31 @@ begin
         end if;
      end if;
      end process;
+     
+     
      --LED
-     process(clk_i) is
-     variable  led_clk_counter: integer := 256;
+     LED: process(clk_i) is
+     variable  led_clk_counter: integer := 254;
      begin
      if(rising_edge(clk_i)) then
-        if(led_clk_counter > -1) then
+        for i in 67 downto 61 loop
+            if to_integer(unsigned(output_buffer(i - 5))) > led_clk_counter then
+                port_b(i) <= '1';
+            else 
+                port_b(i) <= '0';
+            end if;
+        end loop;
+        if(led_clk_counter > 0) then            
             led_clk_counter := led_clk_counter - 1;
-            for i in 67 downto 61 loop
-                if led_clk_counter < to_integer(signed(output_buffer(i - 5))) then
-                    port_b(i) <= '1';
-                else 
-                    port_b(i) <= '0';
-                end if;
-            end loop;
         else 
-            led_clk_counter := 256;
+            led_clk_counter := 254;
         end if;
      end if;
      end process;
      
      
      --Switches/Buttons
-     process(clk_i) is
-        variable  led_clk_counter: integer := 256;
+     Sw:process(clk_i) is
      begin
      if(rising_edge(clk_i)) then
         if input_buffer(62) /= port_b(60 downto 53) then
@@ -350,7 +353,7 @@ begin
      end process;
      
      --Pcam lp
-     process(port_i(9)) is
+     pcam_lp:process(port_i(9)) is
         variable lp_clk_cnt: unsigned(1 downto 0) := "00";
         variable lp_buffer: std_ulogic_vector(7 downto 0) := (others => '0');
      begin
@@ -373,7 +376,7 @@ begin
      end process;
      
      --Pcam hs
-     process(port_i(15)) is
+     pcam_hs:process(port_i(15)) is
         variable hs_clk_cnt: unsigned(1 downto 0) := "00";
         variable hs_buffer: std_ulogic_vector(7 downto 0) := (others => '0');
      begin
@@ -394,6 +397,9 @@ begin
             end if;
         end if;
      end process;
+     
+     
+     
     --HDMI from Digilent repository
     RGB : for j in 2 downto 0 generate
         Stage1: process(pxl_clk)
@@ -505,6 +511,7 @@ begin
     obufdata3 : OBUFDS
     generic map (IOSTANDARD =>"TMDS_33")
     port map (I=>hdmi_data(2), O=>port_o(6), OB=>port_o(7));
+    
 end Behavioral;
 
 				 
