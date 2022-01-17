@@ -57,6 +57,7 @@ architecture Behavioral of IO is
     
     signal mdio_clk : std_ulogic := '0'; -- 1/50 of clk_i
     
+    signal reset_enable : std_ulogic_vector(7 downto 0) := "10000000";
     --Audio
     signal playbackCounter: unsigned(3 downto 0) := "1000";
     signal recordCounter: unsigned(3 downto 0) := "1000";
@@ -94,8 +95,7 @@ architecture Behavioral of IO is
     
 begin
     
-    
-    reset_o <= port_reset_i;
+    reset_o <= '0' when (std_ulogic_vector(port_b(60 downto 53)) and reset_enable(7 downto 0)) = "00000000" else '1';
     value_o <= to_stdulogicvector(input_buffer(to_integer(unsigned(port_id_i)))) when in_out_i = '0' and enable_i = '1' else (others => 'Z');
     process(clk_i, mio_b(36), mio_b(48)) is
     
@@ -147,7 +147,8 @@ begin
             elsif port_id_i(6 downto 0) = "0010111" then --Pmod Standard(JE)
             elsif port_id_i(6 downto 0) = "0011000" then --Pmod Toggle In/Out 1-toggle
                 pmod_out_enabled := pmod_out_enabled or value_i(3 downto 0);
-            --0011001 reserved for future use
+            elsif port_id_i(6 downto 0) = "0011001" then --Toggle use Button as reset- default 10000000
+                reset_enable <= reset_enable or value_i(7 downto 0);
             elsif port_id_i(6 downto 0) = "0011010" then --PCam control -Bit0 buffer ld input, Bit1 buffer hs input
             elsif port_id_i(6 downto 0) = "0011011" then --Send HDMI Control -Bit0-2 ctrl0, Bit3-5 ctrl1
                 pVde_1(2 downto 0) <= "000";
