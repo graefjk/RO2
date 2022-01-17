@@ -139,6 +139,7 @@ uut: Microcontroller port map (
     
     stimuli: process
     begin
+        port_b(60 downto 53) <= (others => '0');
 		reset_s <= '0';
 		wait for 120 ns;
 
