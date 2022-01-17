@@ -1,0 +1,33 @@
+fetch s0, 00  ;  save the value on the adress 0 of the RAM in s0
+fetch s1, 00    ;  save the value on the adress 0 of the RAM in s1
+add s2, 01  ; S2= 1 raise the value of the counter to 1 beacuse the adress has been already fetched
+loop:
+   load s3, 01    ; load the value 1 into the register s3
+   and s3, s1    ; check the LSB and save into s3
+   compare s3, 00 ; if s3= 0= LSB then jump to fill1
+     Jump Z, fill1
+
+   compare s3,01 ; if s3= 1= LSB then jump to fill0
+     Jump Z, fill0
+
+fill0:
+  sr0 s1     ; shift the value saved in the register s1 one time to the right and fill the MSB with 0
+  compare s1, s0 ; check if the current value of s1 is equal to the value of s0=RAM[0]=the input and jump to the finish if it's
+    Jump Z, finish 
+  store s1, (s2) ;save the the value of s1 into the current addresss(counter) of the RAM
+  add s2, 01  ; increment the counter to the next address
+  
+  jump loop           ; jump to the loop and do the progress again
+
+
+fill1:
+  sr1 s1   ; shift the value saved in the register s1 one time to the right and fill the MSB with 1
+  compare s1, s0  ; check if the current value of s1 is equal to the value of s0=RAM[0]=the input and jump to the finish if it's
+    Jump Z, finish 
+  store s1, (s2)  ;save the the value of s1 into the current addresss(counter) of the RAM
+  add s2, 01   ; increment the counter to the next address
+  
+  jump loop   ; jump to the loop and do the progress again
+
+finish:
+return

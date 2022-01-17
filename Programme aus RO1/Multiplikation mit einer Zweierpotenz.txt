@@ -1,0 +1,25 @@
+fetch s0, 00   ; save the value on the adress 0 of the RAM into s0
+fetch s1, 01  ; save the value on the adress 1 of the RAM into s1
+load LSBs, s0  ; store the value of x into sF
+compare s1, 00  ; if n=s1= exponent is equal to zero then jump to the finish
+  jump Z, finish
+
+
+
+loop:
+  load s2,00    ; load 0 into s2
+  sl0 sF      ; shift the value into sF one time to the left and fill the LSB with 0
+  addcy s2, 00  ; s2= carry= the already shiffted bit
+  sl0 sE  ;shift the value into sE one time to the left and fill the LSB with 0 
+  add sE, s2 ; add the shifted bit, stored in the register s2 to sE
+  sub s1, 01  ; decrement the value of s1
+  compare s1, 00   ; check if the of s1 and jump to the finish if it is
+    jump Z, finish
+
+  jump loop
+
+finish:
+return
+
+
+

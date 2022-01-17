@@ -1,0 +1,9 @@
+loop:              
+  sr0 s0       ; shift the value of s0 one time to the right, save the LSB in carry and fill the MSB with zero
+  addcy sF, 00   ; add the carry value to the register sF
+  compare s0, 00  ; compare if the value of the register s0 is equal to zero. 
+    jump Z, finish    ; If it is jump to the finish
+  jump loop          ; if the value of the register s0 is not equal to zero jump to the loop.
+
+finish:
+return

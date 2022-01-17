@@ -1,0 +1,85 @@
+compare s0, s2    ; check if the the 8 MSBs of the second number are greater in value of the first one
+   jump C, save         ; if it is jump to save
+compare s0, s2    ; check if the the 8 MSBs of the second number are equal in value to the first one
+   jump Z, Beforesave   ; if it is then jump to Beforesave
+
+loop:
+  compare s1, s3          ; check if the the 8 LSBs of the second number are greater in value of the first one
+      jump C, subWithCarry      ; if it is jum to subWithCarry
+  
+  jump subWithoutCarry          ; otherwise jump to subWithoutCarry
+
+
+subWithCarry:       
+  subcy s0, s2             ; s0= s0-s2-C (here C=1 l.13)
+  load s4, 00                    ; s4=0
+  sr1 s1                      ; s1=1s1[7-1] 
+  addcy s4, 00                   ; s4= s4 + C (here C=s1[0] l.23) 
+  load s5, 00                    ; s5=0
+  sr0 s3                      ; s3= 0s3[7-1]
+  addcy s5,00                    ; s5= s5 + C (here C=s3[0] l.225)
+  sub s1, s3               ; s1= s1- s3
+  compare s4, s5
+    jump Z, equal
+  compare s4, s5
+    jump C, greater
+  compare s4, s5
+    jump NC, less               ; check either the shiffted bits stored in s4, s5 are equal, s4<s5 or s4>s5 and jump to the right line
+  
+
+equal:                          ; rotate the bits to its normal position
+  compare s5, 01
+    jump Z, fill1
+  sl0 s1
+  sl0 s3
+  compare s0, s2 
+   jump C, Beforesave
+  compare s0, s2 
+   jump Z, Beforesave
+
+fill1:                          ; rotate the bits to its normal position
+  sl0 s1
+  sl1 s3
+  compare s0, s2 
+    jump C, save
+  compare s0, s2 
+    jump Z, Beforesave
+
+greater:                        ; rotate the bits to its normal position
+  sl0 s1
+  sl1 s3
+  sub s1, 01
+  compare s0, s2 
+     jump C, save
+  compare s0, s2 
+     jump Z, Beforesave
+  
+less:                          ; rotate the bits to its normal position
+  sl1 s1
+  sl0 s3
+  compare s0, s2 
+    jump C, save
+  compare s0, s2 
+    jump Z, Beforesave
+
+subWithoutCarry:              ; substract the number in normal way
+  sub s1, s3
+  sub s0, s2
+  compare s0, s2 
+    jump C, save
+  compare s0, s2 
+    jump Z, Beforesave
+
+  
+
+Beforesave:                 
+   compare s1, s3      ; check if the the 8 LSBs of the second number are greater in value of the first one
+     jump C, save            ; if it is jump to save
+    
+   jump loop                 ; otherwise jump to the loop
+
+
+save:
+   load sE, s0         ; save the value in sF und sE
+   load sF, s1
+   return
