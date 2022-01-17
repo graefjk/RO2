@@ -67,11 +67,12 @@ SUBCY x0 x1
 COMPARE x1 x0
 SUBCY x0 34
 //x0 = 0
+LOAD x1 5
+OUTPUT x0 x3
+OUTPUT x0 1
 INPUT x0 x0
 INPUT x1 1
 //x0 = port[0] input, x1 = port[1] input
-OUTPUT x0 x3
-OUTPUT x0 1
 
 
 
