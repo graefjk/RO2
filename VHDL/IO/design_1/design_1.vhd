@@ -170,7 +170,6 @@ architecture STRUCTURE of design_1 is
     USB1_PORT_INDCTL : out STD_LOGIC_VECTOR ( 1 downto 0 );
     USB1_VBUS_PWRSELECT : out STD_LOGIC;
     USB1_VBUS_PWRFAULT : in STD_LOGIC;
-    FCLK_RESET0_N : out STD_LOGIC;
     MIO : inout STD_LOGIC_VECTOR ( 53 downto 0 );
     DDR_CAS_n : inout STD_LOGIC;
     DDR_CKE : inout STD_LOGIC;
@@ -206,7 +205,6 @@ architecture STRUCTURE of design_1 is
     port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 );
     port_i : in STD_ULOGIC_VECTOR ( 19 downto 0 );
     port_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
-    port_reset_i : in STD_LOGIC;
     reset_o : out STD_LOGIC
   );
   end component design_1_IO_0_0;
@@ -234,7 +232,6 @@ architecture STRUCTURE of design_1 is
   signal processing_system7_0_DDR_RAS_N : STD_LOGIC;
   signal processing_system7_0_DDR_RESET_N : STD_LOGIC;
   signal processing_system7_0_DDR_WE_N : STD_LOGIC;
-  signal processing_system7_0_FCLK_RESET0_N : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_DDR_VRN : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_DDR_VRP : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_MIO : STD_LOGIC_VECTOR ( 53 downto 0 );
@@ -356,7 +353,6 @@ IO_0: component design_1_IO_0_0
       port_i(19 downto 0) => port_i_0_1(19 downto 0),
       port_id_i(7 downto 0) => port_id_i_0_1(7 downto 0),
       port_o(7 downto 0) => port_o(7 downto 0),
-      port_reset_i => processing_system7_0_FCLK_RESET0_N,
       reset_o => IO_0_reset_o,
       value_i(7 downto 0) => value_i(7 downto 0),
       value_o(7 downto 0) => value_o(7 downto 0)
@@ -414,7 +410,6 @@ processing_system7_0: component design_1_processing_system7_0_0
       ENET1_MDIO_MDC => NLW_processing_system7_0_ENET1_MDIO_MDC_UNCONNECTED,
       ENET1_MDIO_O => NLW_processing_system7_0_ENET1_MDIO_O_UNCONNECTED,
       ENET1_MDIO_T => NLW_processing_system7_0_ENET1_MDIO_T_UNCONNECTED,
-      FCLK_RESET0_N => processing_system7_0_FCLK_RESET0_N,
       I2C0_SCL_I => '0',
       I2C0_SCL_O => NLW_processing_system7_0_I2C0_SCL_O_UNCONNECTED,
       I2C0_SCL_T => NLW_processing_system7_0_I2C0_SCL_T_UNCONNECTED,

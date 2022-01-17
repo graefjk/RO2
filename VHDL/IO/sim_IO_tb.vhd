@@ -60,15 +60,15 @@ architecture Behavioral of IO_tb is
 				FIXED_IO_ps_clk : inout STD_LOGIC;
 				FIXED_IO_ps_porb : inout STD_LOGIC;
 				FIXED_IO_ps_srstb : inout STD_LOGIC;
-				port_id_i : IN std_logic_vector(7 DOWNTO 0);
-				value_i : IN std_logic_vector(7 DOWNTO 0);
-				in_out_i : IN std_logic;
-				enable_i : IN STD_LOGIC;
-				value_o : OUT std_logic_vector(7 DOWNTO 0);
+				port_id_i : IN std_ulogic_vector(7 DOWNTO 0);
+				value_i : IN std_ulogic_vector(7 DOWNTO 0);
+				in_out_i : IN STD_ULOGIC;
+				enable_i : IN STD_ULOGIC;
+				value_o : OUT std_ulogic_vector(7 DOWNTO 0);
 				clk_i : in STD_LOGIC;
 				port_b : inout std_logic_vector ( 70 downto 0 );
-				port_i : in std_logic_vector ( 19 downto 0 );
-				port_o : out std_logic_vector ( 7 downto 0 );
+				port_i : in std_ulogic_vector ( 19 downto 0 );
+				port_o : out std_ulogic_vector ( 7 downto 0 );
 				reset_o : out STD_ULOGIC
         );
     end component;
@@ -97,11 +97,11 @@ architecture Behavioral of IO_tb is
     signal FIXED_IO_ps_porb : STD_LOGIC;
     signal FIXED_IO_ps_srstb : STD_LOGIC;
     signal port_b_s : std_logic_vector ( 70 downto 0 );
-    signal port_i : std_logic_vector ( 19 downto 0 );
-    signal port_o : std_logic_vector ( 7 downto 0 );
-    signal value_i_s: std_logic_vector(7 downto 0);
-    signal value_o_s: std_logic_vector(7 downto 0);
-    signal port_id_s: std_logic_vector(7 downto 0);
+    signal port_i : std_ulogic_vector ( 19 downto 0 );
+    signal port_o : std_ulogic_vector ( 7 downto 0 );
+    signal value_i_s: std_ulogic_vector(7 downto 0);
+    signal value_o_s: std_ulogic_vector(7 downto 0);
+    signal port_id_s: std_ulogic_vector(7 downto 0);
     signal in_out_s: std_logic;
     signal enable_s: std_logic;
     
@@ -164,11 +164,11 @@ begin
         for i in 0 to 6 loop
             enable_s <= '1';
             if i < 6 then
-                value_i_s <= std_logic_vector(to_signed(i * 42, 8));
+                value_i_s <= std_ulogic_vector(to_signed(i * 42, 8));
             else 
-                value_i_s <= std_logic_vector(to_signed(255, 8));
+                value_i_s <= std_ulogic_vector(to_signed(255, 8));
             end if;
-            port_id_s <= std_logic_vector(to_unsigned(i + 56, 8));
+            port_id_s <= std_ulogic_vector(to_unsigned(i + 56, 8));
             in_out_s <= '1';
             wait for clk_period;            
 		end loop;
@@ -185,7 +185,7 @@ begin
 	    for k in 0 to 256 loop
 	       port_b_s(60 downto 53) <= std_logic_vector(to_unsigned(k,8));
 	       wait for clk_period;
-	       if not(value_o_s = std_logic_vector(to_unsigned(k,8))) then
+	       if not(value_o_s = std_ulogic_vector(to_unsigned(k,8))) then
 	           err_cnt_sw <= err_cnt_sw + 1;
 	           report "Switch Failed";
 	       end if;

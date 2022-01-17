@@ -65,7 +65,6 @@ ENTITY design_1_IO_0_0 IS
     port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0);
     port_i : IN STD_ULOGIC_VECTOR(19 DOWNTO 0);
     port_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
-    port_reset_i : IN STD_LOGIC;
     reset_o : OUT STD_LOGIC
   );
 END design_1_IO_0_0;
@@ -85,7 +84,6 @@ ARCHITECTURE design_1_IO_0_0_arch OF design_1_IO_0_0 IS
       port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0);
       port_i : IN STD_ULOGIC_VECTOR(19 DOWNTO 0);
       port_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
-      port_reset_i : IN STD_LOGIC;
       reset_o : OUT STD_LOGIC
     );
   END COMPONENT IO;
@@ -114,7 +112,6 @@ BEGIN
       port_b => port_b,
       port_i => port_i,
       port_o => port_o,
-      port_reset_i => port_reset_i,
       reset_o => reset_o
     );
 END design_1_IO_0_0_arch;

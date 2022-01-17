@@ -135,7 +135,7 @@ uut: Microcontroller port map (
         wait for clk_period / 2;
     end process;
     
-
+    port_b(60) <= reset_s;
     
     stimuli: process
     begin

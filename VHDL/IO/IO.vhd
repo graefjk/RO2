@@ -44,7 +44,6 @@ entity IO is
            port_b : inout std_logic_vector (70 downto 0):= (others => 'Z');
            port_i : in std_ulogic_vector (19 downto 0);
            port_o : out std_ulogic_vector (7 downto 0);
-           port_reset_i: in std_ulogic;
            reset_o: out std_ulogic);
 end IO;
 
@@ -97,6 +96,7 @@ begin
     
     reset_o <= '0' when (std_ulogic_vector(port_b(60 downto 53)) and reset_enable(7 downto 0)) = "00000000" else '1';
     value_o <= to_stdulogicvector(input_buffer(to_integer(unsigned(port_id_i)))) when in_out_i = '0' and enable_i = '1' else (others => 'Z');
+    --port_b(60 downto 53) <= (others => 'Z');
     process(clk_i, mio_b(36), mio_b(48)) is
     
     variable usb_0_to_send_rst: std_ulogic := '0';
@@ -182,76 +182,76 @@ begin
             end if;
            end loop;
            
-           -- reset for usb sending queue
-           if usb_0_to_send_rst = '1' then
-            output_buffer(0) <= (others => '0');     
-           end if;
-           if usb_1_to_send_rst = '1' then
-            output_buffer(1) <= (others => '0');
-           end if;
-         end if;
-         --Flash
-         if flash_counter >= 0 then
-                case flash_counter is
-                    -- send command EB
-                    when 23|22|21|19|17|16  => mio_b(2) <= '1';
-                        mio_b(10) <= '1';
-                    when 20|18 => mio_b(2) <= '0';
-                        mio_b(10) <= '0';
-                    -- first two bits of address
-                    when 15 => mio_b(5 downto 2) <= (others => '1');
-                        mio_b(13 downto 10) <= (others => '1');
-                    when 14 => mio_b(5 downto 2) <= (others => '1');
-                        mio_b(13 downto 10) <= "110" & output_buffer(9)(7);
-                    -- address
-                    when 13 downto 11 => mio_b(5 downto 2) <= output_buffer(flash_counter - 5)(3 downto 0);
-                        mio_b(13 downto 10) <= output_buffer(flash_counter - 5)(7 downto 4);
-                    -- mode and dummy
-                    when 9 downto 5 => mio_b(5 downto 2) <= (others => '0');
-                        mio_b(13 downto 10) <= (others => '0');
-                    -- data
-                    when 4 downto 0 => mio_b(5 downto 2) <= output_buffer(flash_counter + 2)(3 downto 0);
-                        mio_b(13 downto 10) <= output_buffer(flash_counter + 2)(7 downto 4);
-                    -- default, should never be used
-                    when others => mio_b(5 downto 2) <= (others => '0');
-                        mio_b(13 downto 10) <= (others => '0');
-                end case;
-                flash_counter := flash_counter - 1;
-          end if;
+--           -- reset for usb sending queue
+--           if usb_0_to_send_rst = '1' then
+--            output_buffer(0) <= (others => '0');     
+--           end if;
+--           if usb_1_to_send_rst = '1' then
+--            output_buffer(1) <= (others => '0');
+--           end if;
+--         end if;
+--         --Flash
+--         if flash_counter >= 0 then
+--                case flash_counter is
+--                    -- send command EB
+--                    when 23|22|21|19|17|16  => mio_b(2) <= '1';
+--                        mio_b(10) <= '1';
+--                    when 20|18 => mio_b(2) <= '0';
+--                        mio_b(10) <= '0';
+--                    -- first two bits of address
+--                    when 15 => mio_b(5 downto 2) <= (others => '1');
+--                        mio_b(13 downto 10) <= (others => '1');
+--                    when 14 => mio_b(5 downto 2) <= (others => '1');
+--                        mio_b(13 downto 10) <= "110" & output_buffer(9)(7);
+--                    -- address
+--                    when 13 downto 11 => mio_b(5 downto 2) <= output_buffer(flash_counter - 5)(3 downto 0);
+--                        mio_b(13 downto 10) <= output_buffer(flash_counter - 5)(7 downto 4);
+--                    -- mode and dummy
+--                    when 9 downto 5 => mio_b(5 downto 2) <= (others => '0');
+--                        mio_b(13 downto 10) <= (others => '0');
+--                    -- data
+--                    when 4 downto 0 => mio_b(5 downto 2) <= output_buffer(flash_counter + 2)(3 downto 0);
+--                        mio_b(13 downto 10) <= output_buffer(flash_counter + 2)(7 downto 4);
+--                    -- default, should never be used
+--                    when others => mio_b(5 downto 2) <= (others => '0');
+--                        mio_b(13 downto 10) <= (others => '0');
+--                end case;
+--                flash_counter := flash_counter - 1;
+--          end if;
+--        end if;
+--        --USB
+--        if falling_edge(mio_b(36)) then
+--            if mio_b(31) = '1' then -- interface is to slow -> stop sending
+--            elsif output_buffer(0) = "00000000" then -- nothing to send
+--                usb_0_to_send_rst := '0';
+--            elsif mio_b(29) = '0' then -- send data
+--                mio_b(35 downto 32) <= output_buffer(0)(3 downto 0);
+--                mio_b(39 downto 37) <= output_buffer(0)(7 downto 5);
+--                mio_b(28) <= output_buffer(0)(4);
+--                --output_buffer(0) <= "00000000";
+--                usb_0_to_send_rst := '1';
+--                mio_b(30) <= '0';
+--            elsif output_buffer(0) /= "00000000" then -- something to send, but interface is sending
+--                mio_b(30) <= '1';
+--            end if;
+--        end if;
+--        if falling_edge(mio_b(48)) then
+--            if mio_b(43) = '1' then -- interface is to slow -> stop sending
+--            elsif output_buffer(1) = "00000000" then -- nothing to send
+--                usb_1_to_send_rst := '0';
+--            elsif mio_b(41) = '0' then -- send data
+--                mio_b(47 downto 44) <= output_buffer(1)(3 downto 0);
+--                mio_b(51 downto 49) <= output_buffer(1)(7 downto 5);
+--                mio_b(40) <= output_buffer(1)(4);
+--                --output_buffer(0) <= "00000000";
+--                usb_1_to_send_rst := '1';
+--                mio_b(42) <= '0';
+--            elsif output_buffer(1) /= "00000000" then -- something to send, but interface is sending
+--                mio_b(42) <= '1';
+--            end if;
         end if;
-        --USB
-        if falling_edge(mio_b(36)) then
-            if mio_b(31) = '1' then -- interface is to slow -> stop sending
-            elsif output_buffer(0) = "00000000" then -- nothing to send
-                usb_0_to_send_rst := '0';
-            elsif mio_b(29) = '0' then -- send data
-                mio_b(35 downto 32) <= output_buffer(0)(3 downto 0);
-                mio_b(39 downto 37) <= output_buffer(0)(7 downto 5);
-                mio_b(28) <= output_buffer(0)(4);
-                --output_buffer(0) <= "00000000";
-                usb_0_to_send_rst := '1';
-                mio_b(30) <= '0';
-            elsif output_buffer(0) /= "00000000" then -- something to send, but interface is sending
-                mio_b(30) <= '1';
-            end if;
-        end if;
-        if falling_edge(mio_b(48)) then
-            if mio_b(43) = '1' then -- interface is to slow -> stop sending
-            elsif output_buffer(1) = "00000000" then -- nothing to send
-                usb_1_to_send_rst := '0';
-            elsif mio_b(41) = '0' then -- send data
-                mio_b(47 downto 44) <= output_buffer(1)(3 downto 0);
-                mio_b(51 downto 49) <= output_buffer(1)(7 downto 5);
-                mio_b(40) <= output_buffer(1)(4);
-                --output_buffer(0) <= "00000000";
-                usb_1_to_send_rst := '1';
-                mio_b(42) <= '0';
-            elsif output_buffer(1) /= "00000000" then -- something to send, but interface is sending
-                mio_b(42) <= '1';
-            end if;
-        end if;
-        if unsigned(input_buffer(63)) > 127 then
-            input_buffer(63) <= std_logic_vector(to_unsigned(64, 8));
+--        if unsigned(input_buffer(63)) > 127 then
+--            input_buffer(63) <= std_logic_vector(to_unsigned(64, 8));
         end if;
      end process;
      
@@ -263,18 +263,18 @@ begin
      
      
      --MDIO clock
-     MDIO_clock:process(clk_i) is
-     variable  mdio_clk_counter: integer := 50;
-     begin
-     if(rising_edge(clk_i)) then
-        if(mdio_clk_counter > 0) then
-            mdio_clk_counter := mdio_clk_counter - 1;
-        else 
-            mdio_clk_counter := 50;
-            mdio_clk <= not mdio_clk;
-        end if;
-     end if;
-     end process;
+--     MDIO_clock:process(clk_i) is
+--     variable  mdio_clk_counter: integer := 50;
+--     begin
+--     if(rising_edge(clk_i)) then
+--        if(mdio_clk_counter > 0) then
+--            mdio_clk_counter := mdio_clk_counter - 1;
+--        else 
+--            mdio_clk_counter := 50;
+--            mdio_clk <= not mdio_clk;
+--        end if;
+--     end if;
+--     end process;
      
      --Audio clocks
      --Master
@@ -321,11 +321,11 @@ begin
      
      --LED
      LED: process(clk_i) is
-     variable  led_clk_counter: integer := 254;
+     variable  led_clk_counter: unsigned(7 downto 0) := "11111110";
      begin
      if(rising_edge(clk_i)) then
         for i in 67 downto 61 loop
-            if to_integer(unsigned(output_buffer(i - 5))) > led_clk_counter then
+            if unsigned(output_buffer(i - 5)) > led_clk_counter then
                 port_b(i) <= '1';
             else 
                 port_b(i) <= '0';
@@ -334,7 +334,7 @@ begin
         if(led_clk_counter > 0) then            
             led_clk_counter := led_clk_counter - 1;
         else 
-            led_clk_counter := 254;
+            led_clk_counter := "11111110";
         end if;
      end if;
      end process;
@@ -354,50 +354,50 @@ begin
      end process;
      
      --Pcam lp
-     pcam_lp:process(port_i(9)) is
-        variable lp_clk_cnt: unsigned(1 downto 0) := "00";
-        variable lp_buffer: std_ulogic_vector(7 downto 0) := (others => '0');
-     begin
-        if rising_edge(port_i(9)) then
-            lp_buffer(2 * to_integer(lp_clk_cnt)) := port_i(11);
-            lp_buffer(2 * to_integer(lp_clk_cnt) + 1) := port_i(13);
-            lp_clk_cnt := lp_clk_cnt + 1;
-            if lp_clk_cnt > 3 then
-                lp_clk_cnt := "00";
-                if output_buffer(26)(0) = '1' then
-                    if input_buffer(61) /= to_stdlogicvector(lp_buffer) then
-                        input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(61);-- transfer old value to empty input field
-                        input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(61, 8));-- store port_id
-                        input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
-                        input_buffer(61) <= to_stdlogicvector(lp_buffer);
-                    end if;
-                end if;
-            end if;
-        end if;
-     end process;
+--     pcam_lp:process(port_i(9)) is
+--        variable lp_clk_cnt: unsigned(1 downto 0) := "00";
+--        variable lp_buffer: std_ulogic_vector(7 downto 0) := (others => '0');
+--     begin
+--        if rising_edge(port_i(9)) then
+--            lp_buffer(2 * to_integer(lp_clk_cnt)) := port_i(11);
+--            lp_buffer(2 * to_integer(lp_clk_cnt) + 1) := port_i(13);
+--            lp_clk_cnt := lp_clk_cnt + 1;
+--            if lp_clk_cnt > 3 then
+--                lp_clk_cnt := "00";
+--                if output_buffer(26)(0) = '1' then
+--                    if input_buffer(61) /= to_stdlogicvector(lp_buffer) then
+--                        input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(61);-- transfer old value to empty input field
+--                        input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(61, 8));-- store port_id
+--                        input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
+--                        input_buffer(61) <= to_stdlogicvector(lp_buffer);
+--                    end if;
+--                end if;
+--            end if;
+--        end if;
+--     end process;
      
      --Pcam hs
-     pcam_hs:process(port_i(15)) is
-        variable hs_clk_cnt: unsigned(1 downto 0) := "00";
-        variable hs_buffer: std_ulogic_vector(7 downto 0) := (others => '0');
-     begin
-        if rising_edge(port_i(15)) then
-            hs_buffer(2 * to_integer(hs_clk_cnt)) := port_i(17);
-            hs_buffer(2 * to_integer(hs_clk_cnt) + 1) := port_i(19);
-            hs_clk_cnt := hs_clk_cnt + 1;
-            if hs_clk_cnt > 3 then
-                hs_clk_cnt := "00";
-                if output_buffer(26)(1) = '1' then
-                    if input_buffer(60) /= to_stdlogicvector(hs_buffer) then
-                        input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(60);-- transfer old value to empty input field
-                        input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(60, 8));-- store port_id
-                        input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
-                        input_buffer(60) <= to_stdlogicvector(hs_buffer);
-                    end if;
-                end if;
-            end if;
-        end if;
-     end process;
+--     pcam_hs:process(port_i(15)) is
+--        variable hs_clk_cnt: unsigned(1 downto 0) := "00";
+--        variable hs_buffer: std_ulogic_vector(7 downto 0) := (others => '0');
+--     begin
+--        if rising_edge(port_i(15)) then
+--            hs_buffer(2 * to_integer(hs_clk_cnt)) := port_i(17);
+--            hs_buffer(2 * to_integer(hs_clk_cnt) + 1) := port_i(19);
+--            hs_clk_cnt := hs_clk_cnt + 1;
+--            if hs_clk_cnt > 3 then
+--                hs_clk_cnt := "00";
+--                if output_buffer(26)(1) = '1' then
+--                    if input_buffer(60) /= to_stdlogicvector(hs_buffer) then
+--                        input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(60);-- transfer old value to empty input field
+--                        input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(60, 8));-- store port_id
+--                        input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
+--                        input_buffer(60) <= to_stdlogicvector(hs_buffer);
+--                    end if;
+--                end if;
+--            end if;
+--        end if;
+--     end process;
      
      
      
