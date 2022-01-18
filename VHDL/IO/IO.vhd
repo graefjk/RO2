@@ -112,7 +112,7 @@ begin
             if port_id_i(7) = '0' then  --Buffer output
             output_buffer(to_integer(unsigned(port_id_i))) <= value_i; 
             elsif port_id_i(7) = '1' then --Intermediate Storage
-            input_buffer(to_integer(unsigned(port_id_i))) <= to_stdlogicvector(value_i); 
+            --input_buffer(to_integer(unsigned(port_id_i))) <= to_stdlogicvector(value_i); 
 --                storage(to_integer(unsigned(port_id_i(6 downto 0)))) <= value_i; 
 --            if port_id_i(6 downto 0) = "0000000" then --USB0   
 --            elsif port_id_i(6 downto 0) = "0000001" then --USB1
@@ -169,18 +169,18 @@ begin
            end if;
            
            --Pmod
-           for i in 0 to 3 loop
-            if pmod_out_enabled(i) = '1' then
-                port_b(16 + 8 * i downto 9 + 8 * i) <= to_stdlogicvector(output_buffer(i + 20));
-            else
-                if input_buffer(i + 20) /= port_b(16 + 8 * i downto 9 + 8 * i) then
-                    input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(i + 20);-- transfer old value to empty input field
-                    input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(i + 20, 8));-- store port_id
-                    input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
-                    input_buffer(i + 20) <= port_b(16 + 8 * i downto 9 + 8 * i);
-                end if;
-            end if;
-           end loop;
+--           for i in 0 to 3 loop
+--            if pmod_out_enabled(i) = '1' then
+--                port_b(16 + 8 * i downto 9 + 8 * i) <= to_stdlogicvector(output_buffer(i + 20));
+--            else
+--                if input_buffer(i + 20) /= port_b(16 + 8 * i downto 9 + 8 * i) then
+--                    input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(i + 20);-- transfer old value to empty input field
+--                    input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(i + 20, 8));-- store port_id
+--                    input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
+--                    input_buffer(i + 20) <= port_b(16 + 8 * i downto 9 + 8 * i);
+--                end if;
+--            end if;
+--           end loop;
            
 --           -- reset for usb sending queue
 --           if usb_0_to_send_rst = '1' then
@@ -281,42 +281,42 @@ begin
      --port_b(1) <= port_b(1);
      --port_b(1) <= 'Z';
      --Serial
-     port_b(0) <= port_b(1);
-     --Record
-     port_b(6) <= port_b(1);
-     --Playback
-     port_b(2) <= port_b(1);
-     --config
-     port_b(7) <= port_b(1);
+--     port_b(0) <= port_b(1);
+--     --Record
+--     port_b(6) <= port_b(1);
+--     --Playback
+--     port_b(2) <= port_b(1);
+--     --config
+--     port_b(7) <= port_b(1);
      
-     --Audio
-     Audio:process(port_b(1)) is
-     begin
-     if(rising_edge(port_b(1))) then
-        if playbackCounter < 8 then
-            if playbackCounter < 4 then
-                port_b(4) <= '1';-- Left Channel
-            else
-                port_b(4) <= '0';-- Right Channel
-            end if;
-            port_b(3) <= output_buffer(17)(to_integer(playbackCounter)); --Send Data
-            playbackCounter <= playbackCounter - 1;
-        end if;
-        if configCounter < 8 then
-            port_b(8) <= output_buffer(19)(to_integer(configCounter)); --Send Configdata
-            configCounter <= configCounter - 1;
-        end if;
-        if recordCounter < 8 then
-            if recordCounter < 4 then
-                port_b(4) <= '1';-- Left Channel
-            else
-                port_b(4) <= '0';-- Right Channel
-            end if;
-            input_buffer(18)(to_integer(recordCounter)) <= port_b(5); --Record Data
-            recordCounter <= recordCounter - 1;
-        end if;
-     end if;
-     end process;
+--     --Audio
+--     Audio:process(port_b(1)) is
+--     begin
+--     if(rising_edge(port_b(1))) then
+--        if playbackCounter < 8 then
+--            if playbackCounter < 4 then
+--                port_b(4) <= '1';-- Left Channel
+--            else
+--                port_b(4) <= '0';-- Right Channel
+--            end if;
+--            port_b(3) <= output_buffer(17)(to_integer(playbackCounter)); --Send Data
+--            playbackCounter <= playbackCounter - 1;
+--        end if;
+--        if configCounter < 8 then
+--            port_b(8) <= output_buffer(19)(to_integer(configCounter)); --Send Configdata
+--            configCounter <= configCounter - 1;
+--        end if;
+--        if recordCounter < 8 then
+--            if recordCounter < 4 then
+--                port_b(4) <= '1';-- Left Channel
+--            else
+--                port_b(4) <= '0';-- Right Channel
+--            end if;
+--            input_buffer(18)(to_integer(recordCounter)) <= port_b(5); --Record Data
+--            recordCounter <= recordCounter - 1;
+--        end if;
+--     end if;
+--     end process;
      
      
      --LED
@@ -344,12 +344,13 @@ begin
      Sw:process(clk_i) is
      begin
      if(rising_edge(clk_i)) then
-        if input_buffer(62) /= port_b(60 downto 53) then
-           input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(62);-- transfer old value to empty input field
-           input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(62, 8));-- store port_id
-           input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
-           input_buffer(62) <= port_b(60 downto 53);
-        end if;
+--        if input_buffer(62) /= port_b(60 downto 53) then
+--           input_buffer(to_integer(unsigned(input_buffer(63)))) <= input_buffer(62);-- transfer old value to empty input field
+--           input_buffer(to_integer(unsigned(input_buffer(63))) + 1) <= std_logic_vector(to_unsigned(62, 8));-- store port_id
+--           input_buffer(63) <= std_logic_vector(unsigned(input_buffer(63))+ 2);
+--           input_buffer(62) <= port_b(60 downto 53);
+--        end if;
+        input_buffer(62) <= port_b(60 downto 53);
      end if;
      end process;
      
@@ -402,104 +403,104 @@ begin
      
      
     --HDMI from Digilent repository
-    RGB : for j in 2 downto 0 generate
-        Stage1: process(pxl_clk)
+--    RGB : for j in 2 downto 0 generate
+--        Stage1: process(pxl_clk)
          
-        begin
-            if Rising_Edge(pxl_clk) then
+--        begin
+--            if Rising_Edge(pxl_clk) then
         
-                n1d_1(j) <= sum_bits(pDataOut(j)(7 downto 0));
-                pDataOut(j) <= output_buffer(28 + j); --insert data into the pipeline;
-            end if;
-        end process Stage1;
+--                n1d_1(j) <= sum_bits(pDataOut(j)(7 downto 0));
+--                pDataOut(j) <= output_buffer(28 + j); --insert data into the pipeline;
+--            end if;
+--        end process Stage1;
         
-        ----------------------------------------------------------------------------------
-        -- Choose one of the two encoding options based on n1d_1
-        ----------------------------------------------------------------------------------
---        q_m_xor_1(j)(0) <= pDataOut(j)(0);
---        encode1: for i in 1 to 7 generate
---            q_m_xor_1(j)(i) <= q_m_xor_1(j)(i-1) xor pDataOut(j)(i);
---        end generate encode1;
---        q_m_xor_1(j)(8) <= '1';
+--        ----------------------------------------------------------------------------------
+--        -- Choose one of the two encoding options based on n1d_1
+--        ----------------------------------------------------------------------------------
+----        q_m_xor_1(j)(0) <= pDataOut(j)(0);
+----        encode1: for i in 1 to 7 generate
+----            q_m_xor_1(j)(i) <= q_m_xor_1(j)(i-1) xor pDataOut(j)(i);
+----        end generate encode1;
+----        q_m_xor_1(j)(8) <= '1';
         
-        q_m_xnor_1(j)(0) <= pDataOut(j)(0);
-        encode2: for i in 1 to 7 generate
-            q_m_xnor_1(j)(i) <= q_m_xnor_1(j)(i-1) xnor pDataOut(j)(i);
-        end generate encode2;
-        q_m_xnor_1(j)(8) <= '0';
+--        q_m_xnor_1(j)(0) <= pDataOut(j)(0);
+--        encode2: for i in 1 to 7 generate
+--            q_m_xnor_1(j)(i) <= q_m_xnor_1(j)(i-1) xnor pDataOut(j)(i);
+--        end generate encode2;
+--        q_m_xnor_1(j)(8) <= '0';
         
-        q_m_1(j) <= q_m_xnor_1(j) when n1d_1(j) > 4 or (n1d_1(j) = 4 and pDataOut(j)(0) = '0') else
-                 q_m_xor_1(j);
+--        q_m_1(j) <= q_m_xnor_1(j) when n1d_1(j) > 4 or (n1d_1(j) = 4 and pDataOut(j)(0) = '0') else
+--                 q_m_xor_1(j);
         
-        n1q_m_1(j) <= sum_bits(q_m_1(j)(7 downto 0));
+--        n1q_m_1(j) <= sum_bits(q_m_1(j)(7 downto 0));
                 
-        ----------------------------------------------------------------------------------
-        -- Pipeline stage 2, balance DC
-        ----------------------------------------------------------------------------------
-        Stage2: process(pxl_clk)
-        begin
-            if Rising_Edge(pxl_clk) then
-                n1q_m_2(j) <= n1q_m_1(j);
-                n0q_m_2(j) <= 8 - n1q_m_1(j);
-                q_m_2(j) <= q_m_1(j);
-                pC0_2(j) <= pC0_1(j);
-                pC1_2(j) <= pC1_1(j);
-                pVde_2(j) <= pVde_1(j);
-            end if;
-        end process Stage2;
+--        ----------------------------------------------------------------------------------
+--        -- Pipeline stage 2, balance DC
+--        ----------------------------------------------------------------------------------
+--        Stage2: process(pxl_clk)
+--        begin
+--            if Rising_Edge(pxl_clk) then
+--                n1q_m_2(j) <= n1q_m_1(j);
+--                n0q_m_2(j) <= 8 - n1q_m_1(j);
+--                q_m_2(j) <= q_m_1(j);
+--                pC0_2(j) <= pC0_1(j);
+--                pC1_2(j) <= pC1_1(j);
+--                pVde_2(j) <= pVde_1(j);
+--            end if;
+--        end process Stage2;
         
-        cond_balanced_2(j) <=   '1' when cnt_t_3(j) = 0 or n1q_m_2(j) = 4 else -- DC balanced output
-                                   '0';
-        cond_not_balanced_2(j) <=  '1' when (cnt_t_3(j) > 0 and n1q_m_2(j) > 4) or -- too many 1's
-                                             (cnt_t_3(j) < 0 and n1q_m_2(j) < 4) else -- too many 0's
-                                '0';
+--        cond_balanced_2(j) <=   '1' when cnt_t_3(j) = 0 or n1q_m_2(j) = 4 else -- DC balanced output
+--                                   '0';
+--        cond_not_balanced_2(j) <=  '1' when (cnt_t_3(j) > 0 and n1q_m_2(j) > 4) or -- too many 1's
+--                                             (cnt_t_3(j) < 0 and n1q_m_2(j) < 4) else -- too many 0's
+--                                '0';
         
-        control_token_2(j) <= 	"1101010100" when pC1_2(j) = '0' and pC0_2(j) = '0' else
-                             "0010101011" when pC1_2(j) = '0' and pC0_2(j) = '1' else
-                             "0101010100" when pC1_2(j) = '1' and pC0_2(j) = '0' else
-                             "1010101011";
+--        control_token_2(j) <= 	"1101010100" when pC1_2(j) = '0' and pC0_2(j) = '0' else
+--                             "0010101011" when pC1_2(j) = '0' and pC0_2(j) = '1' else
+--                             "0101010100" when pC1_2(j) = '1' and pC0_2(j) = '0' else
+--                             "1010101011";
                                     
-        q_out_2(j) <=  control_token_2(j)												when pVde_2(j) = '0' else	--control period
-                       not q_m_2(j)(8) & q_m_2(j)(8) & not q_m_2(j)(7 downto 0)    when cond_balanced_2(j) = '1' and q_m_2(j)(8) = '0' else
-                       not q_m_2(j)(8) & q_m_2(j)(8) & q_m_2(j)(7 downto 0)        when cond_balanced_2(j) = '1' and q_m_2(j)(8) = '1' else
-                       '1' & q_m_2(j)(8) & not q_m_2(j)(7 downto 0)             when cond_not_balanced_2(j) = '1' else
-                       '0' & q_m_2(j)(8) & q_m_2(j)(7 downto 0);	--DC balanced
+--        q_out_2(j) <=  control_token_2(j)												when pVde_2(j) = '0' else	--control period
+--                       not q_m_2(j)(8) & q_m_2(j)(8) & not q_m_2(j)(7 downto 0)    when cond_balanced_2(j) = '1' and q_m_2(j)(8) = '0' else
+--                       not q_m_2(j)(8) & q_m_2(j)(8) & q_m_2(j)(7 downto 0)        when cond_balanced_2(j) = '1' and q_m_2(j)(8) = '1' else
+--                       '1' & q_m_2(j)(8) & not q_m_2(j)(7 downto 0)             when cond_not_balanced_2(j) = '1' else
+--                       '0' & q_m_2(j)(8) & q_m_2(j)(7 downto 0);	--DC balanced
         
-        dc_bias_2(j) <= signed('0' & n0q_m_2(j)) - signed('0' & n1q_m_2(j));
+--        dc_bias_2(j) <= signed('0' & n0q_m_2(j)) - signed('0' & n1q_m_2(j));
         
-        cnt_t_2(j) <=  to_signed(0, cnt_t_2(j)'length)                                   when pVde_2(j) = '0' else	--control period
-                       cnt_t_3(j) + dc_bias_2(j)                                          when cond_balanced_2(j) = '1' and q_m_2(j)(8) = '0' else
-                       cnt_t_3(j) - dc_bias_2(j)                                            when cond_balanced_2(j) = '1' and q_m_2(j)(8) = '1' else
-                       cnt_t_3(j) + signed('0' & q_m_2(j)(8 downto 8) & '0') + dc_bias_2(j)	   when cond_not_balanced_2(j) = '1' else
-                       cnt_t_3(j) - signed('0' & not q_m_2(j)(8 downto 8) & '0') - dc_bias_2(j);
+--        cnt_t_2(j) <=  to_signed(0, cnt_t_2(j)'length)                                   when pVde_2(j) = '0' else	--control period
+--                       cnt_t_3(j) + dc_bias_2(j)                                          when cond_balanced_2(j) = '1' and q_m_2(j)(8) = '0' else
+--                       cnt_t_3(j) - dc_bias_2(j)                                            when cond_balanced_2(j) = '1' and q_m_2(j)(8) = '1' else
+--                       cnt_t_3(j) + signed('0' & q_m_2(j)(8 downto 8) & '0') + dc_bias_2(j)	   when cond_not_balanced_2(j) = '1' else
+--                       cnt_t_3(j) - signed('0' & not q_m_2(j)(8 downto 8) & '0') - dc_bias_2(j);
         
-        ----------------------------------------------------------------------------------
-        -- Pipeline stage 3, registered output
-        ----------------------------------------------------------------------------------
-        Stage3: process(pxl_clk)
-        begin
-           if Rising_Edge(pxl_clk) then
-              cnt_t_3(j) <= cnt_t_2(j);
-              pDataOutRaw(j) <= q_out_2(j); --encoded, ready to be serialized
-           end if;
-        end process Stage3;
-    end generate;
-    hdmi_serial: process(port_b(45))
-        variable clk_cnt: unsigned(3 downto 0):= "0000";
-    begin
-        if Rising_Edge(port_b(45)) then
-            for i in 0 to 2 loop
-                hdmi_data(i) <= pDataOutRaw(i)(to_integer(clk_cnt));
+--        ----------------------------------------------------------------------------------
+--        -- Pipeline stage 3, registered output
+--        ----------------------------------------------------------------------------------
+--        Stage3: process(pxl_clk)
+--        begin
+--           if Rising_Edge(pxl_clk) then
+--              cnt_t_3(j) <= cnt_t_2(j);
+--              pDataOutRaw(j) <= q_out_2(j); --encoded, ready to be serialized
+--           end if;
+--        end process Stage3;
+--    end generate;
+--    hdmi_serial: process(port_b(45))
+--        variable clk_cnt: unsigned(3 downto 0):= "0000";
+--    begin
+--        if Rising_Edge(port_b(45)) then
+--            for i in 0 to 2 loop
+--                hdmi_data(i) <= pDataOutRaw(i)(to_integer(clk_cnt));
                 
-            end loop;
-            if clk_cnt < 4 then
-                pxl_clk <= '0';
-            else 
-                pxl_clk <= '1';
-            end if;
-            clk_cnt := (clk_cnt + 1) mod 10;
-        end if;
-    end process hdmi_serial;
+--            end loop;
+--            if clk_cnt < 4 then
+--                pxl_clk <= '0';
+--            else 
+--                pxl_clk <= '1';
+--            end if;
+--            clk_cnt := (clk_cnt + 1) mod 10;
+--        end if;
+--    end process hdmi_serial;
     obuf : OBUFDS
     generic map (IOSTANDARD =>"TMDS_33")
     port map (I=>port_b(45), O=>port_o(0), OB=>port_o(1));
