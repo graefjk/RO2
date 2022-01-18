@@ -29,6 +29,4 @@ sed -i 's/opcode_select_s <= "001100";/opcode_select_s <= "001101";/g' ALU_tb_XO
 cp ALU_tb_LOAD.vhd ALU_tb_LOAD_kk.vhd	
 sed -i 's/opcode_select_s <= "001110";/opcode_select_s <= "001111";/g' ALU_tb_LOAD_kk.vhd
 
-cat ALU_tb_*.vhd > ALL.vhd
-
-cat template_begining.vhd ALL.vhd template_end.vhd > ../ALU_tb_COMPLETE.vhd
+cat template_begining.vhd ALU_tb_*.vhd template_end.vhd > ../ALU_tb_COMPLETE.vhd
