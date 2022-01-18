@@ -7,7 +7,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_RR"))
     else:
         f.write("opcode_select_s <= \"110001\";\n")
         f.write("sA_s <= \"00000000\";\n")
@@ -15,7 +15,7 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"RR error at 00000000\" severity error;")
     
-        for i in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
@@ -33,7 +33,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_RL"))
     else:
         f.write("opcode_select_s <= \"110000\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
@@ -41,7 +41,7 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"RL error at 00000000\" severity error;\n\n")
         
-        for i in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
@@ -57,7 +57,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SL0"))
     else:
         f.write("opcode_select_s <= \"110010\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
@@ -65,7 +65,7 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SL0 error at 00000000\" severity error;\n\n")
         
-        for i in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
@@ -81,7 +81,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SL1"))
     else:
         f.write("opcode_select_s <= \"110011\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
@@ -89,7 +89,7 @@ for line in lines:
         f.write("assert sALU_s = \"00000001\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SL1 error at 00000000\" severity error;\n\n")
         
-        for i in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
@@ -104,7 +104,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SLX"))
     else:
         f.write("opcode_select_s <= \"110101\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
@@ -112,7 +112,7 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SLX error at 00000000\" severity error;\n\n")
         
-        for i in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
@@ -127,7 +127,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SR0"))
     else:
         f.write("opcode_select_s <= \"110110\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
@@ -135,7 +135,7 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SR0 error at 00000000\" severity error;\n\n")
         
-        for i in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
@@ -150,7 +150,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SR1"))
     else:
         f.write("opcode_select_s <= \"110111\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
@@ -158,7 +158,7 @@ for line in lines:
         f.write("assert sALU_s = \"10000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SR1 error at 00000000\" severity error;\n\n")
         
-        for i in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
@@ -173,7 +173,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SRX"))
     else:
         f.write("opcode_select_s <= \"111001\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
@@ -181,7 +181,7 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SRX error at 00000000\" severity error;\n\n")
         
-        for i in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
@@ -198,11 +198,11 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_ADD"))
     else:
         f.write("opcode_select_s <= \"000000\";")
-        for i in range(1, 2 ** 8):
-            for k in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
+            for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
                 f.write("sA_s <= \"" + binI + "\";\n")
@@ -220,18 +220,18 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SUB"))
     else:
         f.write("opcode_select_s <= \"000100\";")
-        for i in range(1, 2 ** 8):
-            for k in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
+            for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
                 binSum = numpy.binary_repr((i - k) % 256,8)
-                f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int(i - k == 0)) + "\' and sCarry_s=\'" + str(int((i - k) > 255)) + "\'\n")
+                f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int(i - k == 0)) + "\' and sCarry_s=\'" + str(int((i - k) < 0)) + "\'\n")
                 f.write("\t" + "report \"SUB error at SUB " + binI + " " + binK + "\" severity error;\n\n")
 f.close()
 
@@ -242,17 +242,17 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_COMPARE"))
     else:
         f.write("opcode_select_s <= \"011010\";")
-        for i in range(1, 2 ** 8):
-            for k in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
+            for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
-                f.write("assert sZERO_s = \'" + str(int(i == k)) + "\' and sCarry_s=\'" + str(int(i < k)) + "\'\n")
+                f.write("assert sZERO_s = \'" + str(int(i == k)) + "\' and sCarry_s=\'" + str(int(i < k)) + "\';\n")
                 f.write("\t" + "report \"COMPARE error at COMPARE " + binI + " " + binK + "\" severity error;\n\n")
 f.close()
 
@@ -262,11 +262,11 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_TEST"))
     else:
         f.write("opcode_select_s <= \"000100\";")
-        for i in range(1, 2 ** 8):
-            for k in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
+            for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
                 f.write("sA_s <= \"" + binI + "\";\n")
@@ -277,7 +277,7 @@ for line in lines:
                 for c in binAND:
                     if c == "1":
                         n+=1
-                f.write("assert sZERO_s = \'" + str(i & k) + "\' and sCarry_s=\'" + str(n % 2) + "\'\n")
+                f.write("assert sZERO_s = \'" + str(int((i & k)==0)) + "\' and sCarry_s=\'" + str((n % 2)) + "\';\n")
                 f.write("\t" + "report \"TEST error at TEST " + binI + " " + binK + "\" severity error;\n\n")
 f.close()
 
@@ -288,11 +288,11 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_AND"))
     else:
         f.write("opcode_select_s <= \"001000\";")
-        for i in range(1, 2 ** 8):
-            for k in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
+            for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
                 binAND = numpy.binary_repr(i & k)
@@ -310,11 +310,11 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_OR"))
     else:
         f.write("opcode_select_s <= \"001010\";")
-        for i in range(1, 2 ** 8):
-            for k in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
+            for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
                 binOR = numpy.binary_repr(i | k)
@@ -332,11 +332,11 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_XOR"))
     else:
         f.write("opcode_select_s <= \"001010\";")
-        for i in range(1, 2 ** 8):
-            for k in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
+            for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
                 binXOR = numpy.binary_repr(i ^ k)
@@ -354,10 +354,10 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line)
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_LOAD"))
     else:
         f.write("opcode_select_s <= \"001110\";")
-        for i in range(1, 2 ** 8):
+        for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + binI + "\";\n")
             f.write("wait for waitTime;\n")

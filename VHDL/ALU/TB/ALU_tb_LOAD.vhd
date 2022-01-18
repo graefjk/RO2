@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 04.12.2021 12:00:50
 -- Design Name: 
--- Module Name: sim_ALU_tb - Behavioral
+-- Module Name: sim_ALU_tb_LOAD - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,11 +31,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_ALU_tb is
+entity sim_ALU_tb_LOAD is
 --  Port ( );
-end sim_ALU_tb;
+end sim_ALU_tb_LOAD;
 
-architecture Behavioral of sim_ALU_tb is
+architecture Behavioral of sim_ALU_tb_LOAD is
 component ALU
  Port (sA_i: in std_ulogic_vector(7 downto 0); --input signals
        sB_i: in std_ulogic_vector(7 downto 0);
@@ -93,6 +93,11 @@ uut: ALU port map (
  wait for waitTime;   
     
 opcode_select_s <= "001110";sA_s <= "11111111";
+wait for waitTime;
+assert sALU_s = "11111111"
+	report "LOAD error at LOAD 11111111" severity error;
+
+sA_s <= "11111111";
 wait for waitTime;
 assert sALU_s = "11111111"
 	report "LOAD error at LOAD 11111111" severity error;

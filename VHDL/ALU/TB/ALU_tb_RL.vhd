@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 04.12.2021 12:00:50
 -- Design Name: 
--- Module Name: sim_ALU_tb - Behavioral
+-- Module Name: sim_ALU_tb_RL - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,11 +31,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_ALU_tb is
+entity sim_ALU_tb_RL is
 --  Port ( );
-end sim_ALU_tb;
+end sim_ALU_tb_RL;
 
-architecture Behavioral of sim_ALU_tb is
+architecture Behavioral of sim_ALU_tb_RL is
 component ALU
  Port (sA_i: in std_ulogic_vector(7 downto 0); --input signals
        sB_i: in std_ulogic_vector(7 downto 0);
@@ -97,6 +97,11 @@ sA_s <= "00000000";
 wait for waitTime;
 assert sALU_s = "00000000" and sZERO_s = '1' and sCarry_s='0'
 	 report "RL error at 00000000" severity error;
+
+sA_s <= "00000000";
+wait for waitTime;
+assert sALU_s = "00000000" and sZERO_s = '0' and sCarry_s='0'
+	report "RL error at 00000000" severity error;
 
 sA_s <= "00000001";
 wait for waitTime;
