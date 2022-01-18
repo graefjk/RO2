@@ -359,8 +359,8 @@ for line in lines:
         f.write("opcode_select_s <= \"001110\";")
         for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
-            f.write("sA_s <= \"" + binI + "\";\n")
+            f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
-            f.write("assert sALU_s = \"" + binI + "\"\n")
-            f.write("\t" + "report \"LOAD error at LOAD " + binI + "\" severity error;\n\n")
+            f.write("assert sALU_s = \"" + bin + "\"\n")
+            f.write("\t" + "report \"LOAD error at LOAD " + bin + "\" severity error;\n\n")
 f.close()
