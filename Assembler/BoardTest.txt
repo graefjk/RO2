@@ -73,36 +73,48 @@ SUBCY x0 34 // line 56
 LOAD x5 200
 
 //Rot loop
-COMPARE x4 x5
-ADD x4 1
-JUMPZ 63 //Grün loop
-ADD x1 1
+COMPARE x4 x5 //line 58
+JUMPZ 64 //GrÃ¼n loop
+ADD x1 0
 OUTPUT x1 60 //rot
+ADD x4 1
+CALL 78 //Wait loop
 JUMP 57 //Rot loop
 
-//Grün loop
-COMPARE x4 x5
+//GrÃ¼n loop
+COMPARE x4 x5 //line 65
+JUMPZ 71 //Blau loop
+ADD x2 0
+OUTPUT x2 61 //grÃ¼n
 ADD x4 1
-JUMPZ 69 //Blau loop
-ADD x2 1
-OUTPUT x2 61 //grün
-JUMP 63 //Grün loop
+CALL 78 //Wait loop
+JUMP 64 //GrÃ¼n loop
 
 //Blau loop
-COMPARE x4 x5
-ADD x4 1
+COMPARE x4 x5 //line 72
 JUMPZ 57 //Rot loop
 ADD x3 1
-OUTPUT x3 61 //blau
-JUMP 69 //Blau loop
+OUTPUT x3 62 //blau
+ADD x4 1
+CALL 78 //Wait loop
+JUMP 71 //Blau loop
 
 
+//Wait loop
+LOAD xA 250 //line 79
+LOAD xB 0
+LOAD xC 0
+
+COMPARE xB xA //line 82
+RETURNZ
+CALL 87 //COMPARE xC xA
+ADD xB 1
+OUTPUT xB 56
+JUMP 81 //COMPARE xB xA
 
 
-
-
-
-
-
-
+COMPARE xC xA //line 88
+RETURNZ
+ADD xC 1
+JUMP 87 //COMPARE xC xA
 
