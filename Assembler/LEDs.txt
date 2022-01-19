@@ -1,17 +1,18 @@
 //Run LEDs
-LOAD x1 65 //LED 1 port
-LOAD x2 66 //LED 2 port
-LOAD x3 67 //LED 3 port
-LOAD x5 0 //LED 1 value
-LOAD x6 0 //LED 2 value
-LOAD x7 0 //LED 3 value
+LOAD x1 60
+LOAD x2 61
+LOAD x3 61
+
+LOAD x4 0
+LOAD x5 50
+LOAD x6 100
 
 //LED loop
-OUTPUT x5 x1
-OUTPUT x6 x2
-OUTPUT x7 x3
-ADD x5 8
-ADD x6 4
-ADD x7 1
+OUTPUT x4 x1
+OUTPUT x5 x2
+OUTPUT x6 x3
+ADD x4 10
+ADD x5 20
+ADD x6 30
 JUMP 6
 
