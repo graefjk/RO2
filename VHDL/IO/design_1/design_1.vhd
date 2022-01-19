@@ -37,7 +37,7 @@ entity design_1 is
     clk_i : in STD_LOGIC;
     enable_i : in STD_LOGIC;
     in_out_i : in STD_LOGIC;
-    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 );
+    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 ) := (others => 'Z');
     port_i : in STD_ULOGIC_VECTOR ( 19 downto 0 );
     port_id_i : in STD_ULOGIC_VECTOR ( 7 downto 0 );
     port_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
@@ -202,12 +202,13 @@ architecture STRUCTURE of design_1 is
     value_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
     clk_i : in STD_LOGIC;
     mio_b : inout STD_ULOGIC_VECTOR ( 53 downto 0 );
-    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 );
+    port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 ):= (others => 'Z');
     port_i : in STD_ULOGIC_VECTOR ( 19 downto 0 );
     port_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
     reset_o : out STD_LOGIC
   );
   end component design_1_IO_0_0;
+  signal void:  STD_LOGIC_VECTOR ( 70 downto 0 ):= (others => 'Z');
   signal IO_0_port_o : STD_ULOGIC_VECTOR ( 7 downto 0 );
   signal IO_0_reset_o : STD_LOGIC;
   signal IO_0_value_o : STD_ULOGIC_VECTOR ( 7 downto 0 );

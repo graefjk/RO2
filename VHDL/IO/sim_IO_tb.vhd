@@ -22,6 +22,9 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
+use ieee.math_real.all;
+library unisim;
+use unisim.vcomponents.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -105,10 +108,18 @@ architecture Behavioral of IO_tb is
     signal in_out_s: std_logic;
     signal enable_s: std_logic;
     
-    constant clk_period: time := 8 ns;
+    constant clk_period: time := 8 ns;    
+    constant clk_period_hdmi: time := 0.6734 ns;
+    
+    signal clk_hdmi_s: std_ulogic;
+    signal rec_clk_hdmi_s: std_ulogic;
+    signal send_value_hdmi: std_ulogic_vector(2 downto 0) := "000";
+    signal rec_value_hdmi: std_ulogic_vector(2 downto 0) := "000";
     
     signal err_cnt_led :integer := 0;
     signal err_cnt_sw :integer := 0;
+    signal err_cnt_pmod :integer := 0;
+    signal err_cnt_hdmi :integer := 0;
     
     type LED_type is array (0 to 6) of integer;
     signal LED_ontime: LED_type := (others => 0);
@@ -159,9 +170,19 @@ begin
         wait for clk_period / 2;
     end process;
     
+    clk_hdmi_process: process
+    begin
+        clk_hdmi_s <= '0';
+        wait for clk_period_hdmi / 2;
+        clk_hdmi_s <= '1';
+        wait for clk_period_hdmi / 2;
+    end process;
+    
     stimuli: process
     begin
+        --LED 
         for i in 0 to 6 loop
+		    port_b_s(61 + i) <= 'Z';
             enable_s <= '1';
             if i < 6 then
                 value_i_s <= std_ulogic_vector(to_signed(i * 42, 8));
@@ -182,6 +203,7 @@ begin
         LED_setontime(6) <= 255;
         LED_test_length <= "LLLHHHHHHHH";
         
+        --Switches/Buttons
 	    for k in 0 to 256 loop
 	       port_b_s(60 downto 53) <= std_logic_vector(to_unsigned(k,8));
 	       wait for clk_period;
@@ -190,7 +212,45 @@ begin
 	           report "Switch Failed";
 	       end if;
 	    end loop;
-		if err_cnt_sw + err_cnt_led = 0 then
+	    
+	    --Pmods in
+	    enable_s <= '1';
+        value_i_s <= "00000000";
+        
+        in_out_s <= '0';
+	    for l in 0 to 3 loop
+	       port_id_s <= std_ulogic_vector(to_unsigned(20 + l,8));
+            for m in 0 to 256 loop
+               port_b_s(16 + 8 * l downto 9 + 8 * l) <= std_logic_vector(to_unsigned(m,8));
+               wait for clk_period;
+               if not(value_o_s = std_ulogic_vector(to_unsigned(m,8))) then
+                   err_cnt_pmod <= err_cnt_pmod + 1;
+                   report "Pmod in failed";
+               end if;
+            end loop;
+	    end loop;
+	    
+	    --Pmods out
+	    enable_s <= '1';
+        --value_o_s <= "00000000";
+        in_out_s <= '1';
+        port_id_s <= std_ulogic_vector(to_unsigned(24,8));
+        value_i_s <= "00001111";
+        wait for clk_period;
+	    for n in 0 to 3 loop
+	       port_b_s(16 + 8 * n downto 9 + 8 * n) <= (others => 'Z');
+	       port_id_s <= std_ulogic_vector(to_unsigned(20 + n,8));
+            for o in 0 to 256 loop
+               value_i_s <= std_ulogic_vector(to_unsigned(o,8));
+               wait for clk_period;
+               if not(port_b_s(16 + 8 * n downto 9 + 8 * n) = std_logic_vector(to_unsigned(o,8))) then
+                   err_cnt_pmod <= err_cnt_pmod + 1;
+                   report "Pmod in failed";
+               end if;
+            end loop;
+	    end loop;	    
+	    
+		if err_cnt_sw + err_cnt_led + err_cnt_pmod + err_cnt_hdmi = 0 then
             report "Overall Test Passed";
         else
             report "Overall Test Failed";
@@ -221,5 +281,56 @@ begin
 	      end if;
 		end if;
     end process;
+    
+    HDMI_test: process(clk_hdmi_s)
+    variable seed1, seed2: positive;               -- seed values for random generator
+    variable rand: real;   -- random real-number value in range 0 to 1.0  
+    variable range_of_rand : real := 7.0;
+    begin
+		if falling_edge(clk_hdmi_s) then
+            uniform(seed1, seed2, rand);   -- generate random number
+            send_value_hdmi <= std_ulogic_vector(to_unsigned(integer(rand*range_of_rand),3));
+	    end if;
+    end process;
     port_b_s <= (others => 'Z');
+    
+    HDMI_test_rec: process(rec_clk_hdmi_s)
+    variable seed1, seed2: positive;               -- seed values for random generator
+    variable rand: real;   -- random real-number value in range 0 to 1.0  
+    variable range_of_rand : real := 7.0;
+    begin
+		if rising_edge(rec_clk_hdmi_s) then
+            if rec_value_hdmi /= send_value_hdmi then
+               err_cnt_hdmi <= err_cnt_hdmi + 1;
+	           report "Hdmi Failed";
+            end if;
+	    end if;
+    end process;
+    port_b_s <= (others => 'Z');
+    
+    obuf : OBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (I=>clk_hdmi_s, O=>port_i(0), OB=>port_i(1));
+    obufdata1 : OBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (I=>send_value_hdmi(0), O=>port_i(2), OB=>port_i(3));
+    obufdata2 : OBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (I=>send_value_hdmi(1), O=>port_i(4), OB=>port_i(5));
+    obufdata3 : OBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (I=>send_value_hdmi(2), O=>port_i(6), OB=>port_i(7));
+    
+    ibuf : IBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (O=>rec_clk_hdmi_s, I=>port_o(0), IB=>port_o(1));
+    ibufdata1 : IBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (O=>rec_value_hdmi(0), I=>port_o(2), IB=>port_o(3));
+    ibufdata2 : IBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (O=>rec_value_hdmi(1), I=>port_o(4), IB=>port_o(5));
+    ibufdata3 : IBUFDS
+    generic map (IOSTANDARD =>"TMDS_33")
+    port map (O=>rec_value_hdmi(2), I=>port_o(6), IB=>port_o(7));
 end Behavioral;
