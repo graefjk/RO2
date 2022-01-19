@@ -1,70 +1,63 @@
 LOAD x5 255
-LOAD xD 255
+LOAD xC 80
 
 //Rot loop
 LOAD x4 0 //line 3
 LOAD x3 0
 COMPARE x4 x5 //line 5
-JUMPZ 14 //Grün loop
+JUMPZ 13 //Grün loop
 ADD x1 1
 OUTPUT x1 60 //rot
 OUTPUT x2 61 //grün
 OUTPUT x3 62 //blau
 ADD x4 1
-CALL 36 //Wait loop
+CALL 35 //Wait loop
 JUMP 4 //Rot loop
 
 //Grün loop
-LOAD x4 0 //line 15
+LOAD x4 0 //line 14
 LOAD x1 0
-COMPARE x4 x5 //line 17
-JUMPZ 25 //Blau loop
+COMPARE x4 x5 //line 16
+JUMPZ 24 //Blau loop
 ADD x2 1
 OUTPUT x1 60 //rot
 OUTPUT x2 61 //grün
 OUTPUT x3 62 //blau
 ADD x4 1
-CALL 36 //Wait loop
-JUMP 16 //Grün loop
+CALL 35 //Wait loop
+JUMP 15 //Grün loop
 
 //Blau loop
-LOAD x4 0 //line 26
+LOAD x4 0 //line 25
 LOAD x2 0
-COMPARE x4 x5 //line 28
+COMPARE x4 x5 //line 27
 JUMPZ 2 //Rot loop
 ADD x3 1
 OUTPUT x1 60 //rot
 OUTPUT x2 61 //grün
 OUTPUT x3 62 //blau
 ADD x4 1
-CALL 36 //Wait loop
-JUMP 27 //Blau loop
+CALL 35 //Wait loop
+JUMP 26 //Blau loop
 
 
 //Wait loop
-LOAD xA 0 //line 37
+LOAD xA 0 //line 36
 LOAD xB 0
-LOAD xC 0
 
-COMPARE xA xD //line 40
+COMPARE xA xC //line 38
 RETURNZ
 ADD xA 1
-CALL 38 //COMPARE xB xD
+LOAD xB 0
+CALL 44 //COMPARE xB xC
 OUTPUT xA 56
-JUMP 39 //COMPARE xA xD
+JUMP 37 //COMPARE xA xC
 
-COMPARE xB xD //line 46
+COMPARE xB xC //line 45
 RETURNZ
 ADD xB 1
-CALL 44 //COMPARE xC xD
 OUTPUT xB 57
-JUMP 45 //COMPARE xB xD
-
-COMPARE xC xD //line 52
-RETURNZ
-ADD xC 1
-OUTPUT xC 58
-JUMP 51 //COMPARE xC xD
+JUMP 44 //COMPARE xB xC
 
 
 
