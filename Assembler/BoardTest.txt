@@ -75,7 +75,7 @@ LOAD x5 200
 //Rot loop
 COMPARE x4 x5 //line 58
 JUMPZ 64 //Grün loop
-ADD x1 0
+ADD x1 1
 OUTPUT x1 60 //rot
 ADD x4 1
 CALL 78 //Wait loop
@@ -84,7 +84,7 @@ JUMP 57 //Rot loop
 //Grün loop
 COMPARE x4 x5 //line 65
 JUMPZ 71 //Blau loop
-ADD x2 0
+ADD x2 1
 OUTPUT x2 61 //grün
 ADD x4 1
 CALL 78 //Wait loop
