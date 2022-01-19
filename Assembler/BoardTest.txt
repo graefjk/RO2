@@ -1,0 +1,108 @@
+//Tests all instructions
+CALL 4
+CALLNC 5
+CALLNZ 6
+JUMP 7
+RETURN
+RETURNNC
+RETURNNZ
+LOAD x1 1 //x1 = 1
+COMPARE x0 x1
+CALLC 14
+TEST x0 0
+CALLZ 15
+TEST x0 x2
+JUMPZ 16
+RETURNC
+RETURNZ //16
+COMPARE x0 x1
+JUMPC 19
+JUMPNC 21
+COMPARE x1 0
+JUMPNZ 18
+LOAD x0 2
+LOAD x1 x0
+//x0 und x1 = 2
+STORE x0 1
+STORE x0 x1
+//ram[1] und ram[2] = 2
+SUB x0 x1
+SUB x1 2
+//x0 und x1 = 0
+ADD x0 1
+ADD x1 x0
+//x0 und x1 = 1
+FETCH x0 x1
+FETCH x1 2
+//x0 und x1 = 2
+XOR x0 x1
+XOR x1 2
+//x0 und x1 = 0
+OR x0 1
+OR x1 x0
+// x0 und x1 = 1
+AND x0 x1
+AND x1 5
+// x0 und x1 = 1
+RL x0
+RR x1
+// x0 = 2, x1 = 128
+SL0 x0 //x0 = 4
+SL1 x0 //x0 = 9
+SLA x0 //x0 = 18
+SLX x0 //x0 = 36
+SR0 x0 //x0 = 18
+SR1 x0 //x0 = 137
+SRA x0 //x0 = 68
+SRX x0 // x0 = 34
+LOAD x1 0 //x1 = 0
+COMPARE x1 x0
+ADDCY x0 0
+COMPARE x1 x0
+ADDCY x0 x1
+//x0 = 36
+COMPARE x1 x0
+SUBCY x0 x1
+//x0 = 35
+COMPARE x1 x0
+SUBCY x0 34 // line 56
+//x0 = 0
+
+
+//LED Loop
+LOAD x5 200
+
+//Rot loop
+COMPARE x4 x5
+ADD x4 1
+JUMPZ 63 //Grün loop
+ADD x1 1
+OUTPUT x1 60 //rot
+JUMP 57 //Rot loop
+
+//Grün loop
+COMPARE x4 x5
+ADD x4 1
+JUMPZ 69 //Blau loop
+ADD x2 1
+OUTPUT x2 61 //grün
+JUMP 63 //Grün loop
+
+//Blau loop
+COMPARE x4 x5
+ADD x4 1
+JUMPZ 57 //Rot loop
+ADD x3 1
+OUTPUT x3 61 //blau
+JUMP 69 //Blau loop
+
+
+
+
+
+
+
+
+
+
+
