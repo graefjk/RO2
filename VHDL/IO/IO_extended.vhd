@@ -158,13 +158,13 @@ begin
                 pVde_1(2 downto 0) <= "111";
             elsif port_id_i(6 downto 0) = "0011101" then --Send HDMI Green 
             elsif port_id_i(6 downto 0) = "0011110" then --Send HDMI Blue
-            elsif port_id_i(6 downto 0) = "0111000" then --activate LED 1 with value/255 percent brightness
-            elsif port_id_i(6 downto 0) = "0111001" then --activate LED 2 with value/255 percent brightness
-            elsif port_id_i(6 downto 0) = "0111010" then --activate LED 3 with value/255 percent brightness
-            elsif port_id_i(6 downto 0) = "0111011" then --activate LED 4 with value/255 percent brightness
-            elsif port_id_i(6 downto 0) = "0111100" then --activate LED 5 Red with value/255 percent brightness
-            elsif port_id_i(6 downto 0) = "0111101" then --activate LED 5 Green with value/255 percent brightness
-            elsif port_id_i(6 downto 0) = "0111110" then --activate LED 5 Blue with value/255 percent brightness
+            elsif port_id_i(6 downto 0) = "0111000" then --activate LED 1 with value/255 percent brightness 56
+            elsif port_id_i(6 downto 0) = "0111001" then --activate LED 2 with value/255 percent brightness 57
+            elsif port_id_i(6 downto 0) = "0111010" then --activate LED 3 with value/255 percent brightness 58
+            elsif port_id_i(6 downto 0) = "0111011" then --activate LED 4 with value/255 percent brightness 59
+            elsif port_id_i(6 downto 0) = "0111100" then --activate LED 5 Red with value/255 percent brightness 60
+            elsif port_id_i(6 downto 0) = "0111101" then --activate LED 5 Green with value/255 percent brightness 61
+            elsif port_id_i(6 downto 0) = "0111110" then --activate LED 5 Blue with value/255 percent brightness 62
             end if;
            end if;
            

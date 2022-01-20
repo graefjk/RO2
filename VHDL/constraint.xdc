@@ -73,20 +73,19 @@ set_property -dict {PACKAGE_PIN U13 IOSTANDARD LVCMOS33} [get_ports {port_b[70]}
 #HDMI Clock
 #create_clock -period 0.6734 -waveform {0.000 0.3367} [get_ports {port_b[45]}]
 set_property -dict {PACKAGE_PIN P19 IOSTANDARD LVCMOS33} [get_ports {port_b[45]}]
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets {port_b[45]}]
 
 #HDMI RX
 set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33} [get_ports {port_b[46]}]
 set_property -dict {PACKAGE_PIN W18 IOSTANDARD LVCMOS33} [get_ports {port_b[47]}]
 set_property -dict {PACKAGE_PIN Y19 IOSTANDARD LVCMOS33} [get_ports {port_b[48]}]
-set_property -dict {PACKAGE_PIN U19 IOSTANDARD TMDS_33} [get_ports {port_i[0]}]
-set_property -dict {PACKAGE_PIN U18 IOSTANDARD TMDS_33} [get_ports {port_i[1]}]
-set_property -dict {PACKAGE_PIN W20 IOSTANDARD TMDS_33} [get_ports {port_i[2]}]
-set_property -dict {PACKAGE_PIN V20 IOSTANDARD TMDS_33} [get_ports {port_i[3]}]
-set_property -dict {PACKAGE_PIN U20 IOSTANDARD TMDS_33} [get_ports {port_i[4]}]
-set_property -dict {PACKAGE_PIN T20 IOSTANDARD TMDS_33} [get_ports {port_i[5]}]
-set_property -dict {PACKAGE_PIN P20 IOSTANDARD TMDS_33} [get_ports {port_i[6]}]
-set_property -dict {PACKAGE_PIN N20 IOSTANDARD TMDS_33} [get_ports {port_i[7]}]
+set_property -dict {PACKAGE_PIN U18 IOSTANDARD TMDS_33} [get_ports {port_i[0]}]
+set_property -dict {PACKAGE_PIN U19 IOSTANDARD TMDS_33} [get_ports {port_i[1]}]
+set_property -dict {PACKAGE_PIN V20 IOSTANDARD TMDS_33} [get_ports {port_i[2]}]
+set_property -dict {PACKAGE_PIN W20 IOSTANDARD TMDS_33} [get_ports {port_i[3]}]
+set_property -dict {PACKAGE_PIN T20 IOSTANDARD TMDS_33} [get_ports {port_i[4]}]
+set_property -dict {PACKAGE_PIN U20 IOSTANDARD TMDS_33} [get_ports {port_i[5]}]
+set_property -dict {PACKAGE_PIN N20 IOSTANDARD TMDS_33} [get_ports {port_i[6]}]
+set_property -dict {PACKAGE_PIN P20 IOSTANDARD TMDS_33} [get_ports {port_i[7]}]
 
 ##HDMI RX CEC (Zybo Z7-20 only)
 #set_property -dict { PACKAGE_PIN Y8    IOSTANDARD LVCMOS33 } [get_ports { hdmi_rx_cec }]; #IO_L14N_T2_SRCC_13 Sch=hdmi_rx_cec
@@ -881,4 +880,5 @@ set_property PACKAGE_PIN C2 [get_ports {DDR_dqs_p[0]}]
 set_property PACKAGE_PIN G2 [get_ports {DDR_dqs_p[1]}]
 set_property PACKAGE_PIN R2 [get_ports {DDR_dqs_p[2]}]
 set_property SLEW FAST [get_ports FIXED_IO_ps_clk]
+
 
