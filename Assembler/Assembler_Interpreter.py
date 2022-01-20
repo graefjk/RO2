@@ -53,18 +53,6 @@ def removeUnnecessary(instructions):
     return instructions
 
 
-def changeToDezimal(binary):
-    """
-    Converts binary strings to dezimal strings.
-    :param binary: binary number string.
-    :return: dezimal number string.
-    """
-    if binary[0] == "0":
-        return str(int(binary, 2))
-    else:
-        return str(int(binary[1:], 2)-128)
-
-
 def changeToBinary(n, bits):
     """
     Takes a number in dezimal, hexadezimal or binary and
