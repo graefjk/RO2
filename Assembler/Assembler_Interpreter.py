@@ -20,7 +20,7 @@ registerDict = {
     "x5": "0101", "x6": "0110", "x7": "0111", "x8": "1000", "x9": "1001",
     "xA": "1010", "xB": "1011", "xC": "1100", "xD": "1101", "xE": "1110", "xF": "1111"}
 
-tags = {}
+label = {}
 
 
 checkOneList = ("RETURN", "RETURNC", "RETURNNC", "RETURNZ", "RETURNNZ")
@@ -101,28 +101,31 @@ def changeToBinary(n, bits):
 def generateMachinecode():
     """
     This function takes assembler code and converts it into machinecode.
-    Each line in the assembler textfield should have one Instruction of the following structures:
+    Each line in the assembler textfield should be empty or have one Instruction of the following structure:
     1. Operation register1, register2; //comment
     2. Operation register, constant; //comment
     3. Operation register; //comment
-    4. Operation; //comment
-    The comments starting wit a "//", the "," aswell as the ";" are optional.
+    4. Operation constant; //Comment
+    5. Operation Label; //Comment
+    6. Operation; //comment
+    7. Label
+    8. //Comment
+    The comments starting wit a "//", the ",", the ";" aswell as "()" are optional.
     """
-
     text_field_machinecode.delete("1.0", "end")
     lines = text_field_assembler.get("1.0", "end").splitlines()
     current_line = 0
-    tags.clear()
+    label.clear()
     removeUnnecessary(lines)
     for line in lines:
         line = line.replace(",", "").replace(";", "").replace("(", "").replace(")", "").split("//")[0].split()
         current_line += 1
         if len(line) == 1 and not checkOneList.__contains__(line[0].upper()):
             try:
-                tags[line[0].upper()] = str(current_line - tags.__len__() - 1)
+                label[line[0].upper()] = str(current_line - label.__len__() - 1)
             except KeyError:
                 text_field_machinecode.insert("end", "Error in line {} {}, "
-                                                     "not a valid tag!".format(current_line, line) + "\n")
+                                                     "not a valid label!".format(current_line, line) + "\n")
                 text_field_machinecode.tag_add("error", "end-2c linestart", "end")
                 text_field_assembler.mark_set("insert", str(current_line) + ".0 lineend")
                 text_field_assembler.see(str(current_line) + ".0")
@@ -145,7 +148,7 @@ def generateMachinecode():
                 text_field_assembler.mark_set("insert", str(current_line) + ".0 lineend")
                 text_field_assembler.see(str(current_line) + ".0")
                 return
-        elif len(line) == 1 and tags.__contains__(line[0].upper()):
+        elif len(line) == 1 and label.__contains__(line[0].upper()):
             pass
         elif len(line) == 2 and checkTwoList.__contains__(line[0].upper()):
             try:
@@ -153,8 +156,8 @@ def generateMachinecode():
                 if registerDict.__contains__(line[1]):
                     value = registerDict[line[1]] + "00000000"
                 else:
-                    if tags.__contains__(line[1].upper()):
-                        value = changeToBinary(tags.get(line[1].upper()), 12)
+                    if label.__contains__(line[1].upper()):
+                        value = changeToBinary(label.get(line[1].upper()), 12)
                     else:
                         value = changeToBinary(line[1], 12)
                     if len(value) > 12:
