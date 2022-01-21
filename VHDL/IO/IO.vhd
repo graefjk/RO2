@@ -54,7 +54,7 @@ architecture Behavioral of IO is
 begin
     
     reset_o <= '0' when (std_ulogic_vector(port_b(60 downto 53)) and reset_enable(7 downto 0)) = "00000000" else '1';
-    value_o <= to_stdulogicvector(input_buffer(to_integer(unsigned(port_id_i)))) when in_out_i = '0' and enable_i = '1' else (others => 'Z');
+    
     
     pmod_out: for i in 0 to 3 generate
         port_b(16 + 8 * i downto 9 + 8 * i) <= to_stdlogicvector(output_buffer(i + 20)) when pmod_out_enabled(i) = '1' else (others => 'Z');
@@ -72,10 +72,13 @@ begin
 			end if;
             if port_id_i(6 downto 0) = "0011001" then --Toggle use Button as reset- default 10000000
                 reset_enable <= reset_enable or value_i(7 downto 0);
+                input_buffer(25) <= std_logic_vector(reset_enable);
             elsif port_id_i(6 downto 0) = "0011000" then --Pmod Toggle In/Out 1-toggle
                 pmod_out_enabled <= pmod_out_enabled or value_i(3 downto 0);
-                
+                input_buffer(24)(3 downto 0) <= std_logic_vector(pmod_out_enabled);
             end if;
+           else 
+            value_o <= to_stdulogicvector(input_buffer(to_integer(unsigned(port_id_i))));
            end if;
         --Pmod
            for i in 0 to 3 loop

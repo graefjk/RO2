@@ -21,6 +21,8 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
+use ieee.math_real.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -135,14 +137,25 @@ uut: Microcontroller port map (
         wait for clk_period / 2;
     end process;
     
-    port_b(60) <= reset_s;
+    --port_b(60) <= reset_s;
     
     stimuli: process
     begin
-        port_b(60 downto 53) <= (others => '0');
+        --port_b(60 downto 53) <= (others => '0');
 		reset_s <= '0';
 		wait for 120 ns;
 
+    end process;
+    
+    buttontest: process(clk_s)
+    variable seed1, seed2: positive;               -- seed values for random generator
+    variable rand: real;   -- random real-number value in range 0 to 1.0  
+    variable range_of_rand : real := 127.0;
+    begin
+        if falling_edge(clk_s) then
+        uniform(seed1, seed2, rand);   -- generate random number
+        port_b(60 downto 53) <= std_logic_vector(to_unsigned(integer(rand*range_of_rand),8));
+	    end if;
     end process;
 
 end Behavioral;

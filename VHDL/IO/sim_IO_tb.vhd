@@ -180,6 +180,15 @@ begin
     
     stimuli: process
     begin
+        
+        enable_s <= '1';
+        value_i_s <= "10000000";
+        port_id_s <= "00011001";
+        wait for clk_period;
+        enable_s <= '0';
+        value_i_s <= "00000000";
+        port_id_s <= "00000000";
+        wait for clk_period;
         --LED 
         for i in 0 to 6 loop
 		    port_b_s(61 + i) <= 'Z';
