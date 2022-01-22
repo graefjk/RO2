@@ -180,10 +180,10 @@ begin
     
     stimuli: process
     begin
-        
+        in_out_s <= '1';
         enable_s <= '1';
         value_i_s <= "10000000";
-        port_id_s <= "00011001";
+        port_id_s <= "00110111";
         wait for clk_period;
         enable_s <= '0';
         value_i_s <= "00000000";
@@ -215,7 +215,7 @@ begin
         --Switches/Buttons
 	    for k in 0 to 256 loop
 	       port_b_s(60 downto 53) <= std_logic_vector(to_unsigned(k,8));
-	       wait for clk_period;
+	       wait for clk_period * 2;
 	       if not(value_o_s = std_ulogic_vector(to_unsigned(k,8))) then
 	           err_cnt_sw <= err_cnt_sw + 1;
 	           report "Switch Failed";
@@ -228,10 +228,10 @@ begin
         
         in_out_s <= '0';
 	    for l in 0 to 3 loop
-	       port_id_s <= std_ulogic_vector(to_unsigned(20 + l,8));
+	       port_id_s <= std_ulogic_vector(to_unsigned(50 + l,8));
             for m in 0 to 256 loop
                port_b_s(16 + 8 * l downto 9 + 8 * l) <= std_logic_vector(to_unsigned(m,8));
-               wait for clk_period;
+               wait for clk_period * 2;
                if not(value_o_s = std_ulogic_vector(to_unsigned(m,8))) then
                    err_cnt_pmod <= err_cnt_pmod + 1;
                    report "Pmod in failed";
@@ -243,12 +243,12 @@ begin
 	    enable_s <= '1';
         --value_o_s <= "00000000";
         in_out_s <= '1';
-        port_id_s <= std_ulogic_vector(to_unsigned(24,8));
+        port_id_s <= std_ulogic_vector(to_unsigned(54,8));
         value_i_s <= "00001111";
         wait for clk_period;
 	    for n in 0 to 3 loop
 	       port_b_s(16 + 8 * n downto 9 + 8 * n) <= (others => 'Z');
-	       port_id_s <= std_ulogic_vector(to_unsigned(20 + n,8));
+	       port_id_s <= std_ulogic_vector(to_unsigned(50 + n,8));
             for o in 0 to 256 loop
                value_i_s <= std_ulogic_vector(to_unsigned(o,8));
                wait for clk_period;
