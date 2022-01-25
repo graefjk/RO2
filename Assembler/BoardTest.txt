@@ -65,37 +65,84 @@ COMPARE x1 x0
 SUBCY x0 x1
 //x0 = 35
 COMPARE x1 x0
-SUBCY x0 34 // line 56
+SUBCY x0 34
 //x0 = 0
+COMPARE x0 0
+JUMPNZ 111 //error
 
+LEDs
+LOAD x5 255
+LOAD xC 80
 
-//LED Loop
-LOAD x5 200
-
-//Rot loop
+Red
+LOAD x4 0
+LOAD x3 0
+Red2
 COMPARE x4 x5
-ADD x4 1
-JUMPZ 63 //Grün loop
+JUMPZ Green
 ADD x1 1
 OUTPUT x1 60 //rot
-JUMP 57 //Rot loop
-
-//Grün loop
-COMPARE x4 x5
+OUTPUT x2 61 //grÃ¼n
+OUTPUT x3 62 //blau
 ADD x4 1
-JUMPZ 69 //Blau loop
+CALL Wait
+JUMP Red2
+
+Green
+LOAD x4 0 //line 72
+LOAD x1 0
+Green2
+COMPARE x4 x5
+JUMPZ Blue
 ADD x2 1
-OUTPUT x2 61 //grün
-JUMP 63 //Grün loop
-
-//Blau loop
-COMPARE x4 x5
+OUTPUT x1 60 //rot
+OUTPUT x2 61 //grÃ¼n
+OUTPUT x3 62 //blau
 ADD x4 1
-JUMPZ 57 //Rot loop
-ADD x3 1
-OUTPUT x3 61 //blau
-JUMP 69 //Blau loop
+CALL Wait
+JUMP Green2
 
+Blue
+LOAD x4 0
+LOAD x2 0
+Blue2
+COMPARE x4 x5
+JUMPZ Red
+ADD x3 1
+OUTPUT x1 60 //rot
+OUTPUT x2 61 //grÃ¼n
+OUTPUT x3 62 //blau
+ADD x4 1
+CALL Wait
+JUMP Blue2
+
+
+Wait
+LOAD xA 0
+LOAD xB 0
+LOAD x9 200
+
+Wait2
+COMPARE xA xC
+RETURNZ
+ADD xA 1
+LOAD xB 0
+CALL Wait3
+OUTPUT xA 56
+JUMP Wait2
+
+Wait3
+COMPARE xB xC
+RETURNZ
+ADD xB 1
+OUTPUT xB 57
+INPUT x8 62
+OUTPUT x8 59
+JUMP Wait3
+
+
+Error
+OUTPUT x0 60
 
 
 

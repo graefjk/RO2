@@ -66,7 +66,7 @@ architecture Behavioral of IO_tb is
 				enable_i : IN STD_LOGIC;
 				value_o : OUT std_logic_vector(7 DOWNTO 0);
 				clk_i : in STD_LOGIC;
-				port_b : inout std_logic_vector ( 70 downto 0 );
+				port_b : inout std_logic_vector ( 70 downto 0 ) := (others => 'Z');
 				port_i : in std_logic_vector ( 19 downto 0 );
 				port_o : out std_logic_vector ( 7 downto 0 );
 				reset_o : out STD_ULOGIC
@@ -96,7 +96,7 @@ architecture Behavioral of IO_tb is
     signal FIXED_IO_ps_clk : STD_LOGIC;
     signal FIXED_IO_ps_porb : STD_LOGIC;
     signal FIXED_IO_ps_srstb : STD_LOGIC;
-    signal port_b_s : std_logic_vector ( 70 downto 0 );
+    signal port_b_s : std_logic_vector ( 70 downto 0 ) := (others => '0');
     signal port_i : std_logic_vector ( 19 downto 0 );
     signal port_o : std_logic_vector ( 7 downto 0 );
     signal value_i_s: std_logic_vector(7 downto 0);
@@ -161,6 +161,18 @@ begin
     
     stimuli: process
     begin
+        enable_s <= '1';
+        value_i_s <= "00000000";
+        port_id_s <= "00111110";
+        in_out_s <= '0';
+        for k in 0 to 256 loop
+	       port_b_s(60 downto 53) <= std_logic_vector(to_unsigned(k,8));
+	       wait for clk_period;
+	       if not(value_o_s = std_logic_vector(to_unsigned(k,8))) then
+	           err_cnt_sw <= err_cnt_sw + 1;
+	           report "Switch Failed";
+	       end if;
+	    end loop;
         for i in 0 to 6 loop
             enable_s <= '1';
             if i < 6 then
@@ -172,24 +184,14 @@ begin
             in_out_s <= '1';
             wait for clk_period;            
 		end loop;
-		enable_s <= '1';
-        value_i_s <= "00000000";
-        port_id_s <= "00111110";
-        in_out_s <= '0';
+		enable_s <= '0';
         for j in 0 to 5 loop
             LED_setontime(j) <= j * 42;
         end loop;
         LED_setontime(6) <= 255;
         LED_test_length <= "LLLHHHHHHHH";
         
-	    for k in 0 to 256 loop
-	       port_b_s(60 downto 53) <= std_logic_vector(to_unsigned(k,8));
-	       wait for clk_period;
-	       if not(value_o_s = std_logic_vector(to_unsigned(k,8))) then
-	           err_cnt_sw <= err_cnt_sw + 1;
-	           report "Switch Failed";
-	       end if;
-	    end loop;
+	    
 		if err_cnt_sw + err_cnt_led = 0 then
             report "Overall Test Passed";
         else
@@ -221,5 +223,4 @@ begin
 	      end if;
 		end if;
     end process;
-    port_b_s <= (others => 'Z');
 end Behavioral;

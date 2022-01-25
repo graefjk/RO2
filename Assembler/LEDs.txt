@@ -1,18 +1,75 @@
-//Run LEDs
-LOAD x1 60
-LOAD x2 61
-LOAD x3 61
+LOAD x5 255
+LOAD xC 80
 
-LOAD x4 0
-LOAD x5 50
-LOAD x6 100
+//Rot loop
+LOAD x4 0 //line 3
+LOAD x3 0
+COMPARE x4 x5 //line 5
+JUMPZ 13 //Grün loop
+ADD x1 1
+OUTPUT x1 60 //rot
+OUTPUT x2 61 //grün
+OUTPUT x3 62 //blau
+ADD x4 1
+CALL 35 //Wait loop
+JUMP 4 //Rot loop
 
-//LED loop
-OUTPUT x4 x1
-OUTPUT x5 x2
-OUTPUT x6 x3
-ADD x4 10
-ADD x5 20
-ADD x6 30
-JUMP 6
+//Grün loop
+LOAD x4 0 //line 14
+LOAD x1 0
+COMPARE x4 x5 //line 16
+JUMPZ 24 //Blau loop
+ADD x2 1
+OUTPUT x1 60 //rot
+OUTPUT x2 61 //grün
+OUTPUT x3 62 //blau
+ADD x4 1
+CALL 35 //Wait loop
+JUMP 15 //Grün loop
+
+//Blau loop
+LOAD x4 0 //line 25
+LOAD x2 0
+COMPARE x4 x5 //line 27
+JUMPZ 2 //Rot loop
+ADD x3 1
+OUTPUT x1 60 //rot
+OUTPUT x2 61 //grün
+OUTPUT x3 62 //blau
+ADD x4 1
+CALL 35 //Wait loop
+JUMP 26 //Blau loop
+
+
+//Wait loop
+LOAD xA 0 //line 36
+LOAD xB 0
+
+COMPARE xA xC //line 38
+RETURNZ
+ADD xA 1
+LOAD xB 0
+CALL 44 //COMPARE xB xC
+OUTPUT xA 56
+JUMP 37 //COMPARE xA xC
+
+COMPARE xB xC //line 45
+RETURNZ
+ADD xB 1
+OUTPUT xB 57
+JUMP 44 //COMPARE xB xC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

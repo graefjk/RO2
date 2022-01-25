@@ -18,18 +18,13 @@ instructionDict = {
 registerDict = {
     "x0": "0000", "x1": "0001", "x2": "0010", "x3": "0011", "x4": "0100",
     "x5": "0101", "x6": "0110", "x7": "0111", "x8": "1000", "x9": "1001",
-    "xA": "1010", "xB": "1011", "xC": "1100", "xD": "1101", "xE": "1110", "xF": "1111"}
+    "xA": "1010", "xB": "1011", "xC": "1100", "xD": "1101", "xE": "1110", "xF": "1111",
+    "s0": "0000", "s1": "0001", "s2": "0010", "s3": "0011", "s4": "0100",
+    "s5": "0101", "s6": "0110", "s7": "0111", "s8": "1000", "s9": "1001",
+    "sA": "1010", "sB": "1011", "sC": "1100", "sD": "1101", "sE": "1110", "sF": "1111"}
 
-register = {
-    "x0": "0", "x1": "0", "x2": "0", "x3": "0", "x4": "0",
-    "x5": "0", "x6": "0", "x7": "0", "x8": "0", "x9": "0",
-    "xA": "0", "xB": "0", "xC": "0", "xD": "0", "xE": "0", "xF": "0"}
+label = {}
 
-ram = {}
-
-inputPortValue = 0
-
-returnStack = []
 
 checkOneList = ("RETURN", "RETURNC", "RETURNNC", "RETURNZ", "RETURNNZ")
 
@@ -59,363 +54,6 @@ def removeUnnecessary(instructions):
             instructions.remove(i)
             removeUnnecessary(instructions)
     return instructions
-
-
-def testCode(instructions):
-    """
-    Simulates the assembler.
-    :param instructions: assembler instructions.
-    """
-    carry = 0
-    zero = 0
-    instructions = removeUnnecessary(instructions)
-    for key in register:
-        register[key] = "0"
-    current_line = 1
-    while current_line <= len(instructions):
-        instruction = instructions[current_line-1]
-        instruction = \
-            instruction.replace(",", "").replace(";", "").replace("(", "").replace(")", "").split("//")[0].split()
-        if len(instruction) == 0:
-            pass
-        elif instruction[0].upper() == "ADD":
-            if instruction[2][0] == "x":
-                register[instruction[1]] = str(int(register.get(instruction[1])) + int(register.get(instruction[2])))
-            else:
-                register[instruction[1]] = str(int(register.get(instruction[1])) + int(instruction[2]))
-            zero = 1 if int(register.get(instruction[1])) == 0 or int(register.get(instruction[1])) == 256 else 0
-            carry = 1 if int(register.get(instruction[1])) > 255 else 0
-            register[instruction[1]] = changeToDezimal(changeToBinary(register.get(instruction[1]), 8))
-
-        elif instruction[0].upper() == "ADDCY":
-            if instruction[2][0] == "x":
-                register[instruction[1]] = \
-                    str(int(register.get(instruction[1])) + int(register.get(instruction[2])) + carry)
-            else:
-                register[instruction[1]] = str(int(register.get(instruction[1])) + int(instruction[2]) + carry)
-            zero = 1 if int(register[instruction[1]]) == 0 or int(register[instruction[1]]) == 256 else 0
-            carry = 1 if int(register[instruction[1]]) > 255 else 0
-            register[instruction[1]] = changeToDezimal(changeToBinary(register.get(instruction[1]), 8))
-
-        elif instruction[0].upper() == "SUB":
-            if instruction[2][0] == "x":
-                register[instruction[1]] = str(int(register.get(instruction[1])) - int(register.get(instruction[2])))
-            else:
-                register[instruction[1]] = str(int(register.get(instruction[1])) - int(instruction[2]))
-            zero = 1 if int(register[instruction[1]]) == 0 else 0
-            carry = 1 if int(register[instruction[1]]) < 0 else 0
-            register[instruction[1]] = changeToDezimal(changeToBinary(register.get(instruction[1]), 8))
-
-        elif instruction[0].upper() == "SUBCY":
-            if instruction[2][0] == "x":
-                register[instruction[1]] = \
-                    str(int(register.get(instruction[1])) - int(register.get(instruction[2])) - carry)
-            else:
-                register[instruction[1]] = str(int(register.get(instruction[1])) - int(instruction[2]) - carry)
-            zero = 1 if int(register[instruction[1]]) == 0 or int(register[instruction[1]]) == -256 else 0
-            carry = 1 if int(register[instruction[1]]) < 0 else 0
-            register[instruction[1]] = changeToDezimal(changeToBinary(register.get(instruction[1]), 8))
-
-        elif instruction[0].upper() == "AND":
-            if instruction[2][0] == "x":
-                bin1 = changeToBinary(register[instruction[1]], 8)
-                bin2 = changeToBinary(register[instruction[2]], 8)
-                binres = "00000000"
-                for i in range(7, -1, -1):
-                    binres = binres[:i] + str((int(bin1[i]) & int(bin2[i]))) + binres[i+1:]
-                register[instruction[1]] = changeToDezimal(binres)
-            else:
-                bin1 = changeToBinary(register[instruction[1]], 8)
-                bin2 = changeToBinary(instruction[2], 8)
-                binres = "00000000"
-                for i in range(7, -1, -1):
-                    binres = binres[:i] + str((int(bin1[i]) & int(bin2[i]))) + binres[i+1:]
-                register[instruction[1]] = changeToDezimal(binres)
-            zero = 1 if int(register[instruction[1]]) == 0 else 0
-            carry = 0
-
-        elif instruction[0].upper() == "OR":
-            if instruction[2][0] == "x":
-                bin1 = changeToBinary(register[instruction[1]], 8)
-                bin2 = changeToBinary(register[instruction[2]], 8)
-                binres = "00000000"
-                for i in range(7, -1, -1):
-                    binres = binres[:i] + str((int(bin1[i]) | int(bin2[i]))) + binres[i+1:]
-                register[instruction[1]] = changeToDezimal(binres)
-            else:
-                bin1 = changeToBinary(register[instruction[1]], 8)
-                bin2 = changeToBinary(instruction[2], 8)
-                binres = "00000000"
-                for i in range(7, -1, -1):
-                    binres = binres[:i] + str((int(bin1[i]) | int(bin2[i]))) + binres[i+1:]
-                register[instruction[1]] = changeToDezimal(binres)
-            zero = 1 if int(register[instruction[1]]) == 0 else 0
-            carry = 0
-
-        elif instruction[0].upper() == "XOR":
-            if instruction[2][0] == "x":
-                bin1 = changeToBinary(register[instruction[1]], 8)
-                bin2 = changeToBinary(register[instruction[2]], 8)
-                binres = "00000000"
-                for i in range(7, -1, -1):
-                    binres = binres[:i] + str((int(bin1[i]) ^ int(bin2[i]))) + binres[i+1:]
-                register[instruction[1]] = changeToDezimal(binres)
-            else:
-                bin1 = changeToBinary(register[instruction[1]], 8)
-                bin2 = changeToBinary(instruction[2], 8)
-                binres = "00000000"
-                for i in range(7, -1, -1):
-                    binres = binres[:i] + str((int(bin1[i]) ^ int(bin2[i]))) + binres[i+1:]
-                register[instruction[1]] = changeToDezimal(binres)
-            zero = 1 if int(register[instruction[1]]) == 0 else 0
-            carry = 0
-
-        elif instruction[0].upper() == "LOAD":
-            if instruction[2][0] == "x":
-                register[instruction[1]] = str(int(register.get(instruction[2])))
-            else:
-                register[instruction[1]] = str(int(instruction[2]))
-
-        elif instruction[0].upper() == "STORE":
-            if instruction[2][0] == "x":
-                ram[changeToBinary(register.get(instruction[2]), 8)] = changeToBinary(register.get(instruction[1]), 8)
-            else:
-                ram[changeToBinary(instruction[2], 8)] = changeToBinary(register.get(instruction[1]), 8)
-
-        elif instruction[0].upper() == "FETCH":
-            if instruction[2][0] == "x":
-                register[instruction[1]] = changeToDezimal(ram.get(changeToBinary(register.get(instruction[2]), 8)))
-            else:
-                register[instruction[1]] = changeToDezimal(ram.get(changeToBinary(instruction[2], 8)))
-
-        elif instruction[0].upper() == "OUTPUT":
-            if instruction[2][0] == "x":
-                print("Output_Port: " + register[instruction[1]])
-            else:
-                print("Output_Port: " + changeToDezimal(changeToBinary(instruction[1], 8)))
-
-        elif instruction[0].upper() == "INPUT":
-            if instruction[2][0] == "x":
-                register[instruction[1]] = inputPortValue
-            else:
-                register[instruction[1]] = inputPortValue
-
-        elif instruction[0].upper() == "TEST":
-            if instruction[2][0] == "x":
-                if (int(register[instruction[1]]) & int(register[instruction[2]])) == 0:
-                    zero = 1
-                else:
-                    zero = 0
-                bin1 = changeToBinary(register[instruction[1]], 8)
-                bin2 = changeToBinary(register[instruction[2]], 8)
-                carry = 0
-                for i in range(7, -1, -1):
-                    carry = (int(bin1[i]) & int(bin2[i])) ^ carry
-            else:
-                if (int(register[instruction[1]]) & int(instruction[2])) == 0:
-                    zero = 1
-                else:
-                    zero = 0
-                bin1 = changeToBinary(register[instruction[1]], 8)
-                bin2 = changeToBinary(instruction[2], 8)
-                carry = 0
-                for i in range(7, -1, -1):
-                    carry = (int(bin1[i]) & int(bin2[i])) ^ carry
-
-        elif instruction[0].upper() == "COMPARE":
-            if instruction[2][0] == "x":
-                if int(register[instruction[1]]) == int(register[instruction[2]]):
-                    zero = 1
-                else:
-                    zero = 0
-                if int(register[instruction[1]]) < int(register[instruction[2]]):
-                    carry = 1
-                else:
-                    carry = 0
-            else:
-                if int(register[instruction[1]]) == int(instruction[2]):
-                    zero = 1
-                else:
-                    zero = 0
-                if int(register[instruction[1]]) < int(instruction[2]):
-                    carry = 1
-                else:
-                    carry = 0
-
-        elif instruction[0].upper() == "CALL":
-            returnStack.append(current_line)
-            adress = instruction[1]
-            current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "CALLC":
-            if carry == 1:
-                returnStack.append(current_line)
-                adress = instruction[1]
-                current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "CALLNC":
-            if carry == 0:
-                returnStack.append(current_line)
-                adress = instruction[1]
-                current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "CALLNZ":
-            if zero == 0:
-                returnStack.append(current_line)
-                adress = instruction[1]
-                current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "CALLZ":
-            if zero == 1:
-                returnStack.append(current_line)
-                adress = instruction[1]
-                current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "JUMP":
-            adress = instruction[1]
-            current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "JUMPC":
-            if carry == 1:
-                adress = instruction[1]
-                current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "JUMPNC":
-            if carry == 0:
-                adress = instruction[1]
-                current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "JUMPNZ":
-            if zero == 0:
-                adress = instruction[1]
-                current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "JUMPZ":
-            if zero == 1:
-                adress = instruction[1]
-                current_line = int(adress) - 1
-
-        elif instruction[0].upper() == "RETURN":
-            current_line = returnStack.pop()
-
-        elif instruction[0].upper() == "RETURNC":
-            if carry == 1:
-                current_line = returnStack.pop()
-
-        elif instruction[0].upper() == "RETURNNC":
-            if carry == 0:
-                current_line = returnStack.pop()
-
-        elif instruction[0].upper() == "RETURNZ":
-            if zero == 1:
-                current_line = returnStack.pop()
-
-        elif instruction[0].upper() == "RETURNNZ":
-            if zero == 0:
-                current_line = returnStack.pop()
-
-        elif instruction[0].upper() == "RL":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal(binary[1:9] + binary[0])
-            carry = int(binary[0])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-
-        elif instruction[0].upper() == "RR":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal(binary[7] + binary[0:7])
-            carry = int(binary[7])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-
-        elif instruction[0].upper() == "SL0":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal(binary[1:9] + "0")
-            carry = int(binary[0])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-
-        elif instruction[0].upper() == "SL1":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal(binary[1:9] + "1")
-            carry = int(binary[0])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-
-        elif instruction[0].upper() == "SLA":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal(binary[1:9] + str(carry))
-            carry = int(binary[0])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-
-        elif instruction[0].upper() == "SLX":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal(binary[1:9] + binary[0])
-            carry = int(binary[0])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-
-        elif instruction[0].upper() == "SR0":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal("0" + binary[0:7])
-            carry = int(binary[7])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-
-        elif instruction[0].upper() == "SR1":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal("1" + binary[0:7])
-            carry = int(binary[7])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-
-        elif instruction[0].upper() == "SRA":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal(str(carry) + binary[0:7])
-            carry = int(binary[7])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-
-        elif instruction[0].upper() == "SRX":
-            binary = changeToBinary(register[instruction[1]], 8)
-            register[instruction[1]] = changeToDezimal(binary[0] + binary[0:7])
-            carry = int(binary[7])
-            if int(register[instruction[1]]) == 0:
-                zero = 1
-            else:
-                zero = 0
-        current_line += 1
-
-
-def changeToDezimal(binary):
-    """
-    Converts binary strings to dezimal strings.
-    :param binary: binary number string.
-    :return: dezimal number string.
-    """
-    if binary[0] == "0":
-        return str(int(binary, 2))
-    else:
-        return str(int(binary[1:], 2)-128)
 
 
 def changeToBinary(n, bits):
@@ -454,17 +92,35 @@ def changeToBinary(n, bits):
 def generateMachinecode():
     """
     This function takes assembler code and converts it into machinecode.
-    Each line in the assembler textfield should have one Instruction of the following structures:
+    Each line in the assembler textfield should be empty or have one Instruction of the following structure:
     1. Operation register1, register2; //comment
     2. Operation register, constant; //comment
     3. Operation register; //comment
-    4. Operation; //comment
-    The comments starting wit a "//", the "," aswell as the ";" are optional.
+    4. Operation constant; //Comment
+    5. Operation Label; //Comment
+    6. Operation; //comment
+    7. Label
+    8. //Comment
+    The comments starting wit a "//", the ",", the ";" aswell as "()" are optional.
     """
-    for i in range(256):
-        key = changeToBinary(str(i), 8)
-        ram[key] = "0"
     text_field_machinecode.delete("1.0", "end")
+    lines = text_field_assembler.get("1.0", "end").splitlines()
+    current_line = 0
+    label.clear()
+    removeUnnecessary(lines)
+    for line in lines:
+        line = line.replace(",", "").replace(";", "").replace("(", "").replace(")", "").split("//")[0].split()
+        current_line += 1
+        if len(line) == 1 and not checkOneList.__contains__(line[0].upper()):
+            try:
+                label[line[0].upper()] = str(current_line - label.__len__() - 1)
+            except KeyError:
+                text_field_machinecode.insert("end", "Error in line {} {}, "
+                                                     "not a valid label!".format(current_line, line) + "\n")
+                text_field_machinecode.tag_add("error", "end-2c linestart", "end")
+                text_field_assembler.mark_set("insert", str(current_line) + ".0 lineend")
+                text_field_assembler.see(str(current_line) + ".0")
+                return
     lines = text_field_assembler.get("1.0", "end").splitlines()
     instructions = []
     current_line = 0
@@ -483,13 +139,18 @@ def generateMachinecode():
                 text_field_assembler.mark_set("insert", str(current_line) + ".0 lineend")
                 text_field_assembler.see(str(current_line) + ".0")
                 return
+        elif len(line) == 1 and label.__contains__(line[0].upper()):
+            pass
         elif len(line) == 2 and checkTwoList.__contains__(line[0].upper()):
             try:
                 opcode = instructionDict[line[0].upper()]
                 if registerDict.__contains__(line[1]):
                     value = registerDict[line[1]] + "00000000"
                 else:
-                    value = changeToBinary(line[1], 12)
+                    if label.__contains__(line[1].upper()):
+                        value = changeToBinary(label.get(line[1].upper()), 12)
+                    else:
+                        value = changeToBinary(line[1], 12)
                     if len(value) > 12:
                         text_field_machinecode.insert(
                             "end", "Error in line {} {}, invalid number!"
@@ -549,12 +210,6 @@ def generateMachinecode():
         text_field_machinecode.tag_remove("error", "end-2c linestart", "end")
     text_field_machinecode.insert("end", "Successfully converted assembler to "
                                          "machinecode and copied it to clipboard!" + "\n")
-    text_field_machinecode.insert("end", "End state of the register:" + "\n")
-    # testCode(text_field_assembler.get("1.0", "end").splitlines())
-    i = 0
-    for reg in register:
-        i += 1
-        text_field_machinecode.insert("end", "x" + str(i-1) + ":\t" + str(register.get(reg)) + "\n")
 
 
 def loadAssembler():

@@ -62,7 +62,7 @@ ENTITY design_1_IO_0_0 IS
     value_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
     clk_i : IN STD_LOGIC;
     mio_b : INOUT STD_ULOGIC_VECTOR(53 DOWNTO 0);
-    port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0);
+    port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0):= (others => 'Z');
     port_i : IN STD_ULOGIC_VECTOR(19 DOWNTO 0);
     port_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
     reset_o : OUT STD_LOGIC
@@ -81,7 +81,7 @@ ARCHITECTURE design_1_IO_0_0_arch OF design_1_IO_0_0 IS
       value_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
       clk_i : IN STD_LOGIC;
       mio_b : INOUT STD_ULOGIC_VECTOR(53 DOWNTO 0);
-      port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0);
+      port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0):= (others => 'Z');
       port_i : IN STD_ULOGIC_VECTOR(19 DOWNTO 0);
       port_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
       reset_o : OUT STD_LOGIC
