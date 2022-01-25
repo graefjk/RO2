@@ -99,7 +99,7 @@ architecture Behavioral of IO_tb is
     signal FIXED_IO_ps_clk : STD_LOGIC;
     signal FIXED_IO_ps_porb : STD_LOGIC;
     signal FIXED_IO_ps_srstb : STD_LOGIC;
-    signal port_b_s : std_logic_vector ( 70 downto 0 );
+    signal port_b_s : std_logic_vector ( 70 downto 0 ) := (others => 'Z');
     signal port_i : std_ulogic_vector ( 19 downto 0 );
     signal port_o : std_ulogic_vector ( 7 downto 0 );
     signal value_i_s: std_ulogic_vector(7 downto 0);
@@ -299,17 +299,30 @@ begin
 		if falling_edge(clk_hdmi_s) then
             uniform(seed1, seed2, rand);   -- generate random number
             send_value_hdmi <= std_ulogic_vector(to_unsigned(integer(rand*range_of_rand),3));
+            if to_unsigned(integer(rand*range_of_rand),3) mod 2 = 0 then
+                if to_unsigned(integer(rand*range_of_rand),3) mod 4 = 0 then
+                    port_b_s(48) <= '1';
+                else
+                    port_b_s(48) <= '0';
+                end if;
+                port_b_s(51) <= 'Z';
+             else
+                if to_unsigned(integer(rand*range_of_rand),3) mod 4 = 1 then
+                    port_b_s(51) <= '1';
+                else
+                    port_b_s(51) <= '0';
+                end if;
+                port_b_s(48) <= 'Z';
+             end if;
 	    end if;
     end process;
-    port_b_s <= (others => 'Z');
-    
     HDMI_test_rec: process(rec_clk_hdmi_s)
     variable seed1, seed2: positive;               -- seed values for random generator
     variable rand: real;   -- random real-number value in range 0 to 1.0  
     variable range_of_rand : real := 7.0;
     begin
 		if rising_edge(rec_clk_hdmi_s) then
-            if rec_value_hdmi /= send_value_hdmi then
+            if rec_value_hdmi /= send_value_hdmi or port_b_s(48) /= port_b_s(51) then
                err_cnt_hdmi <= err_cnt_hdmi + 1;
 	           report "Hdmi Failed";
             end if;

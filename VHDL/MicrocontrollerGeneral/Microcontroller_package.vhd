@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use work.bus_multiplexer_pkg.all;
 
 
 package microcontroller_package is
@@ -28,7 +29,9 @@ package microcontroller_package is
     --generall architekture
     constant instruction_address_c : integer := 12; --size in bits for addressing a instruction in the instruction prom
     constant architecture_width_c: integer := 8; --width for the alu, the registers and scratchpadmemory
-    
+    constant number_of_cores: positive := 30; --number of cores generated
+    constant File_Name: String := "Test";
+    constant File_Ending: String := ".data";
     --register things
     constant register_select_size_c: integer := 4; --size in bits for addressing a register
     
@@ -56,6 +59,17 @@ package microcontroller_package is
 		        sALU_o: out std_ulogic_vector(7 downto 0); -- output signals
 		        sCARRY_o: out std_logic;
 		        sZERO_o: out std_logic);
+    end component;
+    
+    component Core
+       generic (File_Name: String := File_Name);
+	   port(   clk_i: in std_ulogic;
+                reset_i: in std_ulogic;
+                port_id_i : out std_ulogic_vector(7 downto 0);
+                value_i : out std_ulogic_vector(7 downto 0);
+                value_o : in std_ulogic_vector(7 downto 0);
+                in_out_i : out std_ulogic;
+                enable_i : out std_ulogic);
     end component;
 
     component Decoder
@@ -95,42 +109,44 @@ package microcontroller_package is
     end component;
 	
 	component design_1_wrapper
+        generic (number_of_cores : positive := number_of_cores);
 		port (
-    DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );
-    DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
-    DDR_cas_n : inout STD_LOGIC;
-    DDR_ck_n : inout STD_LOGIC;
-    DDR_ck_p : inout STD_LOGIC;
-    DDR_cke : inout STD_LOGIC;
-    DDR_cs_n : inout STD_LOGIC;
-    DDR_dm : inout STD_LOGIC_VECTOR ( 3 downto 0 );
-    DDR_dq : inout STD_LOGIC_VECTOR ( 31 downto 0 );
-    DDR_dqs_n : inout STD_LOGIC_VECTOR ( 3 downto 0 );
-    DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 );
-    DDR_odt : inout STD_LOGIC;
-    DDR_ras_n : inout STD_LOGIC;
-    DDR_reset_n : inout STD_LOGIC;
-    DDR_we_n : inout STD_LOGIC;
-    FIXED_IO_ddr_vrn : inout STD_LOGIC;
-    FIXED_IO_ddr_vrp : inout STD_LOGIC;
-    FIXED_IO_mio : inout STD_LOGIC_VECTOR ( 53 downto 0 );
-    FIXED_IO_ps_clk : inout STD_LOGIC;
-    FIXED_IO_ps_porb : inout STD_LOGIC;
-    FIXED_IO_ps_srstb : inout STD_LOGIC;
-    port_id_i : IN std_ulogic_vector(7 DOWNTO 0);
-    value_i : IN std_ulogic_vector(7 DOWNTO 0);
-    in_out_i : IN STD_ULOGIC;
-    enable_i : IN STD_ULOGIC;
-    value_o : OUT std_ulogic_vector(7 DOWNTO 0);
-    clk_i : in STD_LOGIC;
-    port_b : inout std_logic_vector ( 70 downto 0 );
-    port_i : in std_ulogic_vector ( 19 downto 0 );
-    port_o : out std_ulogic_vector ( 7 downto 0 );
-    reset_o : out STD_ULOGIC
+                DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );
+                DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
+                DDR_cas_n : inout STD_LOGIC;
+                DDR_ck_n : inout STD_LOGIC;
+                DDR_ck_p : inout STD_LOGIC;
+                DDR_cke : inout STD_LOGIC;
+                DDR_cs_n : inout STD_LOGIC;
+                DDR_dm : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+                DDR_dq : inout STD_LOGIC_VECTOR ( 31 downto 0 );
+                DDR_dqs_n : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+                DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+                DDR_odt : inout STD_LOGIC;
+                DDR_ras_n : inout STD_LOGIC;
+                DDR_reset_n : inout STD_LOGIC;
+                DDR_we_n : inout STD_LOGIC;
+                FIXED_IO_ddr_vrn : inout STD_LOGIC;
+                FIXED_IO_ddr_vrp : inout STD_LOGIC;
+                FIXED_IO_mio : inout STD_LOGIC_VECTOR ( 53 downto 0 );
+                FIXED_IO_ps_clk : inout STD_LOGIC;
+                FIXED_IO_ps_porb : inout STD_LOGIC;
+                FIXED_IO_ps_srstb : inout STD_LOGIC;
+                port_id_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+                value_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+                value_o : out bus_array(number_of_cores - 1 downto 0,7 downto 0);
+                in_out_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
+                enable_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
+                clk_i : in STD_LOGIC;
+                port_b : inout std_logic_vector ( 70 downto 0 );
+                port_i : in std_ulogic_vector ( 19 downto 0 );
+                port_o : out std_ulogic_vector ( 7 downto 0 );
+                reset_o : out STD_ULOGIC
   );
     end component;
 	
 	component IP
+	    generic(File_Name: String := File_Name);
         port(   pc_i : in std_ulogic_vector(11 downto 0);
                 clk_i : in std_ulogic;
                 instruction_o : out std_ulogic_vector(17 downto 0));

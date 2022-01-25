@@ -11,7 +11,9 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
+use work.bus_multiplexer_pkg.all;
 entity design_1 is
+  generic (number_of_cores : positive := 1);
   port (
     DDR_addr : inout STD_LOGIC_VECTOR ( 14 downto 0 );
     DDR_ba : inout STD_LOGIC_VECTOR ( 2 downto 0 );
@@ -35,15 +37,15 @@ entity design_1 is
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
     clk_i : in STD_LOGIC;
-    enable_i : in STD_LOGIC;
-    in_out_i : in STD_LOGIC;
     port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 ) := (others => 'Z');
     port_i : in STD_ULOGIC_VECTOR ( 19 downto 0 );
-    port_id_i : in STD_ULOGIC_VECTOR ( 7 downto 0 );
     port_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
     reset_o : out STD_LOGIC;
-    value_i : in STD_ULOGIC_VECTOR ( 7 downto 0 );
-    value_o : out STD_ULOGIC_VECTOR ( 7 downto 0 )
+    port_id_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    value_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    value_o : out bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    in_out_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
+    enable_i : in std_ulogic_vector (number_of_cores - 1 downto 0)
   );
   attribute CORE_GENERATION_INFO : string;
   attribute CORE_GENERATION_INFO of design_1 : entity is "design_1,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=design_1,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=2,numReposBlks=2,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=1,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=26,da_board_cnt=1,da_ps7_cnt=3,synth_mode=Global}";
@@ -193,13 +195,14 @@ architecture STRUCTURE of design_1 is
     PS_PORB : inout STD_LOGIC
   );
   end component design_1_processing_system7_0_0;
-  component design_1_IO_0_0 is
-  port (
-    port_id_i : in STD_ULOGIC_VECTOR ( 7 downto 0 );
-    value_i : in STD_ULOGIC_VECTOR ( 7 downto 0 );
-    in_out_i : in STD_LOGIC;
-    enable_i : in STD_LOGIC;
-    value_o : out STD_ULOGIC_VECTOR ( 7 downto 0 );
+  component design_1_IO_0_0 is 
+    generic (number_of_cores : positive := number_of_cores);
+  port ( 
+    port_id_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    value_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    value_o : out bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    in_out_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
+    enable_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
     clk_i : in STD_LOGIC;
     mio_b : inout STD_ULOGIC_VECTOR ( 53 downto 0 );
     port_b : inout STD_LOGIC_VECTOR ( 70 downto 0 ):= (others => 'Z');
@@ -214,10 +217,10 @@ architecture STRUCTURE of design_1 is
   signal IO_0_value_o : STD_ULOGIC_VECTOR ( 7 downto 0 );
   signal Net : STD_LOGIC_VECTOR ( 70 downto 0 );
   signal clk_i_1 : STD_LOGIC;
-  signal enable_i_0_1 : STD_LOGIC;
-  signal in_out_i_0_1 : STD_LOGIC;
+  signal enable_i_0_1 : STD_ULOGIC_VECTOR ( number_of_cores - 1 downto 0 );
+  signal in_out_i_0_1 : STD_ULOGIC_VECTOR ( number_of_cores - 1 downto 0 );
   signal port_i_0_1 : STD_ULOGIC_VECTOR ( 19 downto 0 );
-  signal port_id_i_0_1 : STD_ULOGIC_VECTOR ( 7 downto 0 );
+  --signal port_id_i_0_1 : STD_ULOGIC_VECTOR ( 7 downto 0 );
   signal processing_system7_0_DDR_ADDR : STD_LOGIC_VECTOR ( 14 downto 0 );
   signal processing_system7_0_DDR_BA : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal processing_system7_0_DDR_CAS_N : STD_LOGIC;
@@ -339,12 +342,13 @@ begin
   enable_i_0_1 <= enable_i;
   in_out_i_0_1 <= in_out_i;
   port_i_0_1(19 downto 0) <= port_i(19 downto 0);
-  port_id_i_0_1(7 downto 0) <= port_id_i(7 downto 0);
+  --port_id_i_0_1(7 downto 0) <= port_id_i(7 downto 0);
   --port_o(7 downto 0) <= IO_0_port_o(7 downto 0);
   reset_o <= IO_0_reset_o;
   --value_i_0_1(7 downto 0) <= value_i(7 downto 0);
   --value_o(7 downto 0) <= IO_0_value_o(7 downto 0);
 IO_0: component design_1_IO_0_0
+    generic map(number_of_cores => number_of_cores)
      port map (
       clk_i => clk_i_1,
       enable_i => enable_i_0_1,
@@ -352,11 +356,11 @@ IO_0: component design_1_IO_0_0
       mio_b(53 downto 0) => NLW_IO_0_mio_b_UNCONNECTED(53 downto 0),
       port_b(70 downto 0) => port_b(70 downto 0),
       port_i(19 downto 0) => port_i_0_1(19 downto 0),
-      port_id_i(7 downto 0) => port_id_i_0_1(7 downto 0),
+      port_id_i => port_id_i,
       port_o(7 downto 0) => port_o(7 downto 0),
       reset_o => IO_0_reset_o,
-      value_i(7 downto 0) => value_i(7 downto 0),
-      value_o(7 downto 0) => value_o(7 downto 0)
+      value_i => value_i,
+      value_o => value_o
     );
 processing_system7_0: component design_1_processing_system7_0_0
      port map (

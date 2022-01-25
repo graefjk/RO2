@@ -52,14 +52,16 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
+use work.bus_multiplexer_pkg.all;
 
 ENTITY design_1_IO_0_0 IS
+    generic (number_of_cores : positive := 1);
   PORT (
-    port_id_i : IN STD_ULOGIC_VECTOR(7 DOWNTO 0);
-    value_i : IN STD_ULOGIC_VECTOR(7 DOWNTO 0);
-    in_out_i : IN STD_LOGIC;
-    enable_i : IN STD_LOGIC;
-    value_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
+    port_id_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    value_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    value_o : out bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    in_out_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
+    enable_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
     clk_i : IN STD_LOGIC;
     mio_b : INOUT STD_ULOGIC_VECTOR(53 DOWNTO 0);
     port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0):= (others => 'Z');
@@ -73,12 +75,13 @@ ARCHITECTURE design_1_IO_0_0_arch OF design_1_IO_0_0 IS
   ATTRIBUTE DowngradeIPIdentifiedWarnings : STRING;
   ATTRIBUTE DowngradeIPIdentifiedWarnings OF design_1_IO_0_0_arch: ARCHITECTURE IS "yes";
   COMPONENT IO IS
+    generic (number_of_cores : positive := number_of_cores);
     PORT (
-      port_id_i : IN STD_ULOGIC_VECTOR(7 DOWNTO 0);
-      value_i : IN STD_ULOGIC_VECTOR(7 DOWNTO 0);
-      in_out_i : IN STD_LOGIC;
-      enable_i : IN STD_LOGIC;
-      value_o : OUT STD_ULOGIC_VECTOR(7 DOWNTO 0);
+      port_id_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+      value_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+      value_o : out bus_array(number_of_cores - 1 downto 0,7 downto 0);
+      in_out_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
+      enable_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
       clk_i : IN STD_LOGIC;
       mio_b : INOUT STD_ULOGIC_VECTOR(53 DOWNTO 0);
       port_b : INOUT STD_LOGIC_VECTOR(70 DOWNTO 0):= (others => 'Z');
@@ -101,6 +104,7 @@ ARCHITECTURE design_1_IO_0_0_arch OF design_1_IO_0_0 IS
   ATTRIBUTE X_INTERFACE_INFO OF reset_o: SIGNAL IS "xilinx.com:signal:reset:1.0 reset_o RST";
 BEGIN
   U0 : IO
+    generic map(number_of_cores => number_of_cores)
     PORT MAP (
       port_id_i => port_id_i,
       value_i => value_i,
