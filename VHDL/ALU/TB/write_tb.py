@@ -14,13 +14,14 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"RR error at 00000000\" severity error;\n\n")
     
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binRR = bin[7] + bin[0:7]
-            f.write("assert sALU_s = \"" + binRR + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[7] + "\'\n")
+            f.write("assert sALU_s = \"" + binRR + "\" and sZERO_s = \'"+str(int(binRR=="00000000"))+"\' and sCarry_s=\'" + bin[7] + "\'\n")
             f.write("\t" + "report \"RR error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close
 
 
@@ -39,13 +40,14 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"RL error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binRL = bin[1:8] + bin[0]
-            f.write("assert sALU_s = \"" + binRL + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[0] + "\'\n")
+            f.write("assert sALU_s = \"" + binRL + "\" and sZERO_s = \'"+str(int(binRL=="00000000"))+"\' and sCarry_s=\'" + bin[0] + "\'\n")
             f.write("\t" + "report \"RL error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 
@@ -63,13 +65,14 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SL0 error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSL0 = bin[1:8] + "0"
-            f.write("assert sALU_s = \"" + binSL0 + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[0] + "\'\n")
+            f.write("assert sALU_s = \"" + binSL0 + "\" and sZERO_s = \'"+str(int(binSL0=="00000000"))+"\' and sCarry_s=\'" + bin[0] + "\'\n")
             f.write("\t" + "report \"SL0 error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 # SL1
@@ -83,16 +86,17 @@ for line in lines:
         f.write("opcode_select_s <= \"110011\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
         f.write("wait for waitTime;\n")
-        f.write("assert sALU_s = \"00000001\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
+        f.write("assert sALU_s = \"00000001\" and sZERO_s = \'0\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SL1 error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSL1 = bin[1:8] + "1"
-            f.write("assert sALU_s = \"" + binSL1 + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[0] + "\'\n")
+            f.write("assert sALU_s = \"" + binSL1 + "\" and sZERO_s = \'"+str(int(binSL1=="00000000"))+"\' and sCarry_s=\'" + bin[0] + "\'\n")
             f.write("\t" + "report \"SL1 error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 # SLA0
@@ -104,20 +108,23 @@ for line in lines:
         f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SL1"))
     else:
         f.write("opcode_select_s <= \"110100\";")
-        f.write("carry_s <= \'0\';\n")
+        f.write("\n" + "sA_s <= \"00000000\";\n")
+        f.write("wait for waitTime;\n")
         f.write("\n" + "sA_s <= \"00000000\";\n")
         f.write("wait for waitTime;\n")
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SL1 error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
-            f.write("carry_s <= \'0\';\n")
+            f.write("\n" + "sA_s <= \"00000000\";\n")
+            f.write("wait for waitTime;\n")
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSL1 = bin[1:8] + "0"
-            f.write("assert sALU_s = \"" + binSL1 + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[0] + "\'\n")
+            f.write("assert sALU_s = \"" + binSL1 + "\" and sZERO_s = \'"+str(int(binSL1=="00000000"))+"\' and sCarry_s=\'" + bin[0] + "\'\n")
             f.write("\t" + "report \"SL1 error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 # SLA1
@@ -129,20 +136,23 @@ for line in lines:
         f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SL1"))
     else:
         f.write("opcode_select_s <= \"110100\";")
-        f.write("carry_s <= \'1\';\n")
+        f.write("sA_s <= \"10000000\";\n")
+        f.write("wait for waitTime;\n")
         f.write("\n" + "sA_s <= \"00000000\";\n")
         f.write("wait for waitTime;\n")
-        f.write("assert sALU_s = \"00000001\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
+        f.write("assert sALU_s = \"00000001\" and sZERO_s = \'0\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SL1 error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
-            f.write("carry_s <= \'1\';\n")
+            f.write("sA_s <= \"10000000\";\n")
+            f.write("wait for waitTime;\n")
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSL1 = bin[1:8] + "1"
-            f.write("assert sALU_s = \"" + binSL1 + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[0] + "\'\n")
+            f.write("assert sALU_s = \"" + binSL1 + "\" and sZERO_s = \'"+str(int(binSL1=="00000000"))+"\' and sCarry_s=\'" + bin[0] + "\'\n")
             f.write("\t" + "report \"SL1 error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 # SLX
@@ -159,13 +169,14 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SLX error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSX = bin[1:8] + bin[7]
-            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[0] + "\'\n")
+            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'"+str(int(binSX=="00000000"))+"\' and sCarry_s=\'" + bin[0] + "\'\n")
             f.write("\t" + "report \"SLX error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 #SR0
@@ -182,13 +193,14 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SR0 error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSX = "0" + bin[0:7]
-            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[7] + "\'\n")
+            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'"+str(int(binSX=="00000000"))+"\' and sCarry_s=\'" + bin[7] + "\'\n")
             f.write("\t" + "report \"SR0 error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 #SR1
@@ -202,16 +214,17 @@ for line in lines:
         f.write("opcode_select_s <= \"110111\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
         f.write("wait for waitTime;\n")
-        f.write("assert sALU_s = \"10000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
+        f.write("assert sALU_s = \"10000000\" and sZERO_s = \'0\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SR1 error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSX = "1" + bin[0:7]
-            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[7] + "\'\n")
+            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'"+str(int(binSX=="00000000"))+"\' and sCarry_s=\'" + bin[7] + "\'\n")
             f.write("\t" + "report \"SR1 error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 #SRA0
@@ -223,20 +236,23 @@ for line in lines:
         f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SR1"))
     else:
         f.write("opcode_select_s <= \"111000\";")
-        f.write("carry_s <= \'0\';\n")
+        f.write("sA_s <= \"00000000\";\n")
+        f.write("wait for waitTime;\n")
         f.write("\n" + "sA_s <= \"00000000\";\n")
         f.write("wait for waitTime;\n")
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SR1 error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
-            f.write("carry_s <= \'0\';\n")
+            f.write("sA_s <= \"00000000\";\n")
+            f.write("wait for waitTime;\n")
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSX = "0" + bin[0:7]
-            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[7] + "\'\n")
+            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'"+str(int(binSX=="00000000"))+"\' and sCarry_s=\'" + bin[7] + "\'\n")
             f.write("\t" + "report \"SRA0 error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 #SRA1
@@ -248,20 +264,23 @@ for line in lines:
         f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SR1"))
     else:
         f.write("opcode_select_s <= \"111000\";")
-        f.write("carry_s <= \'1\';\n")
+        f.write("sA_s <= \"00000001\";\n")
+        f.write("wait for waitTime;\n")
         f.write("\n" + "sA_s <= \"00000000\";\n")
         f.write("wait for waitTime;\n")
-        f.write("assert sALU_s = \"10000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
+        f.write("assert sALU_s = \"10000000\" and sZERO_s = \'0\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SR1 error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
-            f.write("carry_s <= \'1\';\n")
+            f.write("sA_s <= \"00000001\";\n")
+            f.write("wait for waitTime;\n")
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSX = "1" + bin[0:7]
-            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[7] + "\'\n")
+            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'"+str(int(binSX=="00000000"))+"\' and sCarry_s=\'" + bin[7] + "\'\n")
             f.write("\t" + "report \"SRA1 error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 #SRX
@@ -278,13 +297,14 @@ for line in lines:
         f.write("assert sALU_s = \"00000000\" and sZERO_s = \'1\' and sCarry_s=\'0\'\n")
         f.write("\t report \"SRX error at 00000000\" severity error;\n\n")
         
-        for i in range(0, 2 ** 8):
+        for i in range(1, 2 ** 8):
             bin = numpy.binary_repr(i,8)
             f.write("sA_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             binSX = bin[0] + bin[0:7]
-            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'0\' and sCarry_s=\'" + bin[7] + "\'\n")
+            f.write("assert sALU_s = \"" + binSX + "\" and sZERO_s = \'"+str(int(binSX=="00000000"))+"\' and sCarry_s=\'" + bin[7] + "\'\n")
             f.write("\t" + "report \"SRX error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
 
 
@@ -308,6 +328,7 @@ for line in lines:
                 binSum = numpy.binary_repr((i + k) % 256,8)
                 f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int((i + k) % 256 == 0)) + "\' and sCarry_s=\'" + str(int((i + k) > 255)) + "\'\n")
                 f.write("\t" + "report \"ADD error at ADD " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 #ADDCY0
@@ -323,13 +344,16 @@ for line in lines:
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
-                f.write("carry_s <= \'0\';\n")
+                f.write("sA_s <= \"00000000\";\n")
+                f.write("sB_s <= \"00000000\";\n")
+                f.write("wait for waitTime;\n")
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
                 binSum = numpy.binary_repr((i + k) % 256,8)
                 f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int((i + k) % 256 == 0)) + "\' and sCarry_s=\'" + str(int((i + k) > 255)) + "\'\n")
                 f.write("\t" + "report \"ADDCY0 error at ADDCY0 " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 #ADDCY1
@@ -345,13 +369,16 @@ for line in lines:
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
-                f.write("carry_s <= \'1\';\n")
+                f.write("sA_s <= \"10000000\";\n")
+                f.write("sB_s <= \"10000000\";\n")
+                f.write("wait for waitTime;\n")
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
                 binSum = numpy.binary_repr((i + k + 1) % 256,8)
                 f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int((i + k + 1) % 256 == 0)) + "\' and sCarry_s=\'" + str(int((i + k + 1) > 255)) + "\'\n")
                 f.write("\t" + "report \"ADDCY1 error at ADDCY1 " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 
@@ -374,6 +401,7 @@ for line in lines:
                 binSum = numpy.binary_repr((i - k) % 256,8)
                 f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int(i - k == 0)) + "\' and sCarry_s=\'" + str(int((i - k) < 0)) + "\'\n")
                 f.write("\t" + "report \"SUB error at SUB " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 #SUBCY0
@@ -389,13 +417,16 @@ for line in lines:
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
-                f.write("carry_s <= \'0\';\n")
+                f.write("sA_s <= \"00000000\";\n")
+                f.write("sB_s <= \"00000000\";\n")
+                f.write("wait for waitTime;\n")
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
                 binSum = numpy.binary_repr((i - k) % 256,8)
                 f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int(i - k == 0)) + "\' and sCarry_s=\'" + str(int((i - k) < 0)) + "\'\n")
                 f.write("\t" + "report \"SUBCY0 error at SUBCY0 " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 #SUBCY1
@@ -411,13 +442,16 @@ for line in lines:
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
-                f.write("carry_s <= \'1\';\n")
+                f.write("sA_s <= \"00000000\";\n")
+                f.write("sB_s <= \"00000001\";\n")
+                f.write("wait for waitTime;\n")
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
                 binSum = numpy.binary_repr((i - k - 1) % 256,8)
                 f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int(i - k - 1 == 0)) + "\' and sCarry_s=\'" + str(int((i - k - 1) < 0)) + "\'\n")
                 f.write("\t" + "report \"SUBCY1 error at SUBCY1 " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 
@@ -437,8 +471,9 @@ for line in lines:
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
-                f.write("assert sZERO_s = \'" + str(int(i == k)) + "\' and sCarry_s=\'" + str(int(i < k)) + "\';\n")
+                f.write("assert sZERO_s = \'" + str(int(i == k)) + "\' and sCarry_s=\'" + str(int(i < k)) + "\'\n")
                 f.write("\t" + "report \"COMPARE error at COMPARE " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 #TEST
@@ -457,13 +492,14 @@ for line in lines:
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
-                binAND = numpy.binary_repr(i & k)
+                binAND = numpy.binary_repr(i & k,8)
                 n = 0
                 for c in binAND:
                     if c == "1":
                         n+=1
-                f.write("assert sZERO_s = \'" + str(int((i & k) == 0)) + "\' and sCarry_s=\'" + str((n % 2)) + "\';\n")
+                f.write("assert sZERO_s = \'" + str(int((i & k) == 0)) + "\' and sCarry_s=\'" + str((n % 2)) + "\'\n")
                 f.write("\t" + "report \"TEST error at TEST " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 
@@ -480,12 +516,13 @@ for line in lines:
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
-                binAND = numpy.binary_repr(i & k)
+                binAND = numpy.binary_repr(i & k,8)
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
-                f.write("assert sALU_s = \"" + binAND + "\" and sZERO_s = \'" + str(int(i == 0)) + "\' and sCarry_s=\'0\'\n")
+                f.write("assert sALU_s = \"" + binAND + "\" and sZERO_s = \'" + str(int(i & k == 0)) + "\' and sCarry_s=\'0\'\n")
                 f.write("\t" + "report \"AND error at AND " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 
@@ -502,12 +539,13 @@ for line in lines:
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
-                binOR = numpy.binary_repr(i | k)
+                binOR = numpy.binary_repr(i | k,8)
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
-                f.write("assert sALU_s = \"" + binOR + "\" and sZERO_s = \'" + str(int(i == 0)) + "\' and sCarry_s=\'0\'\n")
+                f.write("assert sALU_s = \"" + binOR + "\" and sZERO_s = \'" + str(int(i | k == 0)) + "\' and sCarry_s=\'0\'\n")
                 f.write("\t" + "report \"OR error at OR " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 
@@ -524,12 +562,13 @@ for line in lines:
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
-                binXOR = numpy.binary_repr(i ^ k)
+                binXOR = numpy.binary_repr(i ^ k,8)
                 f.write("sA_s <= \"" + binI + "\";\n")
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
-                f.write("assert sALU_s = \"" + binXOR + "\" and sZERO_s = \'" + str(int(i == 0)) + "\' and sCarry_s=\'0\'\n")
+                f.write("assert sALU_s = \"" + binXOR + "\" and sZERO_s = \'" + str(int(i ^ k == 0)) + "\' and sCarry_s=\'0\'\n")
                 f.write("\t" + "report \"XOR error at XOR " + binI + " " + binK + "\" severity error;\n\n")
+                f.write("wait for waitTime;\n")
 f.close()
 
 
@@ -544,8 +583,9 @@ for line in lines:
         f.write("opcode_select_s <= \"001110\";")
         for i in range(0, 2 ** 8):
             bin = numpy.binary_repr(i,8)
-            f.write("sA_s <= \"" + bin + "\";\n")
+            f.write("sB_s <= \"" + bin + "\";\n")
             f.write("wait for waitTime;\n")
             f.write("assert sALU_s = \"" + bin + "\"\n")
             f.write("\t" + "report \"LOAD error at LOAD " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
 f.close()
