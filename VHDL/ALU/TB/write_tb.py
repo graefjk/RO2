@@ -105,7 +105,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SL1"))
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SLA0"))
     else:
         f.write("opcode_select_s <= \"110100\";")
         f.write("\n" + "sA_s <= \"00000000\";\n")
@@ -133,7 +133,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SL1"))
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SLA1"))
     else:
         f.write("opcode_select_s <= \"110100\";")
         f.write("sA_s <= \"10000000\";\n")
@@ -233,7 +233,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SR1"))
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SRA0"))
     else:
         f.write("opcode_select_s <= \"111000\";")
         f.write("sA_s <= \"00000000\";\n")
@@ -261,7 +261,7 @@ template = open("template.vhd", "r")
 lines = template.readlines()
 for line in lines:
     if line != "--insert_code_here\n":
-        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SR1"))
+        f.write(line.replace("sim_ALU_tb","sim_ALU_tb_SRA1"))
     else:
         f.write("opcode_select_s <= \"111000\";")
         f.write("sA_s <= \"00000001\";\n")
