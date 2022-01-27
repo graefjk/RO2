@@ -52,7 +52,7 @@ signal enable_s: std_logic;
 signal pc_out_s: std_ulogic_vector(11 downto 0);
 
 constant clk_period: time := 20 ns;
-constant waitTime: time := 20 ns;
+constant waitTime: time := 5 ns;
 
 begin
 

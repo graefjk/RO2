@@ -1,6 +1,6 @@
 import numpy
 
-f = open("PC_tb_long.vhd", "w")
+f = open("PC_tb_long1.vhd", "w")
 start_template = open("template_begining.vhd", "r")
 template = open("template.vhd", "r")
 end_template = open("template_end.vhd", "r")
@@ -16,14 +16,17 @@ for line in lines:
             	f.write(linee)
     elif line == "--insert_code_here\n":
         #normal case
-        for i in range(1, 2 ** 12):
+        for i in range(0, 2 ** 12):
             bin = numpy.binary_repr(i,12)
             f.write("pc_in_s <= \"" + bin + "\";\n")
+            f.write("wait until rising_edge(clk_s);\n")
             f.write("wait for waitTime;\n")
             f.write("assert pc_out_s = \"" + bin + "\" \n")
             f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
             f.write("wait for waitTime;\n")
         #normal case
+        f.write("reset_s <= \'1\';\n")
+        f.write("wait for 100ns;\n")
     else:
         f.write("")
 f.close
@@ -43,16 +46,25 @@ for line in lines:
         for linee in linesend:
             	f.write(linee)
     elif line == "--insert_code_here\n":
-        f.write("enable_s <= \'0\';\n")
         #stop case
-        for i in range(1, 2 ** 12):
+        for i in range(0, 2 ** 12):
             bin = numpy.binary_repr(i,12)
             f.write("pc_in_s <= \"" + bin + "\";\n")
+            f.write("enable_s <= \'0\';\n")
+            f.write("wait until rising_edge(clk_s);\n")
             f.write("wait for waitTime;\n")
             f.write("assert not(pc_out_s = \"" + bin + "\") \n")
             f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
             f.write("wait for waitTime;\n")
+            f.write("enable_s <= \'1\';\n")
+            f.write("wait until rising_edge(clk_s);\n")
+            f.write("wait for waitTime;\n")
+            f.write("assert pc_out_s = \"" + bin + "\" \n")
+            f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
+            f.write("wait for waitTime;\n")
         #stop case
+        f.write("reset_s <= \'1\';\n")
+        f.write("wait for 100ns;\n")
     else:
         f.write("")
 f.close
@@ -72,16 +84,21 @@ for line in lines:
         for linee in linesend:
             	f.write(linee)
     elif line == "--insert_code_here\n":
-        f.write("enable_s <= \'0\';\n")
         #reset case
-        for i in range(1, 2 ** 12):
+        for i in range(0, 2 ** 12):
             bin = numpy.binary_repr(i,12)
             f.write("pc_in_s <= \"" + bin + "\";\n")
+            f.write("reset_s <= \'1\';\n")
+            f.write("wait until rising_edge(clk_s);\n")
             f.write("wait for waitTime;\n")
-            f.write("assert not(pc_out_s = \"" + bin + "\") \n")
+            f.write("assert pc_out_s = \"111111111111\" \n")
             f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
             f.write("wait for waitTime;\n")
+            f.write("reset_s <= \'0\';\n")
+            f.write("wait for waitTime;\n")
         #stop case
+        f.write("reset_s <= \'0\';\n")
+        f.write("wait for 100ns;\n")
     else:
         f.write("")
 f.close
