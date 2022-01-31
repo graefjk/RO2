@@ -1,7 +1,7 @@
 //Assembler to calculate x^y
 
 LOAD x0, 3 //x value
-LOAD x1, 2 //y value
+LOAD x1, 5 //y value
 
 COMPARE x0, 2
 JUMPZ 15 //Jump to shift block if x = 2.
