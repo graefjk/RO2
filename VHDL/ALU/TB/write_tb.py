@@ -417,7 +417,7 @@ for line in lines:
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
                 binK = numpy.binary_repr(k,8)
-                f.write("sA_s <= \"00000000\";\n")
+                f.write("sA_s <= \"00000010\";\n")
                 f.write("sB_s <= \"00000000\";\n")
                 f.write("wait for waitTime;\n")
                 f.write("sA_s <= \"" + binI + "\";\n")
@@ -484,7 +484,7 @@ for line in lines:
     if line != "--insert_code_here\n":
         f.write(line.replace("sim_ALU_tb","sim_ALU_tb_TEST"))
     else:
-        f.write("opcode_select_s <= \"000100\";")
+        f.write("opcode_select_s <= \"011000\";")
         for i in range(0, 2 ** 8):
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
@@ -557,7 +557,7 @@ for line in lines:
     if line != "--insert_code_here\n":
         f.write(line.replace("sim_ALU_tb","sim_ALU_tb_XOR"))
     else:
-        f.write("opcode_select_s <= \"001010\";")
+        f.write("opcode_select_s <= \"001100\";")
         for i in range(0, 2 ** 8):
             for k in range(0, 2 ** 8):
                 binI = numpy.binary_repr(i,8)
