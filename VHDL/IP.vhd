@@ -45,14 +45,18 @@ architecture Behavioral of IP is
     --initializes the rom from the given file
     impure function InitRomFromFile (RomFileName : in string) return rom_type is 
         --The file to be read
-        FILE RomFile : text is in RomFileName;
+       FILE RomFile : text open read_mode is RomFileName;
         --A Line of the File(Also one instruction)
         variable RomFileLine : line;
         --The ROM
-        variable ROM : rom_type;
+        variable ROM : rom_type := (others => "010101010101010101");
     begin
         --Iterating over the size of the ROM
         for I in rom_type'range loop
+            --Escaping on the EOF
+            if endfile(RomFile) = true then
+                exit;
+            end if;
             --Reading from the file 1 line at a time
             readline (RomFile,RomFileLine);
             --Writing the read line into the ROM
