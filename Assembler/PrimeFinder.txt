@@ -1,19 +1,20 @@
 //Assembler to find prime numbers
 LOAD x4, 2
-//x6 being x4 / 2. so that only half as many numbers need to be tested
-LOAD x6, 1 
-LOAD x5, 0
+//x6 is x4 / 2. so that only half as many numbers need to be tested
+LOAD x6, 1
+LOAD x5, 0 //RAM address to write new primes to
+
 Label1
-LOAD x2, 2
+LOAD x2, 1
 Label2
 COMPARE x6, x2
 //all numbers up to x4 / 2 have been checked and no divider has been found =>x4 is prime
-JUMPZ prime 
+JUMPZ prime
+ADD x2, 1 
 LOAD x1, x4
 CALL divider //divide x4 and x2
 COMPARE x1, 0 // x2 divides x4 => x4 is not a prime
 JUMPZ noPrime
-ADD x2, 1
 JUMP Label2
 
 prime
@@ -41,6 +42,7 @@ RETURN
 
 
 end
+
 
 
 
