@@ -50,10 +50,13 @@ architecture Behavioral of IP is
         --A Line of the File(Also one instruction)
         variable RomFileLine : line;
         --The ROM
-        variable ROM : rom_type;
+        variable ROM : rom_type := (others => (others => '0'));
     begin
         --Iterating over the size of the ROM
         for I in rom_type'range loop
+            if endfile(RomFile) = true then
+                exit;
+            end if;
             --Reading from the file 1 line at a time
             readline (RomFile,RomFileLine);
             --Writing the read line into the ROM

@@ -29,7 +29,7 @@ package microcontroller_package is
     --generall architekture
     constant instruction_address_c : integer := 12; --size in bits for addressing a instruction in the instruction prom
     constant architecture_width_c: integer := 8; --width for the alu, the registers and scratchpadmemory
-    constant number_of_cores: positive := 30; --number of cores generated
+    constant number_of_cores: positive := 1; --number of cores generated
     constant File_Name: String := "Test";
     constant File_Ending: String := ".data";
     --register things

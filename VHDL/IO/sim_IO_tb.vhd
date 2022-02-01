@@ -25,6 +25,7 @@ use ieee.numeric_std.all;
 use ieee.math_real.all;
 library unisim;
 use unisim.vcomponents.all;
+use work.bus_multiplexer_pkg.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -36,7 +37,7 @@ use unisim.vcomponents.all;
 --use UNISIM.VComponents.all;
 
 entity IO_tb is
---  Port ( );
+constant number_of_cores: positive := 1;
 end IO_tb;
 
 architecture Behavioral of IO_tb is
@@ -63,11 +64,11 @@ architecture Behavioral of IO_tb is
 				FIXED_IO_ps_clk : inout STD_LOGIC;
 				FIXED_IO_ps_porb : inout STD_LOGIC;
 				FIXED_IO_ps_srstb : inout STD_LOGIC;
-				port_id_i : IN std_ulogic_vector(7 DOWNTO 0);
-				value_i : IN std_ulogic_vector(7 DOWNTO 0);
-				in_out_i : IN STD_ULOGIC;
-				enable_i : IN STD_ULOGIC;
-				value_o : OUT std_ulogic_vector(7 DOWNTO 0);
+				port_id_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+                value_i : in bus_array(number_of_cores - 1 downto 0,7 downto 0);
+                value_o : out bus_array(number_of_cores - 1 downto 0,7 downto 0);
+                in_out_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
+                enable_i : in std_ulogic_vector (number_of_cores - 1 downto 0);
 				clk_i : in STD_LOGIC;
 				port_b : inout std_logic_vector ( 70 downto 0 );
 				port_i : in std_ulogic_vector ( 19 downto 0 );
@@ -108,10 +109,16 @@ architecture Behavioral of IO_tb is
     signal in_out_s: std_logic;
     signal enable_s: std_logic;
     
+    signal port_id_o_s: bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    signal value_o_o_s: bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    signal value_i_i_s: bus_array(number_of_cores - 1 downto 0,7 downto 0);
+    
     constant clk_period: time := 8 ns;    
-    constant clk_period_hdmi: time := 0.6734 ns;
+    constant clk_period_hdmi: time := 6.734 ns;
+    constant ser_clk_period_hdmi: time := clk_period_hdmi/10;
     
     signal clk_hdmi_s: std_ulogic;
+    signal ser_clk_hdmi_s: std_ulogic;
     signal rec_clk_hdmi_s: std_ulogic;
     signal send_value_hdmi: std_ulogic_vector(2 downto 0) := "000";
     signal rec_value_hdmi: std_ulogic_vector(2 downto 0) := "000";
@@ -127,13 +134,18 @@ architecture Behavioral of IO_tb is
     signal LED_setontime : LED_type := (others => 0);
     
 begin
+
+    set_row(port_id_o_s,0,port_id_s);
+    value_o_s <= get_row(value_o_o_s,0);
+    set_row(value_i_i_s,0,value_i_s);
+    
     io_instance: design_1_wrapper
         port map(   
-            port_id_i => port_id_s,
-			value_i => value_i_s, 
-			in_out_i => in_out_s,
-			enable_i => enable_s,
-			value_o => value_o_s,
+            port_id_i => port_id_o_s,
+			value_i => value_i_i_s, 
+			in_out_i(0) => in_out_s,
+			enable_i(0) => enable_s,
+			value_o => value_o_o_s,
 			clk_i => clk_s,
             DDR_addr(14 downto 0) => DDR_addr(14 downto 0),
             DDR_ba(2 downto 0) => DDR_ba(2 downto 0),
@@ -176,6 +188,14 @@ begin
         wait for clk_period_hdmi / 2;
         clk_hdmi_s <= '1';
         wait for clk_period_hdmi / 2;
+    end process;
+    
+    ser_clk_hdmi_process: process
+    begin
+        ser_clk_hdmi_s <= '0';
+        wait for ser_clk_period_hdmi / 2;
+        ser_clk_hdmi_s <= '1';
+        wait for ser_clk_period_hdmi / 2;
     end process;
     
     stimuli: process
@@ -291,12 +311,12 @@ begin
 		end if;
     end process;
     
-    HDMI_test: process(clk_hdmi_s)
+    HDMI_test: process(ser_clk_hdmi_s)
     variable seed1, seed2: positive;               -- seed values for random generator
     variable rand: real;   -- random real-number value in range 0 to 1.0  
     variable range_of_rand : real := 7.0;
     begin
-		if falling_edge(clk_hdmi_s) then
+		if falling_edge(ser_clk_hdmi_s) then
             uniform(seed1, seed2, rand);   -- generate random number
             send_value_hdmi <= std_ulogic_vector(to_unsigned(integer(rand*range_of_rand),3));
             if to_unsigned(integer(rand*range_of_rand),3) mod 2 = 0 then

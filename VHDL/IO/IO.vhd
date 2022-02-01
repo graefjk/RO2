@@ -23,12 +23,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 package bus_multiplexer_pkg is
         type bus_array is array(natural range <>, natural range <>) of std_ulogic;
 
-        procedure set_row(signal slm : out bus_array; constant row : natural; signal slv : in std_ulogic_vector(7 downto 0));
+        procedure set_row(signal slm : out bus_array; constant row : natural; slv : in std_ulogic_vector(7 downto 0));
         function get_row(signal slm : in bus_array; constant row : natural) return std_ulogic_vector ;
 end package;
 
 package body bus_multiplexer_pkg is
-        procedure set_row(signal slm : out bus_array; constant row : natural; signal slv : in std_ulogic_vector(7 downto 0)) is
+        procedure set_row(signal slm : out bus_array; constant row : natural; slv : in std_ulogic_vector(7 downto 0)) is
         begin
                 for i in 7 downto 0 loop
                         slm(row, i) <= slv(i);
@@ -80,10 +80,19 @@ architecture Behavioral of IO is
 	
 	signal reset_enable : std_ulogic_vector(7 downto 0) := "10000000";
     
-    signal hdmi_data: std_ulogic_vector(2 downto 0):= "LLL";
+    signal hdmi_data: std_ulogic_vector(2 downto 0):= "ZZZ";
+    signal hdmi_data_in: std_ulogic_vector(2 downto 0):= "ZZZ";
+    type parallel_tmds is array (2 downto 0) of std_ulogic_vector(9 downto 0);
+    signal hdmi_in_parallel: parallel_tmds := (others => (others => 'Z'));
     
     signal hdmi_sda: std_ulogic := '0';
-    
+    signal sda_sender: std_ulogic := '0';
+    signal sdc_clk: std_ulogic := '0';
+    signal hdmi_hda: std_ulogic := '0';
+    signal hdmi_vde: std_ulogic := '0';
+    signal clkfbout_hdmi_clk, CLK_IN_hdmi_clk, CLK_OUT_1x_hdmi_clk, CLK_OUT_5x_hdmi_clk, SerialClk, PixelClk : std_logic;
+    signal rMMCM_Reset,aMMCM_Locked, clkout1b_unused, clkout2_unused, clkout2b_unused, clkout3_unused, clkout3b_unused, clkout4_unused, clkout5_unused, clkout6_unused, drdy_unused, psdone_unused, clkfbstopped_unused, clkinstopped_unused, clkfboutb_unused, clkout0b_unused, clkout1_unused : std_logic;
+    signal do_unused : std_logic_vector(15 downto 0);
     signal temp: std_ulogic_vector(7 downto 0);
     
 begin
@@ -112,8 +121,7 @@ begin
                     input_buffer(54)(3 downto 0) <= std_logic_vector(pmod_out_enabled);
                 end if;
                else 
-                temp <= to_stdulogicvector(input_buffer(to_integer(unsigned(get_row(port_id_i,i)))));
-                set_row(value_o,i,temp);
+                set_row(value_o,i,to_stdulogicvector(input_buffer(to_integer(unsigned(get_row(port_id_i,i))))));
                end if;
               end if;
           end loop;
@@ -161,28 +169,112 @@ begin
      end if;
      end process;
      
-     HDMI:process(hdmi_clk) is
+     HDMI_DDC:process(hdmi_clk) is
      begin
         --if (rising_edge(hdmi_clk) or falling_edge(hdmi_clk)) then
         if rising_edge(hdmi_clk) then
-            if port_b(51) = 'Z' then
-                port_b(51) <= port_b(48);
-                hdmi_sda <= port_b(48);
-            elsif hdmi_sda = port_b(48) then
+            if sda_sender = '0' then
+                if port_b(48) = 'Z' then
+                    sda_sender <= '1';
+                    port_b(51) <= 'Z';
+                    if port_b(51) = 'X' then
+                        port_b(48) <= not hdmi_sda;
+                        hdmi_sda <= not hdmi_sda;
+                    else
+                        port_b(48) <= port_b(51);
+                        hdmi_sda <= port_b(51);
+                    end if;
+                else
+                    port_b(48) <= 'Z';
+                    port_b(51) <= port_b(48);
+                    hdmi_sda <= port_b(48);
+                end if;
             else
-                port_b(51) <= 'Z';
-            end if; 
-            if port_b(48) = 'Z' then
-                port_b(48) <= port_b(51);
-                hdmi_sda <= port_b(51);
-            elsif hdmi_sda = port_b(48) then
-            else
-                port_b(48) <= 'Z';
-            end if; 
+                if port_b(51) = 'Z' then
+                    sda_sender <= '0';
+                    port_b(48) <= 'Z';
+                    if port_b(48) = 'X' then
+                        port_b(51) <= not hdmi_sda;
+                        hdmi_sda <= not hdmi_sda;
+                    else
+                        port_b(51) <= port_b(48);
+                        hdmi_sda <= port_b(48);
+                    end if;
+                else
+                    port_b(51) <= 'Z';
+                    port_b(48) <= port_b(51);
+                    hdmi_sda <= port_b(51);
+                end if;
+            end if;
         end if;
      end process;
      
+     HDMI_in:process(SerialClk, PixelClk)
+     variable cycle: unsigned(3 downto 0) := "0001";
+     variable new_pxl : std_ulogic:= '1';
+     begin
+        if rising_edge(SerialClk) then
+            if (PixelClk = '1' and new_pxl = '1') or cycle > 9 then
+                hdmi_in_parallel(0)(0) <= hdmi_data_in(0);
+                hdmi_in_parallel(1)(0) <= hdmi_data_in(1);
+                hdmi_in_parallel(2)(0) <= hdmi_data_in(2);
+                cycle := "0001";
+                new_pxl := '0';
+            else
+                hdmi_in_parallel(0)(to_integer(cycle)) <= hdmi_data_in(0);
+                hdmi_in_parallel(1)(to_integer(cycle)) <= hdmi_data_in(1);
+                hdmi_in_parallel(2)(to_integer(cycle)) <= hdmi_data_in(2);
+                cycle := cycle + 1;
+            end if; 
+            if new_pxl = '0' and PixelClk = '0' then
+                new_pxl := '1';
+            end if;
+        end if;
+     end process;
      
+    port_b(50) <= sdc_clk;
+    sdc_clk <= port_b(47);
+    
+    port_b(46) <= hdmi_hda;
+    hdmi_hda <= port_b(49);
+    
+    
+    DVI_ClkGenerator: MMCME2_BASE
+       generic map
+          (BANDWIDTH            => "OPTIMIZED",
+          CLKOUT4_CASCADE      => FALSE,
+          STARTUP_WAIT         => FALSE,
+          DIVCLK_DIVIDE        => 1,
+          CLKFBOUT_MULT_F      => 10.0,
+          CLKFBOUT_PHASE       => 0.000,
+          CLKOUT0_DIVIDE_F     => 1.0,
+          CLKOUT0_PHASE        => 0.000,
+          CLKOUT0_DUTY_CYCLE   => 0.500)
+       port map
+       -- Output clocks
+       (
+          CLKFBOUT            => clkfbout_hdmi_clk,
+          CLKFBOUTB           => clkfboutb_unused,
+          CLKOUT0             => SerialClk,
+          CLKOUT0B            => clkout0b_unused,
+          CLKOUT1             => clkout1_unused,
+          CLKOUT1B            => clkout1b_unused,
+          CLKOUT2             => clkout2_unused,
+          CLKOUT2B            => clkout2b_unused,
+          CLKOUT3             => clkout3_unused,
+          CLKOUT3B            => clkout3b_unused,
+          CLKOUT4             => clkout4_unused,
+          CLKOUT5             => clkout5_unused,
+          CLKOUT6             => clkout6_unused,
+          -- Input clock control
+          CLKFBIN             => clkfbout_hdmi_clk,
+          CLKIN1              => PixelClk,
+          -- Other control and status signals
+          LOCKED              => aMMCM_Locked,
+          PWRDWN              => '0',
+          RST                 => rMMCM_Reset);
+    
+    
     obuf : OBUFDS
     generic map (IOSTANDARD =>"TMDS_33")
     port map (I=>hdmi_clk, O=>port_o(0), OB=>port_o(1));
@@ -198,15 +290,18 @@ begin
     
     ibuf : IBUFDS
     generic map (IOSTANDARD =>"TMDS_33")
-    port map (O=>hdmi_clk, I=>port_i(0), IB=>port_i(1));
+    port map (O=>PixelClk, I=>port_i(0), IB=>port_i(1));
     ibufdata1 : IBUFDS
     generic map (IOSTANDARD =>"TMDS_33")
+    --port map (O=>hdmi_data_in(0), I=>port_i(2), IB=>port_i(3));
     port map (O=>hdmi_data(0), I=>port_i(2), IB=>port_i(3));
     ibufdata2 : IBUFDS
     generic map (IOSTANDARD =>"TMDS_33")
+    --port map (O=>hdmi_data_in(1), I=>port_i(4), IB=>port_i(5));
     port map (O=>hdmi_data(1), I=>port_i(4), IB=>port_i(5));
     ibufdata3 : IBUFDS
     generic map (IOSTANDARD =>"TMDS_33")
+    --port map (O=>hdmi_data_in(2), I=>port_i(6), IB=>port_i(7));
     port map (O=>hdmi_data(2), I=>port_i(6), IB=>port_i(7));
     
 end Behavioral;

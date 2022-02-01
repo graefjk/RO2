@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 16.12.2021 15:37:19
+-- Create Date: 25.01.2021 10:00:00
 -- Design Name: 
--- Module Name: MUX - Behavioral
+-- Module Name: Core - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -35,7 +35,7 @@ entity Core is
             enable_i : out std_ulogic);
 end Core;
 
-architecture STRUCTURE of Core is
+architecture Behavioral of Core is
 
 --inputs on toplevel
 signal reset_s: std_ulogic;
@@ -267,4 +267,4 @@ value_i_s <= value_o;
 port_id_i <= port_b_s;
 enable_i <= sIO_enable_s;
 in_out_i <= sIO_write_or_read_s;
-end STRUCTURE;
+end Behavioral;
