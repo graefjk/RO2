@@ -49,7 +49,7 @@ architecture Behavioral of IP is
         --A Line of the File(Also one instruction)
         variable RomFileLine : line;
         --The ROM
-        variable ROM : rom_type := (others => "010101010101010101");
+        variable ROM : rom_type := (others => "000001000000000000");
     begin
         --Iterating over the size of the ROM
         for I in rom_type'range loop
