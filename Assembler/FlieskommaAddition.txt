@@ -1,0 +1,251 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//NAMEREG s0, x0					//Die erste Zahl
+//NAMEREG s1, x1						//vorzeichen der ersten Zahl
+//NAMEREG s2, x2					//exponent der ersten Zahl
+//NAMEREG s3, x3					//Mantisse der ersten Zahl
+
+//NAMEREG s4, x4					//Die zweite Zahl
+//NAMEREG s5, x5						//vorzeichen der zweiten Zahl
+//NAMEREG s6, x6					//exponent der zweiten Zahl
+//NAMEREG s7, x7					//Mantisse der zweiten Zahl
+
+//NAMEREG s8, x8					//Ergebnis
+//NAMEREG s9, x9
+
+//NAMEREG sF, xF 					//Eine Puffervariable
+
+
+LOAD x9, h0
+//LOAD xF,02
+//ADD xF,FB
+
+start
+	LOAD x0, h40					//~~~~~~~~~HIER ERSTE EINGABE~~~~~~~~~
+	LOAD xF, x0
+	AND xF, h7F
+	JUMPZ zero1	
+	JUMP loadx4
+
+zero1
+	LOAD x8, h08					//~~~~~~~~~HIER ZWEITE EINGABE~~~~~~~~~
+	JUMP end
+
+loadx4
+	LOAD x4, h08					//~~~~~~~~~HIER ZWEITE EINGABE~~~~~~~~~
+	LOAD xF, x4
+	AND xF, h7F
+	JUMPZ zero2	
+
+	LOAD xF, x0				//Überprüft ob x0 negativ unendlich ist
+	XOR xF, hF8
+	JUMPZ inf1
+
+	LOAD xF, x0				//Überprüft ob x0 positiv unendlich ist
+	XOR xF, h78
+	JUMPZ inf1
+
+	LOAD xF, x4				//Überprüft ob x4 negativ unendlich ist
+	XOR xF, hF8
+	JUMPZ inf2
+
+	LOAD xF, x4				//Überprüft ob x4 positiv unendlich ist
+	XOR xF, h78
+	JUMPZ inf2
+
+	LOAD x2, x0				//Bestimmt den Exponenten der ersten Zahl
+	AND x2, h78
+	SR0 x2
+	SR0 x2
+	SR0 x2
+
+	LOAD x1, x0					//Bestimmt das vorzeichen der ersten Zahl
+	AND x1, h80					
+	RL x1
+
+	LOAD x3, x0				//Bestimmt die Mantisse der ersten Zahl
+	AND x3, h07
+	ADD x3, h08
+	
+	LOAD x6, x4				//Bestimmt den Exponenten der zweiten Zahl
+	AND x6, h78
+	SR0 x6
+	SR0 x6
+	SR0 x6
+
+	LOAD x5, x4					//Bestimmt das vorzeichen der zweiten Zahl
+	AND x5, h80					
+	RL x5
+
+	LOAD x7, x4				//Bestimmt die Mantisse der zweiten Zahl
+	AND x7, h07
+	ADD x7, h08
+
+	COMPARE x2, x6
+	JUMPZ equal
+	JUMPC 2grt
+
+1grt							//Angleichen der mantissen
+	ADD x6, h01					
+	SR0 x7
+	COMPARE x2, x6
+	JUMPZ equal
+	JUMP 1grt
+
+2grt
+	ADD x2, h01
+	SR0 x3
+	COMPARE x2, x6
+	JUMPZ equal
+	JUMP 2grt
+
+equal
+	AND x3, h07
+	AND x7, h07
+	OR x1, h00
+	JUMPNZ, nx
+	OR x5, h00
+	JUMPNZ pn
+
+pp		
+	ADD x3, x7
+	CALL ctoxF
+	ADD x2, xF
+	LOAD x8, x2
+	SL0 x8
+	SL0 x8
+	SL0 x8
+	OR x8, x3
+	JUMP end
+
+pn	
+	COMPARE x3, x7
+	JUMPZ bgleich
+	CALL ctoxF
+	CALLC neg1
+	LOAD x9, xF
+	RR x9
+
+
+	
+	
+	XOR x7, hFF
+	ADD x7, x3
+	JUMPC c4
+	JUMP c5
+c4
+	ADD x7, h01
+	JUMP c6
+c5
+	XOR x7, hFF
+c6
+	LOAD x8, x2
+	SL0 x8
+	SL0 x8
+	SL0 x8
+	OR x8, x7
+	OR x8, x9
+	JUMP end
+
+
+np	
+	COMPARE x7, x3
+	JUMPZ bgleich
+	CALL ctoxF
+	LOAD x9, xF
+	RR x9
+	XOR x3, hFF
+	ADD x3, x7
+	JUMPC c1
+	JUMP c2
+c1
+	ADD x3, h01
+	JUMP c3
+c2
+	XOR x3, hFF
+c3
+	LOAD x8, x6
+	SL0 x8
+	SL0 x8
+	SL0 x8
+	OR x8, x3
+	OR x8, x9
+	JUMP end
+
+nn	
+	LOAD x9, h80
+	ADD x3, x7
+	CALL ctoxF
+	ADD x2, xF
+	LOAD x8, x2
+	SL0 x8
+	SL0 x8
+	SL0 x8
+	OR x8, x3
+	OR x8, h80
+	JUMP end
+
+
+nx
+	OR x5, h00
+	JUMPNZ np
+	JUMPZ nn
+		
+inf1	
+	LOAD xF, x4				//Überprüft ob x4 negativ unendlich ist
+	XOR xF, hF8
+	JUMPZ inf3
+	LOAD x8 x0
+	JUMP end
+
+inf2
+	LOAD xF x0				//Überprüft ob x4 negativ unendlich ist
+	XOR xF h78
+	JUMPZ inf3
+	LOAD x8 x4
+	JUMP end
+
+inf3
+	LOAD x8 h00
+	JUMP end
+
+zero2
+	LOAD x8 x0
+	JUMP end
+
+
+ctoxF	
+	JUMPC ctoxF1
+	JUMPNC ctoxF2
+ctoxF1
+	LOAD xF, h01
+	RETURN
+ctoxF2
+	LOAD xF, h00
+	RETURN
+
+
+neg1
+	SUB x2, h01
+	SL0 x7
+	AND x7, h06
+	RETURN
+
+neg2
+	SUB x6, h01
+	SL0 x3
+	AND x3, h06
+	RETURN
+
+bgleich
+	LOAD x8, h00
+
+
+end
+
+
+	
+
+	
+	
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
