@@ -141,7 +141,7 @@ begin
                     
 			when operation_SUBCY | operation_SUBCY_kk=>
 				result_s <= to_stdulogicvector(to_stdlogicvector(sA_i) - to_stdlogicvector(sB_i) - carry_s);
-				if (('1'&to_stdlogicvector(sA_i))-carry_s) < (to_stdlogicvector(sB_i))  then 
+				if (('1'&to_stdlogicvector(sA_i))-carry_s) < ('1'&to_stdlogicvector(sB_i))  then 
 					carry_s <= '1';
 				else
 					carry_s <= '0';
