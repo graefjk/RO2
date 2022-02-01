@@ -449,7 +449,7 @@ for line in lines:
                 f.write("sB_s <= \"" + binK + "\";\n")
                 f.write("wait for waitTime;\n")
                 binSum = numpy.binary_repr((i - k - 1) % 256,8)
-                f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int(i - k - 1 == 0)) + "\' and sCarry_s=\'" + str(int((i - k - 1) < 0)) + "\'\n")
+                f.write("assert sALU_s = \"" + binSum + "\" and sZERO_s = \'" + str(int((i - k - 1) % 256 == 0)) + "\' and sCarry_s=\'" + str(int((i - k - 1) < 0)) + "\'\n")
                 f.write("\t" + "report \"SUBCY1 error at SUBCY1 " + binI + " " + binK + "\" severity error;\n\n")
                 f.write("wait for waitTime;\n")
 f.close()
