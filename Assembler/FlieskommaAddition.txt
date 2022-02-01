@@ -84,8 +84,9 @@ loadx4
 	JUMPZ equal
 	JUMPC 2grt
 
-1grt							//Angleichen der mantissen
-	ADD x6, h01					
+1grt 	//Angleichen der mantissen
+	ADD x6, 0
+	ADD x6, 1					
 	SR0 x7
 	COMPARE x2, x6
 	JUMPZ equal
@@ -248,4 +249,5 @@ end
 	
 	
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
