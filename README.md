@@ -5,4 +5,4 @@ Dieses Projekt entsteht im Rahmen der Vorlesung Rechnerorganisation 2 an der Uni
 ![Blockdiagramm](./Blockbeschreibungen/BlockdiagramErweitert.jpg?raw=true "TEST")
 Die Abbildung zeigt die einzelnen Funktionsblöcke des Mikroprozessors, deren Verkabelung und Interaktionen. Schwarze Pfade zeigen hierbei einen Datenfluss zwischen den Blöcken an, während die blauen Pfade Steuerbefehle des Instruction Decoders anzeigen.
 ## Zielplattform
-Der VHDL-Code wurde für ein Xilinx Zybo Z7-10 in der kostenfreien Version von Xilinx Vivado 2020.2 entwtickelt und enthält daher teilweise plattformabhängigen Code zur Nutzung des integrierten Block-Ram, als auch im IO-Block.
+Der VHDL-Code wurde für ein Xilinx Zybo Z7-10 in der kostenfreien Version von Xilinx Vivado 2020.2 entwickelt und enthält daher teilweise plattformabhängigen Code zur Nutzung des integrierten Block-Ram, als auch im IO-Block.
