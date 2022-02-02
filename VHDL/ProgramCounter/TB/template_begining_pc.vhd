@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 26.01.2021
 -- Design Name: 
--- Module Name: sim_IP_tb - Behavioral
+-- Module Name: sim_PC_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.finish;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -31,31 +32,37 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_IP_tb is
+entity sim_PC_tb is
 --  Port ( );
-end sim_IP_tb;
+end sim_PC_tb;
 
-architecture Behavioral of sim_IP_tb is
-component IP
-    Port ( pc_i : in std_ulogic_vector(11 downto 0);
-           clk_i : in std_ulogic;
-           instruction_o : out std_ulogic_vector(17 downto 0));
+architecture Behavioral of sim_PC_tb is
+component PC
+    port (	pc_i : in std_ulogic_vector(11 downto 0);
+			enable_i : in std_logic;
+			reset_i : in std_logic;
+			clk_i : in std_logic;
+			pc_o : out std_ulogic_vector(11 downto 0));
 end component;
 
-signal pc_s: std_ulogic_vector(11 downto 0);
+signal pc_in_s: std_ulogic_vector(11 downto 0);
+signal reset_s: std_logic;
 signal clk_s: std_logic;
+signal enable_s: std_logic;
 
-signal instruction_s: std_ulogic_vector(17 downto 0);
+signal pc_out_s: std_ulogic_vector(11 downto 0);
 
 constant clk_period: time := 20 ns;
 constant waitTime: time := 5 ns;
 
 begin
 
-uut: IP port map (
-			pc_i => pc_s, 
-			clk_i => clk_s,
-			instruction_o => instruction_s);
+uut: PC port map (
+			pc_i => pc_in_s, 
+			reset_i => reset_s, 
+			clk_i => clk_s, 
+			enable_i => enable_s,
+			pc_o => pc_out_s);
 
     clk_process: process
     begin
@@ -69,5 +76,6 @@ uut: IP port map (
     
     stimuli: process
     begin
-
+ reset_s <= '0';
+ enable_s <= '1';
  wait for waitTime;   

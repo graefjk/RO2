@@ -1,0 +1,35 @@
+Referenced Files:
+
+write_tb.py
+template.vhd
+template_begining.vhd
+template_begining2.vhd
+template_begining3.vhd
+template_begining4.vhd
+template_end.vhd
+
+ADD_tb_long1.vhd
+IP_tb_long1.vhd
+PC_tb_long1.vhd
+PC_tb_long2.vhd
+PC_tb_long3.vhd
+Stack_tb_long1.vhd
+
+Testet uut's:
+PC.vhd
+ADD.vhd
+stack.vhd
+IP.vhd
+
+
+Die hier mir #write_tb.py erstellten VHDL Tests diehnen zur ausführlicheren Überprüfung der hier genannten uut's.
+Wird "The Test is finished" in der console angezeigt ohne dass vorher ein error geworfen wird, war der Test ervolgreich.
+PC:
+- Werden alle PC_inputs richtig zur Taktflanke weitergegeben? -> PC_tb_long1.vhd
+- Werden alle PC_inputs richtig nicht zur Taktflanke weitergegeben wenn enable=0 
+	und entsprechend liegt das richtige output an wenn enable zurückgeschrieben wird? -> PC_tb_long2.vhd
+- Wird der reset unabhängig vom input richtig gesetzt? -> PC_tb_long3.vhd
+ADD:
+- Werden alle sA_s richtig incrementiert unabhängig von der Taktflanke? -> ADD_tb_long1.vhd
+IP:
+Stack:

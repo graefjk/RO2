@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.finish;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -78,6 +79,8 @@ uut: PC port map (
  reset_s <= '0';
  enable_s <= '1';
  wait for waitTime;   
+report "The Test has started ";
+
 pc_in_s <= "000000000000";
 reset_s <= '1';
 wait until rising_edge(clk_s);
@@ -41038,9 +41041,10 @@ assert pc_out_s = "111111111111"
 wait for waitTime;
 reset_s <= '0';
 wait for waitTime;
-reset_s <= '0';
-wait for 100ns;
+report "The Test is finished ";
 
+wait for 10ns;
+		finish;
     end process;
 
 end Behavioral;

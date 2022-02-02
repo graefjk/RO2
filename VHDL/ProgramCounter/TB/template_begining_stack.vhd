@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 26.01.2021
 -- Design Name: 
--- Module Name: sim_PC_tb - Behavioral
+-- Module Name: sim_Stack_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.finish;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -31,37 +32,48 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_PC_tb is
+entity sim_Stack_tb is
 --  Port ( );
-end sim_PC_tb;
+end sim_Stack_tb;
 
-architecture Behavioral of sim_PC_tb is
-component PC
-    port (	pc_i : in std_ulogic_vector(11 downto 0);
-			enable_i : in std_logic;
-			reset_i : in std_logic;
-			clk_i : in std_logic;
-			pc_o : out std_ulogic_vector(11 downto 0));
+architecture Behavioral of sim_Stack_tb is
+component stack
+    port(   sPC_i : in std_ulogic_vector(11 downto 0);
+            write_or_read_i: in std_ulogic; -- 0 for write, 1 for read
+            enable_i: in std_ulogic;
+            reset_i: in std_ulogic;
+            clk_i: in std_ulogic;
+            
+            full_o: out std_ulogic;
+            empty_o: out std_ulogic;
+            
+            sStack_o: out std_ulogic_vector(11 downto 0)); 
 end component;
 
-signal pc_in_s: std_ulogic_vector(11 downto 0);
+signal pc_s: std_ulogic_vector(11 downto 0);
+signal write_or_read_s: std_logic;
+signal enable_s: std_logic;
 signal reset_s: std_logic;
 signal clk_s: std_logic;
-signal enable_s: std_logic;
 
-signal pc_out_s: std_ulogic_vector(11 downto 0);
+signal full_s: std_logic;
+signal empty_s: std_logic;
+signal sStack_s: std_ulogic_vector(17 downto 0);
 
 constant clk_period: time := 20 ns;
 constant waitTime: time := 5 ns;
 
 begin
 
-uut: PC port map (
-			pc_i => pc_in_s, 
+uut: stack port map (
+			pc_i => pc_s, 
+			write_or_read_i => write_or_read_s, 
+			enable_i => enable_s, 
 			reset_i => reset_s, 
 			clk_i => clk_s, 
-			enable_i => enable_s,
-			pc_o => pc_out_s);
+			full_o => full_s, 
+			empty_o => empty_s,
+			sStack_o => sStack_s);
 
     clk_process: process
     begin
@@ -75,6 +87,5 @@ uut: PC port map (
     
     stimuli: process
     begin
- reset_s <= '0';
- enable_s <= '1';
+
  wait for waitTime;   
