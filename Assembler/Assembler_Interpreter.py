@@ -75,14 +75,14 @@ def changeToBinary(n, bits):
         return number
     elif system == "h":
         number = int(n[1:], 16)
-        if (128 > number > -129 and bits == 8) or (4096 > number > -1 and bits == 12):
+        if (256 > number > -129 and bits == 8) or (4096 > number > -1 and bits == 12):
             b = bin(int(number) & int("1" * bits, 2))[2:]
             return ("{0:0>%s}" % bits).format(b)
         else:
             return "1111111111111"
     else:
         number = int(n[0:])
-        if (257 > number > -257 and bits == 8) or (4096 > number > -1 and bits == 12):
+        if (256 > number > -129 and bits == 8) or (4096 > number > -1 and bits == 12):
             b = bin(int(number) & int("1" * bits, 2))[2:]
             return ("{0:0>%s}" % bits).format(b)
         else:
