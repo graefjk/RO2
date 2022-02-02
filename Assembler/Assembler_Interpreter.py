@@ -49,7 +49,7 @@ def removeUnnecessary(instructions):
     """
     for instruction in instructions:
         i = instruction
-        instruction = instruction.replace(" ", "")
+        instruction = instruction.replace(" ", "").replace("\t", "")
         if instruction[0:2] == "//" or instruction == "":
             instructions.remove(i)
             removeUnnecessary(instructions)
