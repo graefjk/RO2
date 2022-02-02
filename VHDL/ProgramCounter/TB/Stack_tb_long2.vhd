@@ -93,6 +93,13 @@ uut: stack port map (
  wait for waitTime;   
 report "The Test has started ";
 
+write_or_read_s <= '0';
+pc_s <= "111111111111";
+wait for waitTime;
+wait for waitTime;
+write_or_read_s <= '1';
+wait for waitTime;
+wait for waitTime;
 write_or_read_s <= '1';
 pc_s <= "000000000000";
 wait for waitTime;

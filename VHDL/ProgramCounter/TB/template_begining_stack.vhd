@@ -58,15 +58,15 @@ signal clk_s: std_logic;
 
 signal full_s: std_logic;
 signal empty_s: std_logic;
-signal sStack_s: std_ulogic_vector(17 downto 0);
+signal sStack_s: std_ulogic_vector(11 downto 0);
 
 constant clk_period: time := 20 ns;
-constant waitTime: time := 5 ns;
+constant waitTime: time := 10 ns;
 
 begin
 
 uut: stack port map (
-			pc_i => pc_s, 
+			sPC_i => pc_s, 
 			write_or_read_i => write_or_read_s, 
 			enable_i => enable_s, 
 			reset_i => reset_s, 
@@ -87,5 +87,7 @@ uut: stack port map (
     
     stimuli: process
     begin
+	reset_s <= '0';
+	enable_s <= '1';
 
  wait for waitTime;   
