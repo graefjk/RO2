@@ -33,10 +33,10 @@ ADD:
 - Werden alle sA_s richtig incrementiert unabhängig von der Taktflanke? -> ADD_tb_long1.vhd
 IP:
 Stack:
-- Was passiert, wenn der Stack nachdem er voll ist weiter gefüllt wird? -> Stack_tb_long3.vhd
+- Was passiert, wenn der Stack nachdem er voll ist weiter gefüllt wird? -> Stack_tb_long3.vhd,Stack_tb_long4.vhd
 - Was passiert, wenn man dem lehren Stack dinge entnehmen möchte? -> Stack_tb_long1.vhd,Stack_tb_long2.vhd
-- Ist es tatsächlich ein Stack und keine Liste? Gilt LiFo?
+- Ist es tatsächlich ein Stack und keine Liste? Gilt LiFo? -> Stack_tb_long5.vhd
 - Was wird bei enable=0 ausgegeben? (passt heirbei das mux steuersignal mit enable zusammen?)
 - Was passiert bei unstabielem write_or_read?
-- Standardtest 3 Laer entnehmen und füllen
-- Werden alle inputmöglichkeiten richtig wieder zurückgegeben?
+- Standardtest 3 Laer füllen und entnehmen -> Stack_tb_long6.vhd
+- Werden alle inputmöglichkeiten richtig wieder zurückgegeben? -> Stack_tb_long6.vhd
