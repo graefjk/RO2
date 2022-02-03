@@ -32,6 +32,10 @@ PC:
 ADD:
 - Werden alle sA_s richtig incrementiert unabhängig von der Taktflanke? -> ADD_tb_long1.vhd
 IP:
+- Wird jede Zeile entsprechend ausgegeben?
+- kleinere datei was passiert bei nicht definierten zeilen
+- zu groses file was passiert
+- in file.data schreiben tests
 Stack:
 - Was passiert, wenn der Stack nachdem er voll ist weiter gefüllt wird? -> Stack_tb_long3.vhd,Stack_tb_long4.vhd
 - Was passiert, wenn man dem lehren Stack dinge entnehmen möchte? -> Stack_tb_long1.vhd,Stack_tb_long2.vhd

@@ -412,6 +412,10 @@ for line in lines:
     elif line == "--insert_code_here\n":
         f.write("report \"The Test has started \";\n\n")
         #vorherige Benutzung simulieren Start
+        f.write("reset_s <= \'1\';\n")
+        f.write("wait for waitTime;\n")
+        f.write("wait for waitTime;\n")
+        f.write("reset_s <= \'0\';\n")
         f.write("write_or_read_s <= \'0\';\n")
         f.write("pc_s <= \"001111001111\";\n")
         f.write("wait for waitTime;\n")
