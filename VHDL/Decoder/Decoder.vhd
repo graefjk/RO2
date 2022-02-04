@@ -243,8 +243,18 @@ sALU_enable_o <= '1' when (state_curr = ALU and
     instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_OUTPUT)) else '0';
 
 sRegister_write_enable_o <= '1' when (state_curr = REG_write and
-    not(instruction_i(17 downto 12) = operation_STORE_ss or instruction_i(17 downto 12) = operation_OUTPUT_pp or
-    instruction_i(17 downto 12) = operation_STORE or instruction_i(17 downto 12) = operation_OUTPUT)) else '0';
+    (instruction_i(17 downto 12) = operation_ADD or instruction_i(17 downto 12) = operation_ADD_kk or instruction_i(17 downto 12) = operation_ADDCY or
+    instruction_i(17 downto 12) = operation_ADDCY_kk or instruction_i(17 downto 12) = operation_XOR or instruction_i(17 downto 12) = operation_RL or
+    instruction_i(17 downto 12) = operation_SUBCY or instruction_i(17 downto 12) = operation_SUB or instruction_i(17 downto 12) = operation_SUB_kk or
+    instruction_i(17 downto 12) = operation_SUBCY_kk or instruction_i(17 downto 12) = operation_LOAD or instruction_i(17 downto 12) = operation_LOAD_kk or
+    instruction_i(17 downto 12) = operation_RR or instruction_i(17 downto 12) = operation_SL0 or instruction_i(17 downto 12) = operation_SLA or
+    instruction_i(17 downto 12) = operation_SLX or instruction_i(17 downto 12) = operation_SR0 or instruction_i(17 downto 12) = operation_SL1 or
+    instruction_i(17 downto 12) = operation_SR1 or instruction_i(17 downto 12) = operation_SRA or instruction_i(17 downto 12) = operation_TEST_kk or
+    instruction_i(17 downto 12) = operation_COMPARE or instruction_i(17 downto 12) = operation_COMPARE_kk or instruction_i(17 downto 12) = operation_SRX or
+    instruction_i(17 downto 12) = operation_TEST or instruction_i(17 downto 12) = operation_XOR_kk or instruction_i(17 downto 12) = operation_OR_kk or
+    instruction_i(17 downto 12) = operation_AND or instruction_i(17 downto 12) = operation_AND_kk or instruction_i(17 downto 12) = operation_OR or
+    instruction_i(17 downto 12) = operation_INPUT or instruction_i(17 downto 12) = operation_INPUT_pp or instruction_i(17 downto 12) = operation_FETCH or
+    instruction_i(17 downto 12) = operation_FETCH_ss)) else '0';
 
 sStack_enable_o <= '1' when (state_curr = JUMPS and (instruction_i(17 downto 12) = operation_CALL or instruction_i(17 downto 12) = operation_RETURN)) or
     (state_curr = JUMPS and carry_i = '1' and (instruction_i(17 downto 12) = operation_CALLC or instruction_i(17 downto 12) = operation_RETURNC)) or
