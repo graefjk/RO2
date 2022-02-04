@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 26.01.2021
 -- Design Name: 
--- Module Name: sim_Stack_1_tb - Behavioral
+-- Module Name: sim_Stack_2_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -32,11 +32,11 @@ use std.env.finish;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_Stack_1_tb is
+entity sim_Stack_2_tb is
 --  Port ( );
-end sim_Stack_1_tb;
+end sim_Stack_2_tb;
 
-architecture Behavioral of sim_Stack_1_tb is
+architecture Behavioral of sim_Stack_2_tb is
 component stack
     port(   sPC_i : in std_ulogic_vector(11 downto 0);
             write_or_read_i: in std_ulogic; -- 0 for write, 1 for read
