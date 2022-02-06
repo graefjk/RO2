@@ -1,0 +1,216 @@
+//Berechnet aus zwei Primzahlen den Öffentlichen
+//und den Privaten Schlüssel für RSA.
+LOAD s1 11 //s1 = p
+LOAD s2 13 //s2 = q
+STORE s1 1 //ram[1] = p
+STORE s2 2 //ram[2] = q
+CALL calcN //s3 = N = p*q
+STORE s3 3 //ram[3] = N
+CALL clearReg
+CALL calcPhiN //s5 = Phi(N)
+STORE s5 4 //ram[4] = Phi(N)
+CALL clearReg
+CALL calce //ram[5] = e
+CALL clearReg
+CALL MultInverse //ram[6] = d = multInv(e, Phi(N))
+FETCH s0 6
+COMPARE s0 1
+CALL clearReg
+
+FETCH s0 3 //N
+FETCH s1 5 //e
+FETCH s2 6 //d
+JUMP end
+
+
+
+
+calcN
+LOAD s3 s1
+LOAD s4 s2
+calcN2
+COMPARE s4 1
+RETURNZ
+ADD s3 s1
+SUB s4 1
+JUMP calcN2
+
+
+calcPhiN
+FETCH s5 1
+SUB s5 1
+LOAD s7 s5
+FETCH s6 2
+SUB s6 1
+calcPhiN2
+COMPARE s6 1
+RETURNZ
+ADD s5 s7
+SUB s6 1
+JUMP calcPhiN2
+
+
+//Multiplikatives Inverse
+MultInverse
+FETCH s1 5 //a
+FETCH s2 4 //b
+LOAD s3 0
+LOAD s4 1
+CALL inverse
+COMPARE s3 128
+JUMPC skipADD
+FETCH s2 4
+ADD s3 s2
+skipADD
+STORE s3 6 //ram[6] = inverse
+RETURN
+
+inverse
+COMPARE s1 0 //while s1 /= 0
+RETURNZ
+CALL div
+LOAD s7 s3
+LOAD s3 s4
+CALL mult1
+SUB s7 sE
+LOAD s4 s7
+LOAD s8 s2
+LOAD s2 s1
+CALL mult2
+SUB s8 sE
+LOAD s1 s8
+JUMP inverse
+
+div
+LOAD sA s2
+LOAD sB s1
+LOAD sC 0
+LoopStartdiv
+SUB sA sB
+JUMPC LoopEnddiv
+ADD sC 1
+JUMP LoopStartdiv
+LoopEnddiv
+ADD sA sB
+RETURN
+
+
+mult1
+LOAD sD sC
+LOAD sE s4
+mult12
+COMPARE sD 1
+RETURNZ
+SUB sD 1
+ADD sE s4
+JUMP mult12
+
+mult2
+LOAD sD sC
+LOAD sE s1
+mult22
+COMPARE sD 1
+RETURNZ
+SUB sD 1
+ADD sE s1
+JUMP mult22
+
+
+clearReg
+LOAD s1 0
+LOAD s2 0
+LOAD s3 0
+LOAD s4 0
+LOAD s5 0
+LOAD s6 0
+LOAD s7 0
+LOAD s8 0
+LOAD s9 0
+LOAD sA 0
+LOAD sB 0
+LOAD sC 0
+LOAD sD 0
+LOAD sE 0
+LOAD sF 0
+RETURN
+
+
+
+//Teilerfremde Zahl finden
+calce
+FETCH s8 1
+FETCH s9 2
+COMPARE s8 s9
+JUMPNC skip
+LOAD s8 s9
+skip
+ADD s8 1
+FETCH s9 4
+JUMP check
+
+checknext
+ADD s8 1
+
+
+check
+LOAD s1 s8
+LOAD s2 s9
+CALL ggt
+COMPARE s1 1
+JUMPZ ggtfound
+JUMP checknext
+
+
+
+ggt
+COMPARE s2 s1 //if s2 < s1 go to next
+JUMPC next
+LOAD s3 s1
+LOAD s1 s2
+LOAD s2 s3
+
+next
+COMPARE s2 0 //if s2 = 0 go to final
+JUMPZ final
+CALL mod
+LOAD s1 s2
+LOAD s2 s3
+JUMP ggt
+
+final
+RETURN
+
+
+mod
+LOAD sA s1
+LOAD sB s2
+LOAD sC 0
+LoopStart
+SUB sA sB
+JUMPC LoopEnd
+ADD sC 1
+JUMP LoopStart
+LoopEnd
+ADD sA sB
+LOAD s3 sA
+RETURN
+
+
+ggtfound
+STORE s8 5
+RETURN
+
+
+end
+JUMP end
+
+
+
+
+
+
+
+
+
+
+
