@@ -26,185 +26,106 @@ def generateTest(uut, testNr, function):
     
 #PC Test Benches
 #standart Durchlauf
-f = open("PC_tb_long1.vhd", "w")
-start_template = open("template_begining_pc.vhd", "r")
-template = open("template.vhd", "r")
-end_template = open("template_end.vhd", "r")
-lines = template.readlines()
-linesstart = start_template.readlines()
-linesend = end_template.readlines()
-for line in lines:
-    if line == "--insert_start_here\n":
-        for lines in linesstart:
-            f.write(lines)
-    elif line == "--insert_end_here\n":
-        for linee in linesend:
-            	f.write(linee)
-    elif line == "--insert_code_here\n":
-        f.write("report \"The Test has started \";\n\n")
-        for i in range(0, maxBit12_allOne):
-            bin = numpy.base_repr(i, base=2).zfill(12)
-            f.write("pc_in_s <= \"" + bin + "\";\n")
-            f.write("wait until rising_edge(clk_s);\n")
-            f.write("wait for waitTime;\n")
-            f.write("assert pc_out_s = \"" + bin + "\" \n")
-            f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
-            f.write("wait for waitTime;\n")
-        f.write("report \"The Test is finished \";\n\n")
-        f.write("wait for 10ns;\n")
-    else:
-        f.write("")
-f.close
+def insertTBCode11(f):
+    f.write("report \"The Test has started \";\n\n")
+    for i in range(0, maxBit12_allOne):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_in_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
+        f.write("wait for waitTime;\n")
+        f.write("assert pc_out_s = \"" + bin + "\" \n")
+        f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+    f.write("report \"The Test is finished \";\n\n")
+    f.write("wait for 10ns;\n")
+
 
 #enable_s=0 Verzögerungsdurchlauf
-f = open("PC_tb_long2.vhd", "w")
-start_template = open("template_begining_pc.vhd", "r")
-template = open("template.vhd", "r")
-end_template = open("template_end.vhd", "r")
-lines = template.readlines()
-linesstart = start_template.readlines()
-linesend = end_template.readlines()
-for line in lines:
-    if line == "--insert_start_here\n":
-        for lines in linesstart:
-            f.write(lines)
-    elif line == "--insert_end_here\n":
-        for linee in linesend:
-            	f.write(linee)
-    elif line == "--insert_code_here\n":
-        f.write("report \"The Test has started \";\n\n")
-        for i in range(0, maxBit12_allOne):
-            bin = numpy.base_repr(i, base=2).zfill(12)
-            f.write("pc_in_s <= \"" + bin + "\";\n")
-            f.write("enable_s <= \'0\';\n")
-            f.write("wait until rising_edge(clk_s);\n")
-            f.write("wait for waitTime;\n")
-            f.write("assert not(pc_out_s = \"" + bin + "\") \n")
-            f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
-            f.write("wait for waitTime;\n")
-            f.write("enable_s <= \'1\';\n")
-            f.write("wait until rising_edge(clk_s);\n")
-            f.write("wait for waitTime;\n")
-            f.write("assert pc_out_s = \"" + bin + "\" \n")
-            f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
-            f.write("wait for waitTime;\n")
-        f.write("report \"The Test is finished \";\n\n")
-        f.write("wait for 10ns;\n")
-    else:
-        f.write("")
-f.close
+def insertTBCode12(f):
+    f.write("report \"The Test has started \";\n\n")
+    for i in range(0, maxBit12_allOne):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_in_s <= \"" + bin + "\";\n")
+        f.write("enable_s <= \'0\';\n")
+        f.write("wait until rising_edge(clk_s);\n")
+        f.write("wait for waitTime;\n")
+        f.write("assert not(pc_out_s = \"" + bin + "\") \n")
+        f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+        f.write("enable_s <= \'1\';\n")
+        f.write("wait until rising_edge(clk_s);\n")
+        f.write("wait for waitTime;\n")
+        f.write("assert pc_out_s = \"" + bin + "\" \n")
+        f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+    f.write("report \"The Test is finished \";\n\n")
+    f.write("wait for 10ns;\n")
+
 
 #reset Durchlauf
-f = open("PC_tb_long3.vhd", "w")
-start_template = open("template_begining_pc.vhd", "r")
-template = open("template.vhd", "r")
-end_template = open("template_end.vhd", "r")
-lines = template.readlines()
-linesstart = start_template.readlines()
-linesend = end_template.readlines()
-for line in lines:
-    if line == "--insert_start_here\n":
-        for lines in linesstart:
-            f.write(lines)
-    elif line == "--insert_end_here\n":
-        for linee in linesend:
-            	f.write(linee)
-    elif line == "--insert_code_here\n":
-        f.write("report \"The Test has started \";\n\n")
-        for i in range(0, maxBit12_allOne):
-            bin = numpy.base_repr(i, base=2).zfill(12)
-            f.write("pc_in_s <= \"" + bin + "\";\n")
-            f.write("reset_s <= \'1\';\n")
-            f.write("wait until rising_edge(clk_s);\n")
-            f.write("wait for waitTime;\n")
-            f.write("assert pc_out_s = \"111111111111\" \n")
-            f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
-            f.write("wait for waitTime;\n")
-            f.write("reset_s <= \'0\';\n")
-            f.write("wait for waitTime;\n")
-        f.write("report \"The Test is finished \";\n\n")
-        f.write("wait for 10ns;\n")
-    else:
-        f.write("")
-f.close
+def insertTBCode13(f):
+    f.write("report \"The Test has started \";\n\n")
+    for i in range(0, maxBit12_allOne):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_in_s <= \"" + bin + "\";\n")
+        f.write("reset_s <= \'1\';\n")
+        f.write("wait until rising_edge(clk_s);\n")
+        f.write("wait for waitTime;\n")
+        f.write("assert pc_out_s = \"111111111111\" \n")
+        f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+        f.write("reset_s <= \'0\';\n")
+        f.write("wait for waitTime;\n")
+    f.write("report \"The Test is finished \";\n\n")
+    f.write("wait for 10ns;\n")
+
 
 #ADD Test Benches
 #standart Durchlauf
-f = open("ADD_tb_long1.vhd", "w")
-start_template = open("template_begining_add.vhd", "r")
-template = open("template.vhd", "r")
-end_template = open("template_end.vhd", "r")
-lines = template.readlines()
-linesstart = start_template.readlines()
-linesend = end_template.readlines()
-for line in lines:
-    if line == "--insert_start_here\n":
-        for lines in linesstart:
-            f.write(lines)
-    elif line == "--insert_end_here\n":
-        for linee in linesend:
-            	f.write(linee)
-    elif line == "--insert_code_here\n":
-        f.write("report \"The Test has started \";\n\n")
-        for i in range(0, maxBit12_allOne-1):
-            bin = numpy.base_repr(i, base=2).zfill(12)
-            f.write("sA_s <= \"" + bin + "\";\n")
-            f.write("wait for 1ns;\n")
-            inext = i + 1
-            bin = numpy.base_repr(inext, base=2).zfill(12)
-            f.write("assert sB_s = \"" + bin + "\" \n")
-            f.write("\t" + "report \"ADD error at " + bin + "\" severity error;\n\n")
-            f.write("wait for waitTime;\n")
-        #overflow case
-        bin = numpy.base_repr(maxBit12_allOne-1, base=2).zfill(12)
+def insertTBCode21(f):
+    f.write("report \"The Test has started \";\n\n")
+    for i in range(0, maxBit12_allOne-1):
+        bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("sA_s <= \"" + bin + "\";\n")
         f.write("wait for 1ns;\n")
-        inext = 0
+        inext = i + 1
         bin = numpy.base_repr(inext, base=2).zfill(12)
         f.write("assert sB_s = \"" + bin + "\" \n")
         f.write("\t" + "report \"ADD error at " + bin + "\" severity error;\n\n")
         f.write("wait for waitTime;\n")
-        #
-        f.write("report \"The Test is finished \";\n\n")
-        f.write("wait for 10ns;\n")
-    else:
-        f.write("")
-f.close
+    #overflow case
+    bin = numpy.base_repr(maxBit12_allOne-1, base=2).zfill(12)
+    f.write("sA_s <= \"" + bin + "\";\n")
+    f.write("wait for 1ns;\n")
+    inext = 0
+    bin = numpy.base_repr(inext, base=2).zfill(12)
+    f.write("assert sB_s = \"" + bin + "\" \n")
+    f.write("\t" + "report \"ADD error at " + bin + "\" severity error;\n\n")
+    f.write("wait for waitTime;\n")
+    #
+    f.write("report \"The Test is finished \";\n\n")
+    f.write("wait for 10ns;\n")
+
 
 #IP Test Benches
+#standart Durchlauf
+def insertTBCode31(f):
+    f.write("report \"The Test has started \";\n\n")
+    for i in range(0, maxBit12_allOne):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait for waitTime;\n")
+        #f.write("assert sB_s = \"" + bin + "\" \n")
+        #f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+    f.write("report \"The Test is finished \";\n\n")
+    f.write("wait for 10ns;\n")
+    
 
-f = open("IP_tb_long1.vhd", "w")
-start_template = open("template_begining_ip.vhd", "r")
-template = open("template.vhd", "r")
-end_template = open("template_end.vhd", "r")
-lines = template.readlines()
-linesstart = start_template.readlines()
-linesend = end_template.readlines()
-for line in lines:
-    if line == "--insert_start_here\n":
-        for lines in linesstart:
-            f.write(lines)
-    elif line == "--insert_end_here\n":
-        for linee in linesend:
-            	f.write(linee)
-    elif line == "--insert_code_here\n":
-        f.write("report \"The Test has started \";\n\n")
-        for i in range(0, maxBit12_allOne):
-            bin = numpy.base_repr(i, base=2).zfill(12)
-            f.write("pc_s <= \"" + bin + "\";\n")
-            f.write("wait for waitTime;\n")
-            #f.write("assert sB_s = \"" + bin + "\" \n")
-            #f.write("\t" + "report \"PC error at " + bin + "\" severity error;\n\n")
-            f.write("wait for waitTime;\n")
-        f.write("report \"The Test is finished \";\n\n")
-        f.write("wait for 10ns;\n")
-    else:
-        f.write("")
-f.close
 
 #Stack Test Benches
 #empty Test begin 
-def insertTBCode1(f):
+def insertTBCode41(f):
     f.write("report \"The Test has started. \";\n\n")
     f.write("write_or_read_s <= \'1\';\n")
     for i in range(0, maxBit12_allOne):
@@ -227,7 +148,7 @@ def insertTBCode1(f):
 
 
 #empty Test laufzeit 
-def insertTBCode2(f):
+def insertTBCode42(f):
     f.write("report \"The Test has started \";\n\n")
     #vorherige Benutzung simulieren Start
     f.write("write_or_read_s <= \'0\';\n")
@@ -257,7 +178,7 @@ def insertTBCode2(f):
 
 #full Test begin
 #TODO
-def insertTBCode3(f):
+def insertTBCode43(f):
     f.write("report \"The Test has started \";\n\n")
     f.write("write_or_read_s <= \'0\';\n")
     f.write("wait for waitTime;\n")
@@ -287,7 +208,7 @@ def insertTBCode3(f):
 
 #full Test laufzeit
 #TODO
-def insertTBCode4(f):
+def insertTBCode44(f):
     f.write("report \"The Test has started \";\n\n")
     #vorherige Benutzung simulieren Start
     f.write("write_or_read_s <= \'0\';\n")
@@ -321,7 +242,7 @@ def insertTBCode4(f):
 
 
 #LiFo Test
-def insertTBCode5(f):
+def insertTBCode45(f):
     f.write("report \"The Test has started \";\n\n")
     f.write("write_or_read_s <= \'0\';\n")
     f.write("wait for waitTime;\n")
@@ -348,7 +269,7 @@ def insertTBCode5(f):
 
 
 #standart Durchlauf
-def insertTBCode6(f):
+def insertTBCode46(f):
     f.write("report \"The Test has started \";\n\n")
     #vorherige Benutzung simulieren Start
     f.write("reset_s <= \'1\';\n")
@@ -424,7 +345,7 @@ def insertTBCode6(f):
     
 
 #enable = 0 Test begin 
-def insertTBCode7(f):
+def insertTBCode47(f):
     f.write("report \"The Test has started. \";\n\n")
     f.write("enable_s <= \'0\';\n")
     f.write("write_or_read_s <= \'1\';\n")
@@ -499,7 +420,7 @@ def insertTBCode7(f):
     
 
 #enable = 0 Test laufzeit 
-def insertTBCode8(f):
+def insertTBCode48(f):
     f.write("report \"The Test has started \";\n\n")
     #vorherige Benutzung simulieren Start
     f.write("write_or_read_s <= \'0\';\n")
@@ -583,7 +504,7 @@ def insertTBCode8(f):
     
     
 #reset Durchlauf
-def insertTBCode9(f):
+def insertTBCode49(f):
     f.write("report \"The Test has started. \";\n\n")
     f.write("write_or_read_s <= \'1\';\n")
     f.write("reset_s <= \'1\';\n")
@@ -662,13 +583,21 @@ def insertTBCode9(f):
     f.write("wait for 10ns;\n")
     
     
+#Unstable
+#TODO
+
 #generate TBfiles
-generateTest("Stack", 1, insertTBCode1)
-generateTest("Stack", 2, insertTBCode2)
-generateTest("Stack", 3, insertTBCode3)
-generateTest("Stack", 4, insertTBCode4)
-generateTest("Stack", 5, insertTBCode5)
-generateTest("Stack", 6, insertTBCode6)
-generateTest("Stack", 7, insertTBCode7)
-generateTest("Stack", 8, insertTBCode8)
-generateTest("Stack", 9, insertTBCode9)
+generateTest("PC", 1, insertTBCode11)
+generateTest("PC", 2, insertTBCode12)
+generateTest("PC", 3, insertTBCode13)
+generateTest("ADD", 1, insertTBCode21)
+generateTest("IP", 1, insertTBCode31)
+generateTest("Stack", 1, insertTBCode41)
+generateTest("Stack", 2, insertTBCode42)
+generateTest("Stack", 3, insertTBCode43)
+generateTest("Stack", 4, insertTBCode44)
+generateTest("Stack", 5, insertTBCode45)
+generateTest("Stack", 6, insertTBCode46)
+generateTest("Stack", 7, insertTBCode47)
+generateTest("Stack", 8, insertTBCode48)
+generateTest("Stack", 9, insertTBCode49)

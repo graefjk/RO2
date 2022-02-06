@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 26.01.2021
 -- Design Name: 
--- Module Name: sim_PC_tb - Behavioral
+-- Module Name: sim_PC_2_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -32,11 +32,11 @@ use std.env.finish;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_PC_tb is
+entity sim_PC_2_tb is
 --  Port ( );
-end sim_PC_tb;
+end sim_PC_2_tb;
 
-architecture Behavioral of sim_PC_tb is
+architecture Behavioral of sim_PC_2_tb is
 component PC
     port (	pc_i : in std_ulogic_vector(11 downto 0);
 			enable_i : in std_logic;

@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 26.01.2021
 -- Design Name: 
--- Module Name: sim_ADD_tb - Behavioral
+-- Module Name: sim_ADD_1_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -32,11 +32,11 @@ use std.env.finish;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_ADD_tb is
+entity sim_ADD_1_tb is
 --  Port ( );
-end sim_ADD_tb;
+end sim_ADD_1_tb;
 
-architecture Behavioral of sim_ADD_tb is
+architecture Behavioral of sim_ADD_1_tb is
 component ADD
     port (  sA_i : in std_ulogic_vector(11 downto 0);
             sB_o : out std_ulogic_vector(11 downto 0));

@@ -31,6 +31,7 @@ PC:
 - Wird der reset unabhängig vom input richtig gesetzt? -> PC_tb_long3.vhd
 ADD:
 - Werden alle sA_s richtig incrementiert unabhängig von der Taktflanke? -> ADD_tb_long1.vhd
++zu beginn xxx sollte nicht sein
 IP:
 - Wird jede Zeile entsprechend ausgegeben?
 - kleinere datei was passiert bei nicht definierten zeilen
