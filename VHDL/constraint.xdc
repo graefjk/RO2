@@ -8,7 +8,6 @@
 set_property -dict {PACKAGE_PIN K17 IOSTANDARD LVCMOS33} [get_ports clk_i]
 create_clock -period 8.000 -name sys_clk_pin -waveform {0.000 4.000} -add [get_ports clk_i]
 
-
 #Switches
 set_property -dict {PACKAGE_PIN G15 IOSTANDARD LVCMOS33} [get_ports {port_b[53]}]
 set_property -dict {PACKAGE_PIN P15 IOSTANDARD LVCMOS33} [get_ports {port_b[54]}]
@@ -73,6 +72,9 @@ set_property -dict {PACKAGE_PIN U13 IOSTANDARD LVCMOS33} [get_ports {port_b[70]}
 #HDMI Clock
 #create_clock -period 0.6734 -waveform {0.000 0.3367} [get_ports {port_b[45]}]
 set_property -dict {PACKAGE_PIN P19 IOSTANDARD LVCMOS33} [get_ports {port_b[45]}]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets port_b_IBUF__0[50]] 
+set_property ALLOW_COMBINATORIAL_LOOPS TRUE [get_nets io_instance/design_1_i/IO_0/U0/hdmi_vde]
+
 
 #HDMI RX
 set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33} [get_ports {port_b[46]}]
