@@ -12,6 +12,6 @@ architecture Behavioral of ADD is
     signal increment : std_ulogic_vector(11 downto 0) := "000000000001";
 
 begin
-    sB_o <= to_stdulogicvector(to_stdlogicvector(sA_i) + to_stdlogicvector(increment)) when not (sA_i = "UUUUUUUUUUUU") else "000000000000";
+    sB_o <= to_stdulogicvector(to_stdlogicvector(sA_i) + to_stdlogicvector(increment));
 
 end Behavioral;
