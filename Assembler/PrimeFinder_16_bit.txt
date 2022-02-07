@@ -6,6 +6,7 @@ LOAD x9, 0
 LOAD xA, 1
 LOAD xB, 0 // RAM address to write new primes to
 LOAD xC, 0
+LOAD xF, 0
 
 Label1
 LOAD x3, 0
@@ -50,7 +51,11 @@ JUMPZ endTest //end the programm if all possible numbers have been tested
 JUMP Label1
 
 writeX7
+STORE xF, xB
+add xB, 1
 STORE x7, xB
+add xB, 1
+STORE xF, xB
 add xB, 1
 add xC, 1
 RETURN
