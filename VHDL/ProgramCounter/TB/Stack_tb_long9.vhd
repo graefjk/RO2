@@ -99,7 +99,7 @@ wait for waitTime;
 wait for waitTime;
 reset_s <= '0';
 wait for waitTime;
-assert sStack_s = "000000000000"
+assert sStack_s = "111111111111"
 	report "Stack error at first" severity error;
 
 assert full_s = '0' 
@@ -12396,7 +12396,7 @@ wait for waitTime;
 pc_s <= "111111111111";
 wait until rising_edge(clk_s);
 wait for waitTime;
-assert sStack_s = "000000000000"
+assert sStack_s = "111111111111"
 	report "Stack error at second" severity error;
 
 assert full_s = '0' 
@@ -12410,7 +12410,7 @@ reset_s <= '1';
 wait for waitTime;
 wait for waitTime;
 reset_s <= '0';
-assert sStack_s = "000000000000"
+assert sStack_s = "111111111111"
 	report "Stack error at third" severity error;
 
 assert full_s = '0' 
@@ -24707,7 +24707,7 @@ wait for waitTime;
 pc_s <= "111111111111";
 wait until rising_edge(clk_s);
 wait for waitTime;
-assert sStack_s = "000000000000"
+assert sStack_s = "111111111111"
 	report "Stack error at forth" severity error;
 
 assert full_s = '1' 
@@ -24721,7 +24721,7 @@ reset_s <= '1';
 wait for waitTime;
 wait for waitTime;
 reset_s <= '0';
-assert sStack_s = "000000000000"
+assert sStack_s = "111111111111"
 	report "Stack error at fith" severity error;
 
 assert full_s = '0' 
@@ -37018,7 +37018,7 @@ wait for waitTime;
 pc_s <= "111111111111";
 wait until rising_edge(clk_s);
 wait for waitTime;
-assert sStack_s = "000000000000"
+assert sStack_s = "111111111111"
 	report "Stack error at sixed" severity error;
 
 assert full_s = '0' 

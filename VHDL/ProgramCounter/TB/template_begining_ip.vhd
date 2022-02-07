@@ -38,6 +38,7 @@ end sim_IP_tb;
 
 architecture Behavioral of sim_IP_tb is
 component IP
+	generic(dataFileName_g: string := "Fibonacci.data");
     Port ( pc_i : in std_ulogic_vector(11 downto 0);
            clk_i : in std_ulogic;
            instruction_o : out std_ulogic_vector(17 downto 0));
