@@ -108,6 +108,7 @@ def insertTBCode21(f):
 
 
 #IP Test Benches
+#TODO
 #standart Durchlauf
 def insertTBCode31(f):
     f.write("report \"The Test has started \";\n\n")
@@ -177,7 +178,6 @@ def insertTBCode42(f):
 
 
 #full Test begin
-#TODO
 def insertTBCode43(f):
     f.write("report \"The Test has started \";\n\n")
     f.write("write_or_read_s <= \'0\';\n")
@@ -185,11 +185,12 @@ def insertTBCode43(f):
     for i in range(0, 2 ** 7):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
-        f.write("wait for waitTime;\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
     for i in range(0, maxBit12_allOne):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
         #f.write("assert sStack_s = \"" + bin + "\"\n")
         #Undefined sollte in ordnung sein.
@@ -199,45 +200,71 @@ def insertTBCode43(f):
         f.write("\t" + "report \"StackFull error at " + bin + "\" severity error;\n\n")
         f.write("assert empty_s = \'0\' \n")
         f.write("\t" + "report \"StackEmpty error at " + bin + "\" severity error;\n\n")
-        f.write("wait for waitTime;\n")
+    f.write("write_or_read_s <= \'1\';\n")
+    bin = numpy.base_repr(2**7-2, base=2).zfill(12)
+    f.write("pc_s <= \"001111001111\";\n")
+    f.write("wait until rising_edge(clk_s);\n")
+    f.write("wait for waitTime;\n")
+    f.write("assert sStack_s = \"" + bin + "\"\n")
+    f.write("\t" + "report \"Stack error at " + bin + "\" severity error;\n\n")
+    f.write("assert full_s = \'0\' \n")
+    f.write("\t" + "report \"StackFull error at " + bin + "\" severity error;\n\n")
+    f.write("assert empty_s = \'0\' \n")
+    f.write("\t" + "report \"StackEmpty error at " + bin + "\" severity error;\n\n")
     f.write("report \"The Test is finished \";\n\n")
     f.write("report \"Under the asumption that UUU is fine. \";\n\n")
-    f.write("wait for 10ns;\n")
     
 
 
 #full Test laufzeit
-#TODO
 def insertTBCode44(f):
     f.write("report \"The Test has started \";\n\n")
     #vorherige Benutzung simulieren Start
+    f.write("reset_s <= \'1\';\n")
+    f.write("wait for waitTime;\n")
+    f.write("wait for waitTime;\n")
+    f.write("wait for waitTime;\n")
+    f.write("reset_s <= \'0\';\n")
     f.write("write_or_read_s <= \'0\';\n")
     f.write("pc_s <= \"001111001111\";\n")
-    f.write("wait for waitTime;\n")
+    f.write("wait until rising_edge(clk_s);\n")
     f.write("wait for waitTime;\n")
     f.write("write_or_read_s <= \'1\';\n")
-    f.write("wait for waitTime;\n")
+    f.write("wait until rising_edge(clk_s);\n")
     f.write("wait for waitTime;\n")
     #vorherige Benutzung simulieren Ende
     f.write("write_or_read_s <= \'0\';\n")
+    f.write("wait for waitTime;\n")
     for i in range(0, 2 ** 7):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
-        f.write("wait for waitTime;\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
     for i in range(0, maxBit12_allOne):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
-        f.write("assert sStack_s = \"" + bin + "\" \n")
+        #f.write("assert sStack_s = \"" + bin + "\"\n")
+        #Undefined sollte in ordnung sein.
+        f.write("assert sStack_s = \"001111001111\"\n")
         f.write("\t" + "report \"Stack error at " + bin + "\" severity error;\n\n")
         f.write("assert full_s = \'1\' \n")
         f.write("\t" + "report \"StackFull error at " + bin + "\" severity error;\n\n")
         f.write("assert empty_s = \'0\' \n")
         f.write("\t" + "report \"StackEmpty error at " + bin + "\" severity error;\n\n")
-        f.write("wait for waitTime;\n")
+    f.write("write_or_read_s <= \'1\';\n")
+    bin = numpy.base_repr(2**7-1, base=2).zfill(12)
+    f.write("pc_s <= \"001111001111\";\n")
+    f.write("wait until rising_edge(clk_s);\n")
+    f.write("wait for waitTime;\n")
+    f.write("assert sStack_s = \"" + bin + "\"\n")
+    f.write("\t" + "report \"Stack error at " + bin + "\" severity error;\n\n")
+    f.write("assert full_s = \'0\' \n")
+    f.write("\t" + "report \"StackFull error at " + bin + "\" severity error;\n\n")
+    f.write("assert empty_s = \'0\' \n")
+    f.write("\t" + "report \"StackEmpty error at " + bin + "\" severity error;\n\n")
     f.write("report \"The Test is finished \";\n\n")
-    f.write("wait for 10ns;\n")
     
 
 

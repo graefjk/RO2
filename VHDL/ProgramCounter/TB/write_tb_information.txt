@@ -50,3 +50,4 @@ Stack:
 - Werden alle inputmöglichkeiten richtig wieder zurückgegeben? -> Stack_tb_long6.vhd
 + UUU ist ok in Stack_tb_long1.vhd, Stack_tb_long3.vhd
 + Reset 111 anstelle 000
+# manche Tests werfen Fehler, wenn sie nach "The Test is finished" weiter mit "run -all" ausgeführt werden, da die Testausgangssituation sich verändert hat. z.B. Stack_tb_long3.vhd, Stack_tb_long7.vhd
