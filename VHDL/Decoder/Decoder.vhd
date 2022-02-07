@@ -143,7 +143,7 @@ constant operation_OUTPUT: std_ulogic_vector(5 downto 0):="010100";
 constant operation_OUTPUT_pp: std_ulogic_vector(5 downto 0):="010101";
 
 -- defining a new type which will be used for the mealy state machine.
-type states is (PC, IP, ID, REG_read_and_RAM, ALU, REG_write, JUMPS);
+type states is (PC, ID, REG_read_and_RAM, ALU, REG_write, JUMPS);
 
 -- defining a new signal from type states, giving it the intial value "PC"
 signal state_curr : states:=PC;
@@ -169,8 +169,6 @@ begin
  elsif rising_edge(clk_i) then  -- otherwise the state-machine will do the next step
     case state_curr is
         when PC =>
-            state_curr <= IP;
-        when IP =>
             state_curr <= ID;
         when ID =>
             case instruction_i(17 downto 16) is
