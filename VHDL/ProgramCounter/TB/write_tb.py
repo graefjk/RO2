@@ -611,7 +611,23 @@ def insertTBCode49(f):
     
     
 #Unstable
-#TODO
+def insertTBCode51(f):
+    f.write("report \"The Test has started \";\n\n")
+    f.write("report \"Variant of Stack_tb_long5 with unstable write_or_read_s. \";\n\n")
+    f.write("wait for waitTime;\n")
+    for i in range(0, 2 ** 7-1):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait for waitTime;\n")
+        f.write("wait for waitTime;\n")
+    f.write("pc_s <= \"001111001111\";\n")
+    f.write("wait for waitTime;\n")
+    for i in range(0, 2 ** 7-1):
+        bin = numpy.base_repr((2 ** 7-2) - i, base=2).zfill(12)
+        f.write("wait for waitTime;\n")
+        f.write("wait for waitTime;\n")
+    f.write("report \"You can see that this unstable write_or_read_s leads to inconsistency of the Stack \";\n\n")
+    f.write("report \"The Test is finished \";\n\n")
 
 #generate TBfiles
 generateTest("PC", 1, insertTBCode11)
@@ -628,3 +644,4 @@ generateTest("Stack", 6, insertTBCode46)
 generateTest("Stack", 7, insertTBCode47)
 generateTest("Stack", 8, insertTBCode48)
 generateTest("Stack", 9, insertTBCode49)
+generateTest("StackU", 1, insertTBCode51)

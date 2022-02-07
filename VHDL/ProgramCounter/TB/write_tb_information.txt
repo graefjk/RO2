@@ -43,11 +43,12 @@ Stack:
 - Was passiert, wenn man dem lehren Stack dinge entnehmen möchte? -> Stack_tb_long1.vhd, Stack_tb_long2.vhd
 - Ist es tatsächlich ein Stack und keine Liste? Gilt LiFo? -> Stack_tb_long5.vhd
 - Was wird bei enable=0 ausgegeben? -> Stack_tb_long7.vhd, Stack_tb_long8.vhd
-(passt heirbei das mux steuersignal mit enable zusammen?)
-- Was passiert bei unstabielem write_or_read?
+(passt heirbei das mux steuersignal mit enable zusammen?) Ja von Hand geprüft. "sStack_write_or_read_o" und "mux_stack_select_o" haben genau gleiche zuweisung.
+- Was passiert bei unstabielem write_or_read? -> StackU_tb_long1.vhd
 - Ist reset richtig? -> Stack_tb_long9.vhd
 - Standardtest 3 Layer füllen und entnehmen -> Stack_tb_long6.vhd
 - Werden alle inputmöglichkeiten richtig wieder zurückgegeben? -> Stack_tb_long6.vhd
 + UUU ist ok in Stack_tb_long1.vhd, Stack_tb_long3.vhd
 + Reset 111 anstelle 000
++ unstabiles write_or_read darf auf keinen fall auftreten
 # manche Tests werfen Fehler, wenn sie nach "The Test is finished" weiter mit "run -all" ausgeführt werden, da die Testausgangssituation sich verändert hat. z.B. Stack_tb_long3.vhd, Stack_tb_long7.vhd
