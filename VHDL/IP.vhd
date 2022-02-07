@@ -35,6 +35,7 @@ use std.textio.all;
 --use UNISIM.VComponents.all;
 
 entity IP is
+    generic(File_Name : String := "Test.data");
     Port ( pc_i : in std_ulogic_vector(11 downto 0);
            clk_i : in std_ulogic;
            instruction_o : out std_ulogic_vector(17 downto 0));
@@ -66,7 +67,7 @@ architecture Behavioral of IP is
         return ROM; 
     end function;    
     --The ROM
-    signal ROM : rom_type := InitRomFromFile("RSA.data");
+    signal ROM : rom_type := InitRomFromFile(File_name);
     --Using BlockRAM for the ROM
     attribute rom_style : string;
     attribute rom_style of ROM : signal is "block";
