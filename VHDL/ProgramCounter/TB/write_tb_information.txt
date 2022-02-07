@@ -2,10 +2,11 @@ Referenced Files:
 
 write_tb.py
 template.vhd
-template_begining.vhd
-template_begining2.vhd
-template_begining3.vhd
-template_begining4.vhd
+template_beginingAdd.vhd
+template_beginingIp.vhd
+template_beginingPC.vhd
+template_beginingStack.vhd
+template_beginingStackU.vhd
 template_end.vhd
 
 ADD_tb_long1.vhd
@@ -14,6 +15,15 @@ PC_tb_long1.vhd
 PC_tb_long2.vhd
 PC_tb_long3.vhd
 Stack_tb_long1.vhd
+Stack_tb_long2.vhd
+Stack_tb_long3.vhd
+Stack_tb_long4.vhd
+Stack_tb_long5.vhd
+Stack_tb_long6.vhd
+Stack_tb_long7.vhd
+Stack_tb_long8.vhd
+Stack_tb_long9.vhd
+StackU_tb_long1.vhd
 
 Testet uut's:
 PC.vhd
@@ -31,13 +41,13 @@ PC:
 - Wird der reset unabhängig vom input richtig gesetzt? -> PC_tb_long3.vhd
 ADD:
 - Werden alle sA_s richtig incrementiert unabhängig von der Taktflanke? -> ADD_tb_long1.vhd
-+zu beginn xxx sollte nicht sein
++bei Input UUU sollte output nicht xxx sein -> wurde diskutiert und als nicht relevant und nicht behebbar angesehen (auf board dan output = unbekannter wert aber nicht xxx)
 IP:
 - Wird jede Zeile entsprechend ausgegeben?
 - kleinere datei was passiert bei nicht definierten zeilen
 - zu groses file was passiert
 - in file.data schreiben tests
--was passiert bei input UUU?
+- was passiert bei input UUU?
 Stack:
 - Was passiert, wenn der Stack nachdem er voll ist weiter gefüllt wird? -> Stack_tb_long3.vhd, Stack_tb_long4.vhd
 - Was passiert, wenn man dem lehren Stack dinge entnehmen möchte? -> Stack_tb_long1.vhd, Stack_tb_long2.vhd
@@ -49,6 +59,6 @@ Stack:
 - Standardtest 3 Layer füllen und entnehmen -> Stack_tb_long6.vhd
 - Werden alle inputmöglichkeiten richtig wieder zurückgegeben? -> Stack_tb_long6.vhd
 + UUU ist ok in Stack_tb_long1.vhd, Stack_tb_long3.vhd
-+ Reset 111 anstelle 000
-+ unstabiles write_or_read darf auf keinen fall auftreten
++ Reset 111 anstelle 000 -> wurde angepasst
++ unstabiles write_or_read darf auf keinen fall auftreten -> abgesichert durch Decoder
 # manche Tests werfen Fehler, wenn sie nach "The Test is finished" weiter mit "run -all" ausgeführt werden, da die Testausgangssituation sich verändert hat. z.B. Stack_tb_long3.vhd, Stack_tb_long7.vhd
