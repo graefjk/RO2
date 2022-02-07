@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 26.01.2021
 -- Design Name: 
--- Module Name: sim_PC_tb - Behavioral
+-- Module Name: sim_PC_3_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.finish;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -31,11 +32,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_PC_tb is
+entity sim_PC_3_tb is
 --  Port ( );
-end sim_PC_tb;
+end sim_PC_3_tb;
 
-architecture Behavioral of sim_PC_tb is
+architecture Behavioral of sim_PC_3_tb is
 component PC
     port (	pc_i : in std_ulogic_vector(11 downto 0);
 			enable_i : in std_logic;
@@ -78,6 +79,8 @@ uut: PC port map (
  reset_s <= '0';
  enable_s <= '1';
  wait for waitTime;   
+report "The Test has started ";
+
 pc_in_s <= "000000000000";
 reset_s <= '1';
 wait until rising_edge(clk_s);
@@ -41038,9 +41041,10 @@ assert pc_out_s = "111111111111"
 wait for waitTime;
 reset_s <= '0';
 wait for waitTime;
-reset_s <= '0';
-wait for 100ns;
+report "The Test is finished ";
 
+wait for 10ns;
+		finish;
     end process;
 
 end Behavioral;

@@ -1,0 +1,49 @@
+//ggt
+LOAD s1 78
+LOAD s2 99
+CALL ggt
+STORE s1 0 //ram[0] = ggt
+JUMP end
+
+
+
+ggt
+COMPARE s2 s1 //if s2 < s1 go to next
+JUMPC next
+LOAD s3 s1
+LOAD s1 s2
+LOAD s2 s3
+
+next
+COMPARE s2 0 //if s2 = 0 go to final
+JUMPZ final
+CALL mod
+LOAD s1 s2
+LOAD s2 s3
+JUMP ggt
+
+final
+RETURN
+
+
+
+mod
+LOAD sA s1
+LOAD sB s2
+LOAD sC 0
+LoopStart
+SUB sA sB
+JUMPC LoopEnd
+ADD sC 1
+JUMP LoopStart
+LoopEnd
+ADD sA sB
+LOAD s3 sA
+RETURN
+
+end
+
+
+
+
+

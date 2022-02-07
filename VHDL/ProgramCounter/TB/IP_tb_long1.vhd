@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 26.01.2021
 -- Design Name: 
--- Module Name: sim_IP_tb - Behavioral
+-- Module Name: sim_IP_1_tb - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use std.env.finish;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -31,11 +32,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sim_IP_tb is
+entity sim_IP_1_tb is
 --  Port ( );
-end sim_IP_tb;
+end sim_IP_1_tb;
 
-architecture Behavioral of sim_IP_tb is
+architecture Behavioral of sim_IP_1_tb is
 component IP
     Port ( pc_i : in std_ulogic_vector(11 downto 0);
            clk_i : in std_ulogic;
@@ -71,6 +72,8 @@ uut: IP port map (
     begin
 
  wait for waitTime;   
+report "The Test has started ";
+
 pc_s <= "000000000000";
 wait for waitTime;
 wait for waitTime;
@@ -12359,8 +12362,10 @@ wait for waitTime;
 pc_s <= "111111111111";
 wait for waitTime;
 wait for waitTime;
-wait for 100ns;
+report "The Test is finished ";
 
+wait for 10ns;
+		finish;
     end process;
 
 end Behavioral;

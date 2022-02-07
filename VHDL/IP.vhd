@@ -35,6 +35,7 @@ use std.textio.all;
 --use UNISIM.VComponents.all;
 
 entity IP is
+    generic(File_Name : String := "Test.data");
     Port ( pc_i : in std_ulogic_vector(11 downto 0);
            clk_i : in std_ulogic;
            instruction_o : out std_ulogic_vector(17 downto 0));
@@ -66,7 +67,7 @@ architecture Behavioral of IP is
         return ROM; 
     end function;    
     --The ROM
-    signal ROM : rom_type := InitRomFromFile("Test.data");
+    signal ROM : rom_type := InitRomFromFile(File_name);
     --Using BlockRAM for the ROM
     attribute rom_style : string;
     attribute rom_style of ROM : signal is "block";
@@ -74,18 +75,5 @@ architecture Behavioral of IP is
     signal old_pc: std_ulogic_vector(11 downto 0) := (others => '1');
     
 begin
-    -- returns the new instruction synchronous
-    process(clk_i)
-    begin
-        --Checking for a rising edge
-        if (clk_i'event and clk_i = '1') then
-            --Checking for a change in the PC
-            if (pc_i /= old_pc) then
-                --Retriving the instruction from the ROM
-                instruction_o <= ROM(to_integer(unsigned(pc_i)));
-                --Storing the new PC as old
-                old_pc <= pc_i;
-            end if;
-        end if;
-    end process;
+    instruction_o <= ROM(to_integer(unsigned(pc_i)));
 end Behavioral;

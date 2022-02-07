@@ -39,6 +39,11 @@ package microcontroller_package is
     --stack things
     constant stack_depth_c : integer := 128; -- depth of the stack
     constant stack_style_c : string := "distributed"; -- "registers", "distributed" or "block" can be used here
+    
+    --IP things
+    constant File_Name: String := "Test";
+    constant File_Ending: String := ".data";
+
 
 	component ADD
         port(   sA_i: in std_ulogic_vector(instruction_address_c - 1 downto 0); --input signals
@@ -131,6 +136,7 @@ package microcontroller_package is
     end component;
 	
 	component IP
+        generic (File_Name: String := File_Name & File_Ending);
         port(   pc_i : in std_ulogic_vector(11 downto 0);
                 clk_i : in std_ulogic;
                 instruction_o : out std_ulogic_vector(17 downto 0));
