@@ -113,6 +113,13 @@ def generateMachinecode():
         current_line += 1
         if len(line) == 1 and not checkOneList.__contains__(line[0].upper()):
             try:
+                if label.__contains__(line[0].upper()):
+                    text_field_machinecode.insert("end", "Error in line {} {}, "
+                                                         "label already used!".format(current_line, line) + "\n")
+                    text_field_machinecode.tag_add("error", "end-2c linestart", "end")
+                    text_field_assembler.mark_set("insert", str(current_line) + ".0 lineend")
+                    text_field_assembler.see(str(current_line) + ".0")
+                    return
                 label[line[0].upper()] = str(current_line - label.__len__() - 1)
             except KeyError:
                 text_field_machinecode.insert("end", "Error in line {} {}, "
