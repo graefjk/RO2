@@ -24,6 +24,30 @@ def generateTest(uut, testNr, function):
     f.close
     print("generall filegeneration: " + uut + " with: " + str(testNr))
     
+
+def generateTestIP(uut, testNr, function, fileData):
+    f = open("" + uut +"_tb_long" + str(testNr) + ".vhd", "w")
+    start_template = open("template_begining_" + uut +".vhd", "r")
+    template = open("template.vhd", "r")
+    end_template = open("template_end.vhd", "r")
+    linemidle = template.readlines()
+    linesstart = start_template.readlines()
+    linesend = end_template.readlines()
+    for line in linemidle:
+        if line == "--insert_start_here\n":
+            for lines in linesstart:
+                f.write(lines.replace("sim_" + uut + "_tb","sim_" + uut + "_" + str(testNr) + "_tb").replace("Fibonacci",fileData))
+        elif line == "--insert_end_here\n":
+            for linee in linesend:
+                	f.write(linee)
+        elif line == "--insert_code_here\n":
+            function(f)
+        else:
+            f.write("")
+    f.close
+    print("generall filegeneration: " + uut + " with: " + str(testNr))
+    
+    
 #PC Test Benches
 #standart Durchlauf
 def insertTBCode11(f):
@@ -108,22 +132,100 @@ def insertTBCode21(f):
 
 
 #IP Test Benches
-#TODO
-#standart Durchlauf
+#short File
 def insertTBCode31(f):
+    f.write("report \"The Test has started \";\n\n")
+    for i in range(0, 2**6):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait for waitTime;\n")
+        bin = numpy.base_repr(i, base=2).zfill(18)
+        f.write("assert instruction_s = \"" + bin + "\" \n")
+        f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+    for i in range(2**6, 2**12):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait for waitTime;\n")
+        bin = numpy.base_repr(2**12, base=2).zfill(18)
+        f.write("assert instruction_s = \"" + bin + "\" \n")
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("\t" + "report \"IP error after File at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+    f.write("report \"The Test is finished \";\n\n")
+    
+
+#standart Durchlauf
+def insertTBCode32(f):
     f.write("report \"The Test has started \";\n\n")
     for i in range(0, maxBit12_allOne):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
-        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
         bin = numpy.base_repr(i, base=2).zfill(18)
         f.write("assert instruction_s = \"" + bin + "\" \n")
-        f.write("\t" + "report \"IP error at " + bin + "\" severity error;\n\n")
+        f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+    f.write("report \"The Test is finished \";\n\n")
+    
+    
+#long Durchlauf
+#TODO
+def insertTBCode33(f):
+    f.write("report \"The Test has started \";\n\n")
+    for i in range(0, maxBit12_allOne):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait for waitTime;\n")
+        bin = numpy.base_repr(i, base=2).zfill(18)
+        f.write("assert instruction_s = \"" + bin + "\" \n")
+        f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+    for i in range(maxBit12_allOne, 2**18):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        #f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait for waitTime;\n")
+        bin = numpy.base_repr(i, base=2).zfill(18)
+        f.write("assert instruction_s = \"" + bin + "\" \n")
+        f.write("\t" + "report \"IP error after 4096 at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+    f.write("report \"The Test is finished \";\n\n")
+    
+    
+    
+#undefined Durchlauf
+#TODO
+def insertTBCode34(f):
+    f.write("report \"The Test has started \";\n\n")
+    for i in range(0, maxBit12_allOne):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait for waitTime;\n")
+        if(i%2==0):
+            f.write("assert instruction_s = \"UUUUUUUUUUUUUUUUUU\" \n")
+            f.write("\t" + "report \"IP error before File at Undefined " + bin + "\" severity error;\n\n")
+        else:
+            bin = numpy.base_repr(i, base=2).zfill(18)
+            f.write("assert instruction_s = \"" + bin + "\" \n")
+            f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
     f.write("report \"The Test is finished \";\n\n")
     
 
-
+#standart Durchlauf
+def insertTBCode35(f):
+    f.write("report \"The Test has started \";\n\n")
+    for i in range(0, maxBit12_allOne):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait for waitTime;\n")
+        bin = numpy.base_repr(i, base=2).zfill(18)
+        f.write("assert instruction_s = \"" + bin + "\" \n")
+        f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
+        f.write("wait for waitTime;\n")
+    f.write("report \"The Test is finished \";\n\n")
+    
+    
 #Stack Test Benches
 #empty Test begin 
 def insertTBCode41(f):
@@ -624,7 +726,11 @@ generateTest("PC", 1, insertTBCode11)
 generateTest("PC", 2, insertTBCode12)
 generateTest("PC", 3, insertTBCode13)
 generateTest("ADD", 1, insertTBCode21)
-generateTest("IP", 1, insertTBCode31)
+generateTestIP("IP", 1, insertTBCode31,"ShorterTBFile")
+generateTestIP("IP", 2, insertTBCode32,"NormalTBFile")
+generateTestIP("IP", 3, insertTBCode33,"LongerTBFile")
+generateTestIP("IP", 4, insertTBCode34,"UndefinedTBFile")
+generateTestIP("IP", 5, insertTBCode35,"Numbers0to4096")
 generateTest("Stack", 1, insertTBCode41)
 generateTest("Stack", 2, insertTBCode42)
 generateTest("Stack", 3, insertTBCode43)
