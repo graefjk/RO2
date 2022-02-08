@@ -138,20 +138,20 @@ def insertTBCode31(f):
     for i in range(0, 2**6):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
         bin = numpy.base_repr(i, base=2).zfill(18)
         f.write("assert instruction_s = \"" + bin + "\" \n")
         f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
-        f.write("wait for waitTime;\n")
     for i in range(2**6, 2**12):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
         bin = numpy.base_repr(2**12, base=2).zfill(18)
         f.write("assert instruction_s = \"" + bin + "\" \n")
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("\t" + "report \"IP error after File at " + bin + "\" severity error;\n\n")
-        f.write("wait for waitTime;\n")
     f.write("report \"The Test is finished \";\n\n")
     
 
@@ -161,34 +161,36 @@ def insertTBCode32(f):
     for i in range(0, maxBit12_allOne):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
         bin = numpy.base_repr(i, base=2).zfill(18)
         f.write("assert instruction_s = \"" + bin + "\" \n")
         f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
-        f.write("wait for waitTime;\n")
     f.write("report \"The Test is finished \";\n\n")
     
     
 #long Durchlauf
-#TODO
 def insertTBCode33(f):
     f.write("report \"The Test has started \";\n\n")
     for i in range(0, maxBit12_allOne):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
         bin = numpy.base_repr(i, base=2).zfill(18)
         f.write("assert instruction_s = \"" + bin + "\" \n")
         f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
+    for i in range(maxBit12_allOne, 2**13):
+        bin = numpy.base_repr(i, base=2).zfill(13)[1:13]
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
-    for i in range(maxBit12_allOne, 2**18):
-        bin = numpy.base_repr(i, base=2).zfill(12)
-        #f.write("pc_s <= \"" + bin + "\";\n")
-        f.write("wait for waitTime;\n")
-        bin = numpy.base_repr(i, base=2).zfill(18)
+        bin = numpy.base_repr(i, base=2).zfill(13)[1:13].zfill(18)
         f.write("assert instruction_s = \"" + bin + "\" \n")
         f.write("\t" + "report \"IP error after 4096 at " + bin + "\" severity error;\n\n")
-        f.write("wait for waitTime;\n")
+        bin = numpy.base_repr(i, base=2).zfill(18)
+        f.write("assert not(instruction_s = \"" + bin + "\") \n")
+        f.write("\t" + "report \"IP error after 4096 at " + bin + "\" severity error;\n\n")
     f.write("report \"The Test is finished \";\n\n")
     
     
@@ -197,18 +199,42 @@ def insertTBCode33(f):
 #TODO
 def insertTBCode34(f):
     f.write("report \"The Test has started \";\n\n")
-    for i in range(0, maxBit12_allOne):
+    for i in range(0, 5):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
-        if(i%2==0):
-            f.write("assert instruction_s = \"UUUUUUUUUUUUUUUUUU\" \n")
-            f.write("\t" + "report \"IP error before File at Undefined " + bin + "\" severity error;\n\n")
-        else:
-            bin = numpy.base_repr(i, base=2).zfill(18)
-            f.write("assert instruction_s = \"" + bin + "\" \n")
-            f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
+        bin = numpy.base_repr(i, base=2).zfill(18)
+        f.write("assert instruction_s = \"" + bin + "\" \n")
+        f.write("\t" + "report \"IP error before first UUU at " + bin + "\" severity error;\n\n")
+    bin = numpy.base_repr(5, base=2).zfill(12)
+    f.write("pc_s <= \"" + bin + "\";\n")
+    f.write("wait until rising_edge(clk_s);\n")
+    f.write("wait for waitTime;\n")
+    f.write("assert instruction_s = \"UUUUUUUUUUUUUUUUUU\" \n")
+    f.write("\t" + "report \"IP error at UUU at Undefined " + bin + "\" severity error;\n\n")
+    for i in range(6, 11):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
+        bin = numpy.base_repr(i, base=2).zfill(18)
+        f.write("assert instruction_s = \"" + bin + "\" \n")
+        f.write("\t" + "report \"IP error after UUU at " + bin + "\" severity error;\n\n")
+    bin = numpy.base_repr(11, base=2).zfill(12)
+    f.write("pc_s <= \"" + bin + "\";\n")
+    f.write("wait until rising_edge(clk_s);\n")
+    f.write("wait for waitTime;\n")
+    f.write("assert instruction_s = \"UUUUUUUUUUUUUUUUUU\" \n")
+    f.write("\t" + "report \"IP error second UUU at Undefined " + bin + "\" severity error;\n\n")
+    for i in range(12, 17):
+        bin = numpy.base_repr(i, base=2).zfill(12)
+        f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
+        f.write("wait for waitTime;\n")
+        bin = numpy.base_repr(i, base=2).zfill(18)
+        f.write("assert instruction_s = \"" + bin + "\" \n")
+        f.write("\t" + "report \"IP error after second UUU at " + bin + "\" severity error;\n\n")
     f.write("report \"The Test is finished \";\n\n")
     
 
@@ -218,11 +244,11 @@ def insertTBCode35(f):
     for i in range(0, maxBit12_allOne):
         bin = numpy.base_repr(i, base=2).zfill(12)
         f.write("pc_s <= \"" + bin + "\";\n")
+        f.write("wait until rising_edge(clk_s);\n")
         f.write("wait for waitTime;\n")
         bin = numpy.base_repr(i, base=2).zfill(18)
         f.write("assert instruction_s = \"" + bin + "\" \n")
         f.write("\t" + "report \"IP error before File at " + bin + "\" severity error;\n\n")
-        f.write("wait for waitTime;\n")
     f.write("report \"The Test is finished \";\n\n")
     
     

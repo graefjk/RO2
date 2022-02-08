@@ -11,6 +11,10 @@ template_end.vhd
 
 ADD_tb_long1.vhd
 IP_tb_long1.vhd
+IP_tb_long2.vhd
+IP_tb_long3.vhd
+IP_tb_long4.vhd
+IP_tb_long5.vhd
 PC_tb_long1.vhd
 PC_tb_long2.vhd
 PC_tb_long3.vhd
@@ -43,11 +47,13 @@ ADD:
 - Werden alle sA_s richtig incrementiert unabhängig von der Taktflanke? -> ADD_tb_long1.vhd
 +bei Input UUU sollte output nicht xxx sein -> wurde diskutiert und als nicht relevant und nicht behebbar angesehen (auf board dan output = unbekannter wert aber nicht xxx)
 IP:
-- Wird jede Zeile entsprechend ausgegeben?
-- kleinere datei was passiert bei nicht definierten zeilen
-- zu groses file was passiert
-- in file.data schreiben tests
-- was passiert bei input UUU?
+- Wird jede Zeile entsprechend ausgegeben? -> IP_tb_long2.vhd, IP_tb_long5.vhd
+- kleinere datei was passiert bei nicht definierten zeilen -> IP_tb_long1.vhd
+- zu groses file was passiert -> IP_tb_long3.vhd
+- in file.data schreiben tests -> nicht umgesetzt daher auch nicht testen
+- was passiert bei input UUU? -> IP_tb_long4.vhd 
+# wird weiter ausgegeben
++ ist 000001000000000000 wirklich der difoult wert? Ja 
 Stack:
 - Was passiert, wenn der Stack nachdem er voll ist weiter gefüllt wird? -> Stack_tb_long3.vhd, Stack_tb_long4.vhd
 - Was passiert, wenn man dem lehren Stack dinge entnehmen möchte? -> Stack_tb_long1.vhd, Stack_tb_long2.vhd
