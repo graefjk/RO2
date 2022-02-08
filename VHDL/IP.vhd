@@ -69,11 +69,24 @@ architecture Behavioral of IP is
     --The ROM
     signal ROM : rom_type := InitRomFromFile(File_name);
     --Using BlockRAM for the ROM
-    attribute rom_style : string;
+    attribute rom_style : string; --change rom_style to ram_style if using ram in the future
     attribute rom_style of ROM : signal is "block";
     --The old PC value for detection of changes
     signal old_pc: std_ulogic_vector(11 downto 0) := (others => '1');
     
 begin
-    instruction_o <= ROM(to_integer(unsigned(pc_i)));
+    -- returns the new instruction synchronous
+    process(clk_i)
+    begin
+        --Checking for a rising edge
+        if (clk_i'event and clk_i = '1') then
+            --Checking for a change in the PC
+            if (pc_i /= old_pc) then
+                --Retriving the instruction from the ROM
+                instruction_o <= ROM(to_integer(unsigned(pc_i)));
+                --Storing the new PC as old
+                old_pc <= pc_i;
+            end if;
+        end if;
+    end process;
 end Behavioral;
