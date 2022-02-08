@@ -45,9 +45,9 @@ end IO;
 
 architecture Behavioral of IO is
     type output_buffer_type is array (127 downto 0) of std_ulogic_vector(7 downto 0);
-    signal output_buffer : output_buffer_type ;
+    signal output_buffer : output_buffer_type := (others => (others => '0'));
 	type input_buffer_type is array (255 downto 0) of std_logic_vector(7 downto 0);
-    signal input_buffer : input_buffer_type := (others => (others => 'Z'));--63: next systemside unused input
+    signal input_buffer : input_buffer_type := (others => (others => '0'));
     
 	signal pmod_out_enabled: std_ulogic_vector(3 downto 0) := "0000"; 
 	
@@ -120,16 +120,19 @@ begin
      end process;
      
      --Pmod
-     Pmod:process(clk_i) is        
-     begin
-        if rising_edge(clk_i) then
-           for i in 0 to 3 loop
-            if pmod_out_enabled(i) = '0' then
-                input_buffer(i + 50) <= port_b(16 + 8 * i downto 9 + 8 * i);
-            end if;
-           end loop;
-		 end if;
-     end process;
+     Pmod:for i in 0 to 3 generate
+         process(clk_i) is        
+         begin
+            if rising_edge(clk_i) then
+                if pmod_out_enabled(i) = '0' then
+                    if input_buffer(i + 50) /= port_b(16 + 8 * i downto 9 + 8 * i) then
+                        input_buffer(i + 56) <= input_buffer(i + 50);
+                        input_buffer(i + 50) <= port_b(16 + 8 * i downto 9 + 8 * i);
+                    end if;
+                end if;
+             end if;
+         end process;
+     end generate;
 	 
      --LED
      LED: process(clk_i) is
@@ -156,7 +159,11 @@ begin
      Sw:process(clk_i) is
      begin
      if(rising_edge(clk_i)) then
-        input_buffer(62) <= port_b(60 downto 53);
+        if input_buffer(62) /= port_b(60 downto 53) then
+            input_buffer(60) <= input_buffer(61);
+            input_buffer(61) <= input_buffer(62);
+            input_buffer(62) <= port_b(60 downto 53);
+        end if;
      end if;
      end process;
      
@@ -270,14 +277,15 @@ begin
                                 data_in_8 := not data_in_10(7 downto 0);
                            end if;
                            hdmi_in_rgb(i)(0) <= data_in_8(0);
-                           input_buffer(46 + i)(0)<= data_in_8(0);
+                           input_buffer(44 + i) <= input_buffer(47 + i);
+                           input_buffer(47 + i)(0)<= data_in_8(0);
                            for iBit in 1 to 7 loop
                               if (data_in_10(8) = '1') then
                                  hdmi_in_rgb(i)(iBit) <= data_in_8(iBit) xor data_in_8(iBit-1);
-                                 input_buffer(46 + i)(iBit) <= data_in_8(iBit) xor data_in_8(iBit-1);
+                                 input_buffer(47 + i)(iBit) <= data_in_8(iBit) xor data_in_8(iBit-1);
                               else
                                  hdmi_in_rgb(i)(iBit) <= data_in_8(iBit) xnor data_in_8(iBit-1);
-                                 input_buffer(46 + i)(iBit) <= data_in_8(iBit) xnor data_in_8(iBit-1);
+                                 input_buffer(47 + i)(iBit) <= data_in_8(iBit) xnor data_in_8(iBit-1);
                               end if;
                            end loop;
                        else
@@ -308,7 +316,7 @@ begin
                     data_out_10 := hdmi_data_buffer(i);
                     disparity := "00000";
                 else
-                    case output_buffer(46) is 
+                    case output_buffer(44 + i) is 
                         when "00000000" =>-- Addition without Overflow 
                             if to_integer(unsigned(output_buffer(47 + i))) + to_integer(unsigned(hdmi_in_rgb(i))) > 255 then
                                 data_out_8 := "11111111";
@@ -335,15 +343,29 @@ begin
                         when "00000101" =>-- Multiplication
                             temp_toBig := std_ulogic_vector(unsigned(output_buffer(47 + i)) * unsigned(hdmi_in_rgb(i)));
                             data_out_8 := temp_toBig(7 downto 0);
-                        when "00000110" =>-- Division without Overflow 
-                            if unsigned(output_buffer(47 + i)) / unsigned(hdmi_in_rgb(i)) < 0 then
-                                data_out_8 := "11111111";
-                            else
-                                data_out_8 := std_ulogic_vector(unsigned(output_buffer(47 + i)) / unsigned(hdmi_in_rgb(i)));
-                            end if;
-                        when "00000111" =>-- Division
+                        when "00000110" =>-- Division round up
                             data_out_8 := std_ulogic_vector(unsigned(output_buffer(47 + i)) / unsigned(hdmi_in_rgb(i)));
+                            if unsigned(data_out_8) * unsigned(hdmi_in_rgb(i)) /= unsigned(output_buffer(47 + i)) then
+                                data_out_8 := std_ulogic_vector(unsigned(data_out_8) + 1);
+                            end if;
+                        when "00000111" =>-- Division round down
+                            data_out_8 := std_ulogic_vector(unsigned(output_buffer(47 + i)) / unsigned(hdmi_in_rgb(i)));
+                        when "00001000" =>-- And
+                            data_out_8 := output_buffer(47 + i) and hdmi_in_rgb(i);
+                        when "00001001" =>-- Or
+                            data_out_8 := output_buffer(47 + i) or hdmi_in_rgb(i);
+                        when "00001010" =>-- xor
+                            data_out_8 := output_buffer(47 + i) xor hdmi_in_rgb(i);
+                        when "00001011" =>-- Not
+                            data_out_8 := not hdmi_in_rgb(i);
+                        when "00001100" =>-- Nand
+                            data_out_8 := output_buffer(47 + i) nand hdmi_in_rgb(i);
+                        when "00001101" =>-- Nor
+                            data_out_8 := output_buffer(47 + i) nor hdmi_in_rgb(i);
+                        when "00001110" =>-- xnor
+                            data_out_8 := output_buffer(47 + i) xnor hdmi_in_rgb(i);
                         when others =>
+                            data_out_8 := output_buffer(47 + i);
                     end case;
                     sob_in := sum_bits(data_out_8);
                     data_temp(0) := data_out_8(0);

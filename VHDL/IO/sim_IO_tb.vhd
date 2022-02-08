@@ -343,17 +343,17 @@ begin
             value_i_s <= std_ulogic_vector(to_unsigned(i, 8));
             port_id_s <= std_ulogic_vector(to_unsigned(46, 8));
             wait for clk_period;
-            for j in 0 to 256 loop
+            for j in 0 to 255 loop
                 enable_s <= '1';
                 value_i_s <= std_ulogic_vector(to_unsigned(j, 8));
                 port_id_s <= std_ulogic_vector(to_unsigned(47, 8));
                 wait for clk_period;
-                for k in 0 to 256 loop
+                for k in 0 to 255 loop
                     enable_s <= '1';
                     value_i_s <= std_ulogic_vector(to_unsigned(k, 8));
                     port_id_s <= std_ulogic_vector(to_unsigned(48, 8));
                     wait for clk_period;
-                    for l in 0 to 256 loop
+                    for l in 0 to 255 loop
                         enable_s <= '1';
                         value_i_s <= std_ulogic_vector(to_unsigned(l, 8));
                         port_id_s <= std_ulogic_vector(to_unsigned(49, 8));
@@ -362,9 +362,9 @@ begin
                         value_i_s <= "00000000";
                         port_id_s <= "00000000";
                         wait for clk_period;
-                        for m in 0 to 256 loop
-                            for n in 0 to 256 loop
-                                for o in 0 to 256 loop
+                        for m in 0 to 255 loop
+                            for n in 0 to 255 loop
+                                for o in 0 to 255 loop
                                     hdmi_vde <= '1';
                                     rgb_val(0) <= std_ulogic_vector(to_unsigned(m, 8));
                                     rgb_val(1) <= std_ulogic_vector(to_unsigned(n, 8));
