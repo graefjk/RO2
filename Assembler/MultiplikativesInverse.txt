@@ -1,0 +1,74 @@
+//Multiplikatives inverse
+LOAD s1 23 //a
+LOAD s2 120 //b
+STORE s2 0
+LOAD s3 0
+LOAD s4 1
+CALL inverse
+COMPARE s3 128
+JUMPC skipADD
+FETCH s2 0
+ADD s3 s2
+skipADD
+STORE s3 255 //ram[0] = inverse
+JUMP end
+
+inverse
+COMPARE s1 0 //while s1 /= 0
+RETURNZ
+CALL div
+LOAD s7 s3
+LOAD s3 s4
+CALL mult1
+SUB s7 sE
+LOAD s4 s7
+LOAD s8 s2
+LOAD s2 s1
+CALL mult2
+SUB s8 sE
+LOAD s1 s8
+JUMP inverse
+
+div
+LOAD sA s2
+LOAD sB s1
+LOAD sC 0
+LoopStartdiv
+SUB sA sB
+JUMPC LoopEnddiv
+ADD sC 1
+JUMP LoopStartdiv
+LoopEnddiv
+ADD sA sB
+RETURN
+
+
+mult1
+LOAD sD sC
+LOAD sE s4
+mult12
+COMPARE sD 1
+RETURNZ
+SUB sD 1
+ADD sE s4
+JUMP mult12
+
+mult2
+LOAD sD sC
+LOAD sE s1
+mult22
+COMPARE sD 1
+RETURNZ
+SUB sD 1
+ADD sE s1
+JUMP mult22
+
+end
+
+
+
+
+
+
+
+

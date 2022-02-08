@@ -57,7 +57,7 @@ architecture Behavioral of stack is
             begin
                 if reset_i = '1' then
                     --stack_s <= (others => (others => '0')); -- this could be skipped, actually its enough to reset the stack_pointer, if uncommented it will be synthesized to registers
-                    sStack_o <= (others => '0');
+                    sStack_o <= (others => '1');
                     empty := '1';
                     full := '0';
                     stack_pointer := 0;

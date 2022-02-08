@@ -1,0 +1,80 @@
+//Assembler to do a prime factorisation
+// 132=11*12=2*2*3*11
+LOAD x0, 132 //number to be factorised
+
+COMPARE x0, 2
+JUMPC end //terminate if x0<2 as x0 has only itself as factor
+
+//find all primes up to 255 and save them in RAM
+LOAD x4, 2
+//x6 is x4 / 2. so that only half as many numbers need to be tested
+LOAD x6, 1
+LOAD x5, 0 //RAM address to write new primes to
+
+Label1
+LOAD x2, 1
+Label2
+COMPARE x6, x2
+//all numbers up to x4 / 2 have been checked and no divider has been found =>x4 is prime
+JUMPZ prime
+ADD x2, 1 
+LOAD x1, x4
+CALL divider //divide x4 and x2
+COMPARE x1, 0 // x2 divides x4 => x4 is not a prime
+JUMPZ noPrime
+JUMP Label2
+
+prime
+STORE x4, x5
+ADD x5, 1
+
+noPrime
+ADD x4, 1
+LOAD x6, x4
+SR0 x6 // x4 / 2 rounded down
+JUMPNZ Label1 
+
+//Prime finding complete
+
+//begin factorisation
+LOAD x4, 0
+LOAD x5, 255
+
+Label3
+FETCH x2, x4 //save prime in x2
+ADD x4, 1
+LOAD x1, x0
+CALL divider // calculate x1 / x2
+COMPARE x1, 0 //if x1 mod x2 = 0 then x2 is a factor of x4
+JUMPZ addFactor
+JUMP Label3
+
+addFactor
+STORE x2, x5
+SUB x5, 1
+LOAD x4, 0
+LOAD x0, x3
+COMPARE x0, 1
+JUMPZ end
+JUMP Label3
+
+divider // calculates x1 / x2 saves divident in x3 and rest in x1
+LOAD x3, 0 //rest
+LoopStart
+SUB x1, x2
+JUMPC LoopEnd
+ADD x3, 1
+JUMP LoopStart
+LoopEnd
+ADD x1, x2
+RETURN
+
+end
+
+
+
+
+
+
+
+

@@ -1,0 +1,92 @@
+//Assembler to find 16 bit prime numbers
+LOAD x7, 0 // first part of currently tested number
+LOAD x8, 2 // second part of currently tested number
+//x9xA is x7x8 / 2. so that only half as many numbers need to be tested
+LOAD x9, 0
+LOAD xA, 1
+LOAD xB, 0 // RAM address to write new primes to
+LOAD xC, 0
+LOAD xF, 0
+
+Label1
+LOAD x3, 0
+LOAD x4, 1
+Label2
+COMPARE x9, x3
+//all numbers up to x7x8 / 2 have been checked and no divider has been found =>x4 is prime
+CALLZ primeX3
+ADD x4, 1 
+ADDCY x3, 0
+LOAD x1, x7
+LOAD x2, x8
+CALL divider //divide x7x8 and x3x4
+COMPARE x1, 0 // x3x4 divides x7x8 => x7x8 is not a prime
+JUMPZ noPrimeX1
+JUMP Label2
+
+primeX3
+COMPARE xA, x4
+JUMPZ prime 
+RETURN
+
+noPrimeX1
+COMPARE x2, 0 // x3x4 divides x7x8 => x7x8 is not a prime
+JUMPZ noPrime
+JUMP Label2
+
+prime
+COMPARE xC, x7
+CALLC writeX7
+STORE x8, xB
+ADD xB, 1
+
+noPrime
+ADD x8, 1
+ADDCY x7, 0
+LOAD x9, x7
+LOAD xA, x8
+SR0 x9 // x7x8 / 2 rounded down
+SRA xA
+JUMPZ endTest //end the programm if all possible numbers have been tested
+JUMP Label1
+
+writeX7
+STORE xF, xB
+add xB, 1
+STORE x7, xB
+add xB, 1
+STORE xF, xB
+add xB, 1
+add xC, 1
+RETURN
+
+endTest
+COMPARE x9, 0
+JUMPZ end
+JUMP Label1
+
+
+divider // div x1x2 and x3x4 saves divident in x5x6 and rest in x3x4
+// calculate a / b
+LOAD x5, 0 // divident part 1
+LOAD x6, 0 // divident part 2
+
+LoopStart
+SUB x2, x4
+SUBCY x1, x3
+JUMPC LoopEnd
+ADD x6, 1
+ADDCY x5, 0
+JUMP LoopStart
+LoopEnd
+ADD x2, x4
+ADDCY x1, x3
+RETURN
+
+
+end
+
+
+
+
+

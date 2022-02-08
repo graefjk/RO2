@@ -1,0 +1,18 @@
+//Assembler to divide two numbers and save the result as divident and the rest zb 29/8=3 R 5
+LOAD x1, 29 //rest will be saved here
+LOAD x2, 8
+LOAD x3, 0 //divident
+LoopStart
+SUB x1, x2
+JUMPC LoopEnd
+ADD x3, 1
+JUMP LoopStart
+LoopEnd
+ADD x1, x2
+
+
+
+
+
+
+

@@ -49,7 +49,7 @@ def removeUnnecessary(instructions):
     """
     for instruction in instructions:
         i = instruction
-        instruction = instruction.replace(" ", "")
+        instruction = instruction.replace(" ", "").replace("\t", "")
         if instruction[0:2] == "//" or instruction == "":
             instructions.remove(i)
             removeUnnecessary(instructions)
@@ -75,14 +75,14 @@ def changeToBinary(n, bits):
         return number
     elif system == "h":
         number = int(n[1:], 16)
-        if (128 > number > -129 and bits == 8) or (4096 > number > -1 and bits == 12):
+        if (256 > number > -129 and bits == 8) or (4096 > number > -1 and bits == 12):
             b = bin(int(number) & int("1" * bits, 2))[2:]
             return ("{0:0>%s}" % bits).format(b)
         else:
             return "1111111111111"
     else:
         number = int(n[0:])
-        if (257 > number > -257 and bits == 8) or (4096 > number > -1 and bits == 12):
+        if (256 > number > -129 and bits == 8) or (4096 > number > -1 and bits == 12):
             b = bin(int(number) & int("1" * bits, 2))[2:]
             return ("{0:0>%s}" % bits).format(b)
         else:
@@ -113,6 +113,13 @@ def generateMachinecode():
         current_line += 1
         if len(line) == 1 and not checkOneList.__contains__(line[0].upper()):
             try:
+                if label.__contains__(line[0].upper()):
+                    text_field_machinecode.insert("end", "Error in line {} {}, "
+                                                         "label already used!".format(current_line, line) + "\n")
+                    text_field_machinecode.tag_add("error", "end-2c linestart", "end")
+                    text_field_assembler.mark_set("insert", str(current_line) + ".0 lineend")
+                    text_field_assembler.see(str(current_line) + ".0")
+                    return
                 label[line[0].upper()] = str(current_line - label.__len__() - 1)
             except KeyError:
                 text_field_machinecode.insert("end", "Error in line {} {}, "

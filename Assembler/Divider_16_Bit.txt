@@ -1,0 +1,33 @@
+//Assembler to divide two 16 bit numbers and save the result as divident and the rest 
+//zb 65000 / 640 = 101 R 360
+//65000 = 11111101 11101000
+//640 = 00000010 10000000
+//101 = 00000000 1100101
+//360 = 00000001 01101000
+
+// calculate a / b
+
+LOAD x1, b11111101 // first part of a   rest part  1
+LOAD x2, b11101000 // second part of a    rest part 2
+LOAD x3, 2 // first part of b     
+LOAD x4, 128 // second part of b
+LOAD x5, 0 // divident part 1
+LOAD x6, 0 // divident part 2
+
+LoopStart
+SUB x2, x4
+SUBCY x1, x3
+JUMPC LoopEnd
+ADD x6, 1
+ADDCY x5, 0
+JUMP LoopStart
+LoopEnd
+ADD x2, x4
+ADDCY x1, x3
+
+
+
+
+
+
+

@@ -58,7 +58,7 @@ architecture Behavioral of stack_new is
             begin
                 if reset_i = '1' then
                     --stack_s <= (others => (others => '0')); -- this could be skipped, actually its enough to reset the stack_pointer, if uncommented it will be synthesized to registers
-                    sStack_o <= (others => '0');
+                    sStack_o <= (others => '1');
                     stack_pointer_s <= 0;
                 elsif(rising_edge(clk_i) and enable_i = '1') then
                     if write_or_read_i = '1' then -- Reading

@@ -1,0 +1,64 @@
+//Teilerfremde Zahl finden
+
+LOAD s8 2
+LOAD s9 120
+JUMP check
+
+checknext
+ADD s8 1
+
+
+check
+LOAD s1 s8
+LOAD s2 s9
+CALL ggt
+COMPARE s1 1
+JUMPZ ggtfound
+JUMP checknext
+
+
+
+ggt
+COMPARE s2 s1 //if s2 < s1 go to next
+JUMPC next
+LOAD s3 s1
+LOAD s1 s2
+LOAD s2 s3
+
+next
+COMPARE s2 0 //if s2 = 0 go to final
+JUMPZ final
+CALL mod
+LOAD s1 s2
+LOAD s2 s3
+JUMP ggt
+
+final
+RETURN
+
+
+mod
+LOAD sA s1
+LOAD sB s2
+LOAD sC 0
+LoopStart
+SUB sA sB
+JUMPC LoopEnd
+ADD sC 1
+JUMP LoopStart
+LoopEnd
+ADD sA sB
+LOAD s3 sA
+RETURN
+
+
+ggtfound
+STORE s8 255
+
+
+
+
+
+
+
+

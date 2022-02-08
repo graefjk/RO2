@@ -1,0 +1,64 @@
+Referenced Files:
+
+write_tb.py
+template.vhd
+template_beginingAdd.vhd
+template_beginingIp.vhd
+template_beginingPC.vhd
+template_beginingStack.vhd
+template_beginingStackU.vhd
+template_end.vhd
+
+ADD_tb_long1.vhd
+IP_tb_long1.vhd
+PC_tb_long1.vhd
+PC_tb_long2.vhd
+PC_tb_long3.vhd
+Stack_tb_long1.vhd
+Stack_tb_long2.vhd
+Stack_tb_long3.vhd
+Stack_tb_long4.vhd
+Stack_tb_long5.vhd
+Stack_tb_long6.vhd
+Stack_tb_long7.vhd
+Stack_tb_long8.vhd
+Stack_tb_long9.vhd
+StackU_tb_long1.vhd
+
+Testet uut's:
+PC.vhd
+ADD.vhd
+stack.vhd
+IP.vhd
+
+
+Die hier mir #write_tb.py erstellten VHDL Tests diehnen zur ausführlicheren Überprüfung der hier genannten uut's.
+Wird "The Test is finished" in der console angezeigt ohne dass vorher ein error geworfen wird, war der Test ervolgreich.
+PC:
+- Werden alle PC_inputs richtig zur Taktflanke weitergegeben? -> PC_tb_long1.vhd
+- Werden alle PC_inputs richtig nicht zur Taktflanke weitergegeben wenn enable=0 
+	und entsprechend liegt das richtige output an wenn enable zurückgeschrieben wird? -> PC_tb_long2.vhd
+- Wird der reset unabhängig vom input richtig gesetzt? -> PC_tb_long3.vhd
+ADD:
+- Werden alle sA_s richtig incrementiert unabhängig von der Taktflanke? -> ADD_tb_long1.vhd
++bei Input UUU sollte output nicht xxx sein -> wurde diskutiert und als nicht relevant und nicht behebbar angesehen (auf board dan output = unbekannter wert aber nicht xxx)
+IP:
+- Wird jede Zeile entsprechend ausgegeben?
+- kleinere datei was passiert bei nicht definierten zeilen
+- zu groses file was passiert
+- in file.data schreiben tests
+- was passiert bei input UUU?
+Stack:
+- Was passiert, wenn der Stack nachdem er voll ist weiter gefüllt wird? -> Stack_tb_long3.vhd, Stack_tb_long4.vhd
+- Was passiert, wenn man dem lehren Stack dinge entnehmen möchte? -> Stack_tb_long1.vhd, Stack_tb_long2.vhd
+- Ist es tatsächlich ein Stack und keine Liste? Gilt LiFo? -> Stack_tb_long5.vhd
+- Was wird bei enable=0 ausgegeben? -> Stack_tb_long7.vhd, Stack_tb_long8.vhd
+(passt heirbei das mux steuersignal mit enable zusammen?) Ja von Hand geprüft. "sStack_write_or_read_o" und "mux_stack_select_o" haben genau gleiche zuweisung.
+- Was passiert bei unstabielem write_or_read? -> StackU_tb_long1.vhd
+- Ist reset richtig? -> Stack_tb_long9.vhd
+- Standardtest 3 Layer füllen und entnehmen -> Stack_tb_long6.vhd
+- Werden alle inputmöglichkeiten richtig wieder zurückgegeben? -> Stack_tb_long6.vhd
++ UUU ist ok in Stack_tb_long1.vhd, Stack_tb_long3.vhd
++ Reset 111 anstelle 000 -> wurde angepasst
++ unstabiles write_or_read darf auf keinen fall auftreten -> abgesichert durch Decoder
+# manche Tests werfen Fehler, wenn sie nach "The Test is finished" weiter mit "run -all" ausgeführt werden, da die Testausgangssituation sich verändert hat. z.B. Stack_tb_long3.vhd, Stack_tb_long7.vhd

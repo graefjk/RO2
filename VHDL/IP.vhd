@@ -69,7 +69,7 @@ architecture Behavioral of IP is
     --The ROM
     signal ROM : rom_type := InitRomFromFile(File_name);
     --Using BlockRAM for the ROM
-    attribute rom_style : string;
+    attribute rom_style : string; --change rom_style to ram_style if using ram in the future
     attribute rom_style of ROM : signal is "block";
     
 begin
