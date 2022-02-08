@@ -1,5 +1,6 @@
-
-Architekturbeschreibung.synctex.gz
-Architekturbeschreibung.aux
-Architekturbeschreibung.log
-Architekturbeschreibung.out
+*.aux
+*.dvi
+*.log
+*.out
+*.ps
+*.gz
