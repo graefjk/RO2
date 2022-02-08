@@ -44,8 +44,8 @@ package microcontroller_package is
     constant stack_style_c : string := "distributed"; -- "registers", "distributed" or "block" can be used here
     
     --IP things
-    constant File_Name: String := "BoardTest";
-    constant File_Ending: String := ".data";
+--    constant File_Name: String := "BoardTest";
+--    constant File_Ending: String := ".data";
 
 
 	component ADD
