@@ -1,5 +1,5 @@
-
-Architekturbeschreibung.synctex.gz
-Architekturbeschreibung.aux
-Architekturbeschreibung.log
-Architekturbeschreibung.out
+*.synctex.gz
+*.aux
+*.log
+*.out
+*.aux
