@@ -80,7 +80,7 @@ set_property -dict {PACKAGE_PIN P19 IOSTANDARD LVCMOS33} [get_ports {port_b[45]}
 
 set_property -dict {PACKAGE_PIN W19 IOSTANDARD LVCMOS33} [get_ports {port_b[46]}]
 set_property -dict {PACKAGE_PIN W18 IOSTANDARD LVCMOS33} [get_ports {port_b[47]}]
-#set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets port_b_IBUF__0[47]]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets io_instance/design_1_i/IO_0/U0/DDC_clk_in/O]
 set_property -dict {PACKAGE_PIN Y19 IOSTANDARD LVCMOS33} [get_ports {port_b[48]}]
 set_property -dict {PACKAGE_PIN U18 IOSTANDARD TMDS_33} [get_ports {port_i[0]}]
 set_property -dict {PACKAGE_PIN U19 IOSTANDARD TMDS_33} [get_ports {port_i[1]}]

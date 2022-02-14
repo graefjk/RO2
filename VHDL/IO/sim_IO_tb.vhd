@@ -215,6 +215,8 @@ begin
         wait for clk_period_hdmi / 2;
     end process;
     
+    port_b_s(47)<= clk_hdmi_s;
+    
     ser_clk_hdmi_process: MMCME2_BASE
        generic map
           (BANDWIDTH            => "OPTIMIZED",
@@ -332,7 +334,133 @@ begin
             end loop;
 	    end loop;	    
 	    
+	    --HDMI-DDC
+	       --Single Byte Test
+        wait until falling_edge(clk_hdmi_s);
+	    for i in 0 to 255 loop
+            port_b_s(48) <= '1';
+            port_b_s(51) <= 'Z';
+            wait until rising_edge(clk_hdmi_s);
+            wait for clk_period_hdmi/4;
+            port_b_s(48) <= '0';
+            port_b_s(51) <= 'Z';
+            wait for clk_period_hdmi/2;
+            for j in 7 downto 0 loop
+                port_b_s(48) <= to_unsigned(i,8)(j);
+                port_b_s(51) <= 'Z';
+                wait for clk_period_hdmi;
+            end loop;
+            port_b_s(51) <= '1';
+            port_b_s(48) <= 'Z';
+            wait until falling_edge(clk_hdmi_s);
+            port_b_s(48) <= '0';
+            port_b_s(51) <= 'Z';
+            wait for clk_period_hdmi/2;
+            wait for clk_period_hdmi/4;
+            port_b_s(48) <= '1';
+            port_b_s(51) <= 'Z';
+            wait for clk_period_hdmi/2;
+        end loop;
+            --Multi Byte Test write
+        wait until falling_edge(clk_hdmi_s);
+        port_b_s(48) <= '1';
+        port_b_s(51) <= 'Z';
+        wait until rising_edge(clk_hdmi_s);
+        wait for clk_period_hdmi/4;
+        port_b_s(48) <= '0';
+        port_b_s(51) <= 'Z';
+        wait for clk_period_hdmi/2;
+        for i in 0 to 255 loop
+            for j in 7 downto 0 loop
+                port_b_s(48) <= to_unsigned(i,8)(j);
+                port_b_s(51) <= 'Z';
+                wait for clk_period_hdmi;
+            end loop;
+            port_b_s(51) <= '1';
+            port_b_s(48) <= 'Z';
+            wait for clk_period_hdmi;
+        end loop;
+	    wait until falling_edge(clk_hdmi_s);
+        port_b_s(48) <= '0';
+        port_b_s(51) <= 'Z';
+        wait for clk_period_hdmi/2;
+        wait for clk_period_hdmi/4;
+        port_b_s(48) <= '1';
+        port_b_s(51) <= 'Z';
+        
+            --Multi Byte Test read
+        wait until falling_edge(clk_hdmi_s);
+        port_b_s(48) <= '1';
+        port_b_s(51) <= 'Z';
+        wait until rising_edge(clk_hdmi_s);
+        wait for clk_period_hdmi/4;
+        port_b_s(48) <= '0';
+        port_b_s(51) <= 'Z';
+        wait for clk_period_hdmi/2;
+        for j in 7 downto 0 loop
+            port_b_s(48) <= to_unsigned(1,8)(j);
+            port_b_s(51) <= 'Z';
+            wait for clk_period_hdmi;
+        end loop;
+        port_b_s(51) <= '1';
+        port_b_s(48) <= 'Z';
+        wait for clk_period_hdmi;
+        for i in 2 to 256 loop
+            for j in 7 downto 0 loop
+                port_b_s(51) <= to_unsigned(i,8)(j);
+                port_b_s(48) <= 'Z';
+                wait for clk_period_hdmi;
+            end loop;
+            port_b_s(48) <= '1';
+            port_b_s(51) <= 'Z';
+            wait for clk_period_hdmi;
+        end loop;
+	    wait until falling_edge(clk_hdmi_s);
+        port_b_s(48) <= '0';
+        port_b_s(51) <= 'Z';
+        wait for clk_period_hdmi/2;
+        wait for clk_period_hdmi/4;
+        port_b_s(48) <= '1';
+        port_b_s(51) <= 'Z';
+        wait for clk_period_hdmi;
+            --Multi Start Test
+        for i in 0 to 255 loop
+            wait until falling_edge(clk_hdmi_s);
+            port_b_s(48) <= '1';
+            port_b_s(51) <= 'Z';
+            wait until rising_edge(clk_hdmi_s);
+            wait for clk_period_hdmi/4;
+            port_b_s(48) <= '0';
+            port_b_s(51) <= 'Z';
+            wait for clk_period_hdmi/2;
+            for j in 7 downto 0 loop
+                port_b_s(48) <= to_unsigned(1,8)(j);
+                port_b_s(51) <= 'Z';
+                wait for clk_period_hdmi;
+            end loop;
+            port_b_s(51) <= '1';
+            port_b_s(48) <= 'Z';
+            wait for clk_period_hdmi;
+            for j in 7 downto 0 loop
+                port_b_s(51) <= to_unsigned(i,8)(j);
+                port_b_s(48) <= 'Z';
+                wait for clk_period_hdmi;
+            end loop;
+            port_b_s(48) <= '1';
+            port_b_s(51) <= 'Z';
+            wait for clk_period_hdmi;
+        end loop;
+	    wait until falling_edge(clk_hdmi_s);
+        port_b_s(48) <= '0';
+        port_b_s(51) <= 'Z';
+        wait for clk_period_hdmi/2;
+        wait for clk_period_hdmi/4;
+        port_b_s(48) <= '1';
+        port_b_s(51) <= 'Z';
+        wait for clk_period_hdmi;
+        
 	    --Hdmi
+        wait until rising_edge(clk_hdmi_s);
 	    for i in 0 to 7 loop
 	        hdmi_data_buffer_in(0) <= "0011001101";
 	        hdmi_data_buffer_in(1) <= "1100110010";
