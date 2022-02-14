@@ -202,7 +202,6 @@ begin
                     sda_start_s <= (others => '0');
                 end if;
             end if;
-            old_ddc_val_s <= port_b(48);
         end if;
       end process;
       
@@ -211,6 +210,7 @@ begin
         variable first_byte: std_ulogic := '1';
       begin
         if rising_edge(sdc_clk_s) then
+            old_ddc_val_s <= port_b(48);
             if sda_start_s = 0 then --transmission not started
                 cnt := "0000";
                 first_byte := '1';
