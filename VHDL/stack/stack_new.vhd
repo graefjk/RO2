@@ -50,8 +50,6 @@ architecture Behavioral of stack_new is
     signal stack_pointer_s: integer range 0 to stack_depth_g := 0;
     signal full_s: std_ulogic;
     signal empty_s: std_ulogic;
-    
-    signal stack_pointer_plusplus_s : integer range 0 to stack_depth_g;
 
     begin
         stack_process: process(clk_i, reset_i) is
