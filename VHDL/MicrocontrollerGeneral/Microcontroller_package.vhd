@@ -26,7 +26,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 package microcontroller_package is
     
     --generall architekture
-    constant instruction_address_c : integer := 12; --size in bits for addressing a instruction in the instruction prom
+    constant instruction_address_size_c : integer := 12; --size in bits for addressing a instruction in the instruction prom
     constant architecture_width_c: integer := 8; --width for the alu, the registers and scratchpadmemory
     
     --register things
@@ -46,8 +46,8 @@ package microcontroller_package is
 
 
 	component ADD
-        port(   sA_i: in std_ulogic_vector(instruction_address_c - 1 downto 0); --input signals
-		        sB_o: out std_ulogic_vector(instruction_address_c - 1 downto 0)); -- output signals);
+        port(   sA_i: in std_ulogic_vector(instruction_address_size_c - 1 downto 0); --input signals
+		        sB_o: out std_ulogic_vector(instruction_address_size_c - 1 downto 0)); -- output signals);
     end component;
 
     component ALU
@@ -185,10 +185,10 @@ package microcontroller_package is
     end component;
     
     component stack
-        generic(    instruction_address_g: integer := instruction_address_c;
+        generic(    instruction_address_size_g: integer := instruction_address_size_c;
                     stack_depth_g: integer := stack_depth_c;
                     stack_style_g: string := stack_style_c); -- "registers", "distributed" or "block" can be used here
-        port(   sPC_i : in std_ulogic_vector( instruction_address_g -1 downto 0);
+        port(   sPC_i : in std_ulogic_vector( instruction_address_size_g -1 downto 0);
                 write_or_read_i: in std_ulogic; -- 0 for write, 1 for read
                 enable_i: in std_ulogic;
                 reset_i: in std_ulogic;
@@ -197,7 +197,7 @@ package microcontroller_package is
                 full_o: out std_ulogic;
                 empty_o: out std_ulogic;
             
-                sStack_o: out std_ulogic_vector( instruction_address_g -1 downto 0)); 
+                sStack_o: out std_ulogic_vector( instruction_address_size_g -1 downto 0)); 
     end component;
 
 end package microcontroller_package;

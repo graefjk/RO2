@@ -26,10 +26,10 @@ library work;
 use work.microcontroller_package.all;
 
 entity stack_new is
-    generic(    instruction_address_g: integer := instruction_address_c;
+    generic(    instruction_address_size_g: integer := instruction_address_size_c;
                 stack_depth_g: integer := stack_depth_c;
                 stack_style_g: string := stack_style_c); -- "registers", "distributed" or "block" can be used here
-    port(   sPC_i : in std_ulogic_vector( instruction_address_g -1 downto 0);
+    port(   sPC_i : in std_ulogic_vector( instruction_address_size_g -1 downto 0);
             write_or_read_i: in std_ulogic; -- 0 for write, 1 for read
             enable_i: in std_ulogic;
             reset_i: in std_ulogic;
@@ -38,11 +38,11 @@ entity stack_new is
             full_o: out std_ulogic;
             empty_o: out std_ulogic;
             
-            sStack_o: out std_ulogic_vector( instruction_address_g -1 downto 0)); 
+            sStack_o: out std_ulogic_vector( instruction_address_size_g -1 downto 0)); 
 end stack_new;
 
 architecture Behavioral of stack_new is
-    type stack_type is array (stack_depth_g downto 1) of std_ulogic_vector( instruction_address_g -1 downto 0);
+    type stack_type is array (stack_depth_g downto 1) of std_ulogic_vector( instruction_address_size_g -1 downto 0);
     signal stack_s : stack_type := (others => (others => '0'));
     attribute ram_style : string;
     attribute ram_style of stack_s : signal is stack_style_g;

@@ -30,10 +30,10 @@ end stack_tb;
 
 architecture Behavioral of stack_tb is
     component stack
-        generic(    instruction_address_g: integer := 12;
+        generic(    instruction_address_size_g: integer := 12;
                 stack_depth_g: integer := 128
         );
-        port(   sPC_i : in std_ulogic_vector( instruction_address_g -1 downto 0);
+        port(   sPC_i : in std_ulogic_vector( instruction_address_size_g -1 downto 0);
                 write_or_read_i: in std_ulogic; -- 0 for write, 1 for read
                 enable_i: in std_ulogic;
                 reset_i: in std_ulogic;
@@ -42,7 +42,7 @@ architecture Behavioral of stack_tb is
                  full_o: out std_ulogic;
                  empty_o: out std_ulogic;
             
-                 sStack_o: out std_ulogic_vector( instruction_address_g -1 downto 0)
+                 sStack_o: out std_ulogic_vector( instruction_address_size_g -1 downto 0)
          );
     end component;
     

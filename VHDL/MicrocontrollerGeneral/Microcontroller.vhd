@@ -70,7 +70,7 @@ signal read_Y_data_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 signal sRAM_read_data_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 
 --stack outputs:
-signal sStack_s: std_ulogic_vector(instruction_address_c -1 downto 0);
+signal sStack_s: std_ulogic_vector(instruction_address_size_c -1 downto 0);
 signal full_s: std_ulogic;
 signal empty_s: std_ulogic;
 
@@ -84,11 +84,11 @@ signal mux_i_o_select_s: std_logic;
 
 signal mux_register_s: std_ulogic_vector(architecture_width_c -1 downto 0);
 
-signal pc_i_s: std_ulogic_vector(instruction_address_c -1 downto 0);
-signal pc_s: std_ulogic_vector(instruction_address_c -1 downto 0);
+signal pc_i_s: std_ulogic_vector(instruction_address_size_c -1 downto 0);
+signal pc_s: std_ulogic_vector(instruction_address_size_c -1 downto 0);
 --signal sADD_x_s: std_ulogic_vector(architecture_width_c -1 downto 0);
-signal sADD_y_s: std_ulogic_vector(instruction_address_c -1 downto 0);
-signal sADD_s: std_ulogic_vector(instruction_address_c -1 downto 0);
+signal sADD_y_s: std_ulogic_vector(instruction_address_size_c -1 downto 0);
+signal sADD_s: std_ulogic_vector(instruction_address_size_c -1 downto 0);
 signal instruction_s: std_ulogic_vector(17 downto 0);
 --signal port_id_s: std_logic;
 signal value_i_s: std_ulogic_vector(architecture_width_c -1 downto 0);
@@ -156,7 +156,7 @@ ram_instance: ram
 
 
 stack_instance: stack
-generic map(    instruction_address_g => instruction_address_c,
+generic map(    instruction_address_size_g => instruction_address_size_c,
                 stack_depth_g  => stack_depth_c,
                 stack_style_g  => stack_style_c)
 port map(       sPC_i => pc_s,
