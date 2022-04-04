@@ -71,7 +71,7 @@ dvipsnames,
 		\begin{multicols}{2}
 		\begin{itemize}
 			\item Befehl steht im Instruction PROM
-			\item Program Counter gibt an, dass Befehl ausgeführt werden soll
+			\item Program Counter gibt Befehlsadresse an Instruction PROM
 			\item 18 bit Befehl wird an Instruction Decoder weitergegeben
 		\end{itemize}
 		\includegraphics[width=\linewidth]{../Blockbeschreibungen/IP_beschreibung.pdf}
@@ -102,12 +102,13 @@ dvipsnames,
 			\item entscheiden, welcher Wert wieder in Register sX gespeichert wird
 			\item bei Befehl ADD sX, sY: Output der ALU
 		\end{itemize}
-		\includegraphics[width=\linewidth]{../Blockbeschreibungen/Register_beschreibung.pdf}
+		\includegraphics[width=1.2\linewidth]{../Blockbeschreibungen/Register_beschreibung.pdf}
 		\end{multicols}
 	\end{frame}
 
 	\begin{frame}{Register}
-		\includegraphics[width=\linewidth]{../Blockbeschreibungen/Register-BlockdiagramSnipits.pdf}
+		\includegraphics[width=\linewidth]{../Blockbeschreibungen/Register-BlockdiagramSnipits2.pdf}
+		%\includegraphics[width=\linewidth]{../Blockbeschreibungen/Register-BlockdiagramSnipits.pdf}
 	\end{frame}
 	
 	\begin{frame}{ALU}
@@ -157,7 +158,8 @@ dvipsnames,
 			%\includegraphics[width=.4\linewidth]{figures/STORE.png}
 		\end{itemize}
 		\begin{multicols}{2}	
-		\includegraphics[width=.7\linewidth]{../Blockbeschreibungen/RAM-BlockdiagramSnipits.pdf}
+		%\includegraphics[width=.7\linewidth]{../Blockbeschreibungen/RAM-BlockdiagramSnipits.pdf}
+		\includegraphics[width=.7\linewidth]{../Blockbeschreibungen/RAM-BlockdiagramSnipits2.pdf}
 		\includegraphics[width=\linewidth]{../Blockbeschreibungen/RAM_beschreibung.pdf}
 		\end{multicols}
 	\end{frame}
@@ -179,8 +181,9 @@ dvipsnames,
 	\begin{frame}{Enable Bits}
 		\begin{itemize}
 			\item Der Instruction Decoder setzt alle enable\_i-Bits der Komponenten, die im aktuellen Befehl nicht verwendet werden auf 0.
+			\item in jedem Taktzyklus ist das enable\_i genau eines Bauteils auf 1 gesetzt
+			\item $\rightarrow$ Befehle brauchen mehr als einen Taktzyklus
 			\item $\rightarrow$ bei einem OUTPUT Befehl ist das write\_enable\_i Bit beim Register auf 0, da nur Werte gelesen werden etc.
-			\item ist Grund, weshalb Befehle mehr als einen Taktzyklus brauchen
 		\end{itemize}
 	\end{frame}
 
