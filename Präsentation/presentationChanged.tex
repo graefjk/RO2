@@ -68,12 +68,15 @@ dvipsnames,
 	\end{frame}
 	\section{ADD sX, sY}
 	\begin{frame}{Instruction PROM}
+		\begin{multicols}{2}
 		\begin{itemize}
 			\item Befehl steht im Instruction PROM
 			\item Program Counter gibt an, dass Befehl ausgeführt werden soll
 			\item 18 bit Befehl wird an Instruction Decoder weitergegeben
 		\end{itemize}
-		\includegraphics[width=1.0\linewidth]{../Blockbeschreibungen/PC-IDBlockdiagramSnipits.pdf}
+		\includegraphics[width=\linewidth]{../Blockbeschreibungen/IP_beschreibung.pdf}
+		\end{multicols}
+		\includegraphics[width=\linewidth]{../Blockbeschreibungen/PC-IDBlockdiagramSnipits.pdf}
 	\end{frame}
 	\begin{frame}{Instruction Decoder}
 		\begin{multicols}{2}
@@ -104,7 +107,7 @@ dvipsnames,
 	\end{frame}
 
 	\begin{frame}{Register}
-		\includegraphics[width=\linewidth]{../Blockbeschreibungen/Ram-BlockdiagramSnipits.pdf}
+		\includegraphics[width=\linewidth]{../Blockbeschreibungen/Register-BlockdiagramSnipits.pdf}
 	\end{frame}
 	
 	\begin{frame}{ALU}
@@ -134,22 +137,29 @@ dvipsnames,
 	\section{CALL aaa}
 
 	\begin{frame}{Instruction Decoder}
+		\begin{multicols}{2}
 		\begin{itemize}
 			\item Call/Return Stack speichert Adresse des aktuellen Befehls auf den Stack
 			\item MUX vor Program Counter bekommt vom Instruction Decoder Adresse aaa des nächsten Befehls
 			\item MUX vor PC bekommt auch die Information, dass er Adresse aaa wählen soll
 		\end{itemize}
+		\includegraphics[width=\linewidth]{../Blockbeschreibungen/Stack-BlockdiagramSnipits.pdf}
+		\end{multicols}
 	\end{frame}
 
 	\section{STORE sX, ss}
 
-	\begin{frame}{Instruction Decoder}
+	\begin{frame}{Instruction Decoder}	
 		\begin{itemize}
 			\item Register soll Wert aus sX laden
 			\item MUX vor ALU gibt Immediate Wert vom Instruction Decoder an Scratchpad RAM weiter
 			\item Scratchpad RAM soll geladenen Wert an Adresse ss speichern
 			%\includegraphics[width=.4\linewidth]{figures/STORE.png}
 		\end{itemize}
+		\begin{multicols}{2}	
+		\includegraphics[width=.7\linewidth]{../Blockbeschreibungen/RAM-BlockdiagramSnipits.pdf}
+		\includegraphics[width=\linewidth]{../Blockbeschreibungen/RAM_beschreibung.pdf}
+		\end{multicols}
 	\end{frame}
 
 	\section{OUTPUT sX, pp}
@@ -161,6 +171,7 @@ dvipsnames,
 			\item Wert von Register wird an OUT\_PORT ausgegeben
 			\item $\rightarrow$ bei Port 60 mit Wert 240 in Register sX wird eine rote LED auf dem Board auf nahezu maximale Helligkeit gestellt
 		\end{itemize}
+		\includegraphics[width=.7\linewidth]{../Blockbeschreibungen/IO-BlockdiagramSnipits.pdf}
 	\end{frame}
 	
 	\section{enable\_i}
