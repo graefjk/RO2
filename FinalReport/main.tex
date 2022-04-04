@@ -48,6 +48,7 @@ Der im Rahmen dieses Projektes entstandene VHDL-Code und alle weiteren Ressource
 \newpage
 \pagenumbering{arabic} 
 \section{Motivation}\label{sec:Motivation}
+Geschrieben von: Tobias Weinschenk \newline
 Dieses Projekt entsteht im Rahmen der Vorlesung Rechnerorganisation 2 an der Universität Stuttgart. Ziel der Vorlesung ist die Grundlagen des Entwurfs digitaler Schaltungen und Hardwarebeschreibungssprachen kennenzulernen. Hierzu soll in Gruppenarbeit ein 8-bit Mikroprozessor in der Beschreibungssprache VHDL erstellt werden. Dieser soll im Optimalfall korrekt auf einem \glqq field-programmable gate array\grqq $ $ (FPGA) ausgeführt werden. Hierfür wird uns ein Xilinx Zybo Z7-10 für Testzwecke zur Verfügung gestellt. Die Entwicklung wird durch die kostenlose Version der Xilinx Vivado 2020.2 Entwiclkungsumgebung gestützt. Zudem sollen einfache Programme in Maschinensprache für den Mikroprozessor entwickelt werden, um dessen Funktionsfähigkeit zu zeigen.
 
 \section{Anforderungsschreibung}\label{sec:Anforderungsschreibung}
@@ -115,7 +116,7 @@ Mit den Befehlen:
 Zusätzlich zu den geforderten Befehlen haben wir uns entschlossen einen Scratchpad-RAM, sowie einen CALL/RETURN-Stack zur Erstellung von Subroutinen zu implementieren und hierfür die folgenden Befehle ergänzt:
 \begin{multicols}{3}
 \begin{itemize}
-    \item CALL aaaa
+    \item CALL aaa
     \item CALLC aaa
     \item CALLNC aaa
     \item CALLNZ aaa
@@ -128,7 +129,7 @@ Zusätzlich zu den geforderten Befehlen haben wir uns entschlossen einen Scratch
     \item FETCH sX, ss
     \item FETCH sX, (sY)
     \item STORE sX, ss
-    \item STORE sX, (sy)
+    \item STORE sX, (sY)
 \end{itemize}
 \end{multicols}
 
@@ -913,6 +914,7 @@ Zahlreiche weitere Assembler Programme lassen sich auf GitHub unter\\
          160 & TOP Level conections &  &  &  &  &  & * & \\ \hline
          161 & TOP Level package &  & * &  &  &  &  & \\ \hline
          162 & TOP Level board &  &  &  & * &  &  & \\ \hline
+         162 & Präsentation &  &  &  & * &  &  & * \\ \hline
     \end{longtable}
     \begin{center}
     \centering
