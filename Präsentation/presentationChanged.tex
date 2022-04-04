@@ -59,10 +59,10 @@ dvipsnames,
 	\section{Betrachtete Befehle}
 	\begin{frame}{Betrachtete Befehle}
 		\begin{itemize}
-			\item ADD-Befehl (z.B. ADD x4, 18)
+			\item ADD-Befehl (z.B. ADD s4, s5)
 			\item CALL-Befehl (z.B. CALL 23)
-			\item STORE-Befehl (z.B. STORE x2, x5)
-			\item OUTPUT-Befehl (z.B. OUTPUT x0,60)
+			\item STORE-Befehl (z.B. STORE s4, 42)
+			\item OUTPUT-Befehl (z.B. OUTPUT s0, 60)
 			\item Befehle benötigen 6 Taktzyklen, Sprünge (JUMP, CALL, RETURN) benötigen allerdings nur 4 Taktzyklen, da ALU, Register und Scratchpad RAM nicht benötigt werden
 		\end{itemize}
 	\end{frame}
@@ -137,7 +137,7 @@ dvipsnames,
 
 	\section{CALL aaa}
 
-	\begin{frame}{Instruction Decoder}
+	\begin{frame}{Call/Return Stack}
 		\begin{multicols}{2}
 		\begin{itemize}
 			\item Call/Return Stack speichert Adresse des aktuellen Befehls auf den Stack
@@ -150,7 +150,7 @@ dvipsnames,
 
 	\section{STORE sX, ss}
 
-	\begin{frame}{Instruction Decoder}	
+	\begin{frame}{Scratchpad RAM}	
 		\begin{itemize}
 			\item Register soll Wert aus sX laden
 			\item MUX vor ALU gibt Immediate Wert vom Instruction Decoder an Scratchpad RAM weiter
@@ -166,14 +166,16 @@ dvipsnames,
 
 	\section{OUTPUT sX, pp}
 	
-	\begin{frame}{Instruction Decoder}
+	\begin{frame}{Input/Output}
 		\begin{itemize}
 			\item MUX\_i\_o soll Port für Output bestimmen, \\ bei OUTPUT sX, pp: immediate Wert pp
 			\item Register soll Wert von Adresse sX ausgeben
 			\item Wert von Register wird an OUT\_PORT ausgegeben
-			\item $\rightarrow$ bei Port 60 mit Wert 240 in Register sX wird eine rote LED auf dem Board auf nahezu maximale Helligkeit gestellt
+			\item $\rightarrow$ bei Port 60 mit Wert 240 in Register s0 wird bei \\
+			OUTPUT s0, 60 \\
+			eine rote LED auf dem Board auf nahezu maximale Helligkeit gestellt
 		\end{itemize}
-		\includegraphics[width=.7\linewidth]{../Blockbeschreibungen/IO-BlockdiagramSnipits.pdf}
+		\includegraphics[width=.65\linewidth]{../Blockbeschreibungen/IO-BlockdiagramSnipits.pdf}
 	\end{frame}
 	
 	\section{enable\_i}
