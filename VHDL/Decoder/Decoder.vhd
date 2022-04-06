@@ -19,6 +19,12 @@
 ----------------------------------------------------------------------------------
 
 
+
+
+
+--Geschrieben von Alexander Bunz ab hier (Zeile 25-83):
+
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -74,6 +80,15 @@ end Decoder;
 ---------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------
 architecture Behavioral of Decoder is
+	
+	
+	
+	
+	
+	
+	
+	
+--Geschrieben von Omar Al Kadri ab hier (Zeile 91-159):
 
 -- We've defined the opcode of the deffirent operations as constants to make it easier to read and work with them.
 
@@ -142,6 +157,15 @@ constant operation_INPUT_pp: std_ulogic_vector(5 downto 0):="010111";
 constant operation_OUTPUT: std_ulogic_vector(5 downto 0):="010100";
 constant operation_OUTPUT_pp: std_ulogic_vector(5 downto 0):="010101";
 
+
+
+
+
+
+
+
+--Geschrieben von Alexander Bunz ab hier (Zeile 167-218):
+
 -- defining a new type which will be used for the mealy state machine.
 type states is (PC, IP, ID, REG_read_and_RAM, ALU, REG_write, JUMPS);
 
@@ -155,6 +179,7 @@ signal state_curr : states:=PC;
 ---------------------------------------------------------------------------------------------------------------------------
 
 begin
+	
 -- The main goal of this process is to make sure that all the data is stable to be read by other components.
 -- Moreover the process creates a dally which prevents the other components to make unnecessary steps or doing the next step early,
 -- e.g. fetching the next instruction when the previous instruction is still processing, writing back  
@@ -190,10 +215,19 @@ begin
     end case;
  end if;
 end process mealy;
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+--Geschrieben von Omar Al Kadri ab hier (Zeile 226-310):
 
 ------------------------------------------------------------- 
 -------------------------------------------------------------        
--- setting the output ports depending on what opcode we have--
+-- setting the output ports depending on what opcode we have--	
 ------------------------------------------------------------- 
 ------------------------------------------------------------- 
 
