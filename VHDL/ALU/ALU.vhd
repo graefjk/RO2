@@ -19,6 +19,12 @@
 ----------------------------------------------------------------------------------
 
 
+
+
+
+--Geschrieben von Omar al Kadri ab hier (25-160):
+
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.std_logic_unsigned.all;
@@ -151,6 +157,13 @@ begin
 				else
 					zero_s <= '0';
 				end if;
+					
+					
+					
+				
+	--Geschrieben von Alexander Bunz ab hier (164-257):
+					
+					
         
 			when operation_RL =>
 				carry_s <= sA_i(7);
@@ -241,6 +254,14 @@ begin
 				else
 					zero_s <= '0';
 				end if;
+					
+					
+					
+					
+					
+	--Geschrieben von Simon Naß ab hier (262-335):	
+					
+					
         
 			when operation_COMPARE | operation_COMPARE_kk =>
 				result_s <= sA_i;
