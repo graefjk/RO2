@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: Group 2
--- Engineer: Tobias Weinschenk
+-- Engineer: Jochen Benzenhöfer
 -- 
 -- Create Date: 04/03/2017 10:57:44 AM
 -- Design Name: registers testbench

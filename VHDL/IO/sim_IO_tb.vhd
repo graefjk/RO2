@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: Jochen Benzenhöfer
 -- 
 -- Create Date: 01/15/2022 11:09:36 PM
 -- Design Name: 
@@ -291,6 +291,7 @@ begin
 		end if;
     end process;
     
+	--currently not implemented
     HDMI_test: process(clk_hdmi_s)
     variable seed1, seed2: positive;               -- seed values for random generator
     variable rand: real;   -- random real-number value in range 0 to 1.0  
