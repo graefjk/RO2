@@ -1,3 +1,4 @@
+//transcribed from an RO1 exercise by Jannik Graef
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //NAMEREG s0, x0					//Die erste Zahl
 //NAMEREG s1, x1						//vorzeichen der ersten Zahl
