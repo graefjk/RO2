@@ -1,3 +1,4 @@
+//Author: Jannik Graef
 //Assembler to divide two 16 bit numbers and save the result as divident and the rest 
 //zb 65000 / 640 = 101 R 360
 //65000 = 11111101 11101000
