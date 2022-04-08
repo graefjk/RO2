@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: Jannik Graef
 -- 
 -- Create Date: 04.12.2021 12:00:50
 -- Design Name: 
@@ -91,7 +91,7 @@ uut: ALU port map (
     begin
  enable_s <= '1';
  wait for waitTime;   
-    
+
 opcode_select_s <= "110110";
 sA_s <= "00000000";
 wait for waitTime;
@@ -1628,7 +1628,8 @@ assert sALU_s = "01111111" and sZERO_s = '0' and sCarry_s='1'
 	report "SR0 error at 11111111" severity error;
 
 wait for waitTime;
-	
+
+
     end process;
 
 end Behavioral;
