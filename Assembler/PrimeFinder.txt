@@ -1,3 +1,4 @@
+//Author: Jannik Graef
 //Assembler to find prime numbers
 LOAD x4, 2
 //x6 is x4 / 2. so that only half as many numbers need to be tested
