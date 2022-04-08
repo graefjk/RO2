@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company:
--- Engineer:
+-- Engineer:Jonas Unterweger
 --
 -- Create Date: 04.12.2021 12:00:50
 -- Design Name:
@@ -17,6 +17,10 @@
 -- Additional Comments:
 --
 ----------------------------------------------------------------------------------
+
+--Geschrieben von Jonas Unterweger ab hier (21-129):
+
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 

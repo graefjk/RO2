@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: Group 2
--- Engineer: 
+-- Engineer: Jannik Graef
 -- 
 -- Create Date: 26.11.2021 11:51:37
 -- Design Name: ram

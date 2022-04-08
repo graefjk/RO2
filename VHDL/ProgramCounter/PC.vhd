@@ -1,3 +1,6 @@
+--Geschrieben von Jonas Unterweger ab hier (1-37):
+
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use ieee.std_logic_unsigned.all;

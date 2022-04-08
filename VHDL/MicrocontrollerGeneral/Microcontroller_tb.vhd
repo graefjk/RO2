@@ -18,6 +18,11 @@
 -- 
 ----------------------------------------------------------------------------------
 
+--Geschrieben von Simon Naß ab hier (21-143):	
+
+
+
+
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
