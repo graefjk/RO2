@@ -1,3 +1,4 @@
+//Author: Jannik Graef
 //Assembler to find 16 bit prime numbers
 LOAD x7, 0 // first part of currently tested number
 LOAD x8, 2 // second part of currently tested number
