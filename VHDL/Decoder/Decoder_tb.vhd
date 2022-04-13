@@ -43,7 +43,7 @@ entity Decoder_tb is
 --  Port ( );
 end Decoder_tb;
 
-architecture Behavioral of sim_Decoder is
+architecture Behavioral of Decoder_tb is
 component Decoder
     Port (
          instruction_i: in std_logic_vector(17 downto 0); -- input signals
