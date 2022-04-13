@@ -19,8 +19,11 @@
 ----------------------------------------------------------------------------------
 
 
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+library work;
+use work.microcontroller_package.all;
 use std.env.finish;
 
 
@@ -29,23 +32,7 @@ entity stack_tb is
 end stack_tb;
 
 architecture Behavioral of stack_tb is
-    component stack
-        generic(    instruction_address_size_g: integer := 12;
-                stack_depth_g: integer := 128
-        );
-        port(   sPC_i : in std_ulogic_vector( instruction_address_size_g -1 downto 0);
-                write_or_read_i: in std_ulogic; -- 0 for write, 1 for read
-                enable_i: in std_ulogic;
-                reset_i: in std_ulogic;
-                clk_i: in std_ulogic;
-            
-                 full_o: out std_ulogic;
-                 empty_o: out std_ulogic;
-            
-                 sStack_o: out std_ulogic_vector( instruction_address_size_g -1 downto 0)
-         );
-    end component;
-    
+        
     signal sPC_s : std_ulogic_vector( 11 downto 0);
     signal write_or_read_s: std_ulogic; -- 0 for write, 1 for read
     signal enable_s: std_ulogic;
@@ -62,6 +49,9 @@ architecture Behavioral of stack_tb is
     begin
     
         uut: stack
+            generic map(    instruction_address_size_g => instruction_address_size_c,
+                            stack_depth_g  => stack_depth_c,
+                            stack_style_g  => stack_style_c)
             port map(   sPC_i => sPC_s,
                         write_or_read_i => write_or_read_s,
                         enable_i => enable_s,
