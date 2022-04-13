@@ -21,6 +21,8 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+library work;
+use work.microcontroller_package.all;
 use std.env.finish;
 
 entity registers_tb is
@@ -28,19 +30,6 @@ entity registers_tb is
 end registers_tb;
 
 architecture Behavioral of registers_tb is
-	component registers
-		generic(	register_width_g: integer := 8; 
-					register_select_size_g: integer := 4);
-		port(		write_data_i : in std_ulogic_vector(register_width_g -1 downto 0);
-					write_address_i : in std_ulogic_vector(register_select_size_g -1 downto 0);
-					write_enable_i : in std_ulogic;
-					read_X_address_i : in std_ulogic_vector(register_select_size_g -1 downto 0);
-					read_Y_address_i : in std_ulogic_vector(register_select_size_g -1 downto 0);
-					reset_i : in std_ulogic;
-					clk_i : in std_ulogic;
-					read_X_data_o : out std_ulogic_vector(register_width_g -1 downto 0);
-					read_Y_data_o : out std_ulogic_vector(register_width_g -1 downto 0));
-	end component;
 
 	signal write_data_s : std_ulogic_vector(7 downto 0);
 	signal write_address_s :  std_ulogic_vector(3 downto 0); 
