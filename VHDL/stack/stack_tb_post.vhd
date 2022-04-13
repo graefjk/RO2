@@ -87,7 +87,7 @@ architecture Behavioral of stack_tb_post is
 		          enable_s <= '1';
 		          write_or_read_s <= '1';
 		          wait for 15ns; -- current time 15ns, next rising edge at 30ns
-		          assert sStack_s = X"000" report "should be zero because the stack should not read if it is empty" severity error;
+		          assert sStack_s = X"FFF" report "should be FFF because the stack should not read if it is empty" severity error;
 		          
 		          assert full_s = '0' report "full should be 0 at the start" severity error;
 		          assert empty_s = '1' report "empty should be 1 at the start" severity error;
@@ -104,7 +104,7 @@ architecture Behavioral of stack_tb_post is
 		          --check manually in the simulation for any write activity here
 		          write_or_read_s <= '1'; --now reading again
 		          wait for 20ns; --current time 75ns, next rising edge at 90ns;
-		          assert sStack_s = X"000" report "should still be zero because we never read anything and enabled = 0 at the moment" severity error;
+		          assert sStack_s = X"FFF" report "should still be FFF because we never read anything and enabled = 0 at the moment" severity error;
 		          
 		          enable_s <= '1';
 		          wait for 20ns; --current time 95ns, next rising edge at 110ns;
@@ -132,7 +132,7 @@ architecture Behavioral of stack_tb_post is
 		          --test reset now
 		          reset_s <= '1';
 		          wait for 5ns; --current time 2740ns, next rising edge at 2750ns
-		          assert sStack_s = X"000" report "output should be 0 with reset=1" severity error;
+		          assert sStack_s = X"FFF" report "output should be FFF with reset=1" severity error;
 		          assert full_s = '0' report "stack should not be full after reset" severity error;
 		          assert empty_s = '1' report "stack should be empty after reset" severity error;
 		          reset_s <= '0';
@@ -140,7 +140,7 @@ architecture Behavioral of stack_tb_post is
 		          --check if the stack is writing and reading after reset again
 		          write_or_read_s <= '1'; --now reading again
 		          wait for 20ns; --current time 2760ns, next rising edge at 2770ns
-		          assert sStack_s = X"000" report "stack should not read anything because it is empty" severity error;
+		          assert sStack_s = X"FFF" report "stack should not read anything because it is empty" severity error;
 		          
 		          write_or_read_s <= '0'; --writing
 		          sPC_s <= X"111";
